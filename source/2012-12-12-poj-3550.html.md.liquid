@@ -1,0 +1,31 @@
+---
+layout: post
+title: "POJ 3550 - AT-sequence"
+---
+[http://poj.org/problem?id=3550](http://poj.org/problem?id=3550)
+
+## 概要
+AT-sequence とは、"AT" というプレフィックスの後にいくつかの command が続くような文字列である。
+AT-sequence には空白は含まれていない。
+
+command は header と任意の value (非負の4桁以下の数値) からなる。
+value が存在するときは、header と value は "=" によって区切られる。
+
+header は2つの部分からなる。
+1つ目の部分は必須であり、
+
+- 1つまたは2つの大文字のアルファベット
+- "&", "#", "@" のうちのいずれかの記号1つと、1つの大文字のアルファベット
+
+のどちらかである。
+2つ目の部分は任意であり、20桁以下の非負の整数である。
+
+正しい形式の AT-sequence が与えられるので、それに含まれている各 command を順に改行で区切って出力する。
+
+## 制約
+- AT-sequence は500文字以下
+
+## 解法
+やるだけ。
+
+{% include_code lang:cpp poj/3550.cc %}

@@ -1,0 +1,34 @@
+---
+layout: post
+title: "AOJ 2251 - Merry Christmas"
+---
+[http://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=2251](http://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=2251)
+
+## 概要
+N 個の家を M 本の道が双方向に距離 d[i] で繋いでいる．
+
+L 個の「家 p[i] に時刻 t[i] にプレゼントを届けよ」というリクエストをすべて満たすのに必要な最小のサンタの数を答える．
+
+サンタは時刻 0 にいずれかの家からスタートし，単位時間あたりに単位距離進むことができる．
+一人のサンタが何個のリクエストを処理してもかまわない．
+
+## 制約
+- 1 <= N <= 100
+- 0 <= M <= 1000
+- 1 <= L <= 1000
+
+## 解法
+JAG の講評も参考に．
+[2010/Practice/模擬地区予選/講評 - ACM-ICPC Japanese Alumni Group](http://acm-icpc.aitea.net/index.php?2010%2FPractice%2F%CC%CF%B5%BC%C3%CF%B6%E8%CD%BD%C1%AA%2F%B9%D6%C9%BE)
+
+i 番目のリクエストを処理した後に j 番目のリクエストを処理できるかどうかは
+
+    dist[p[i]][p[j]] <= t[j] - t[i]
+
+で判定できる．ここで dist[u][v] は u, v 間の最短距離で，ワーシャル・フロイドで先に計算しておく．
+
+「i 番目のリクエストを処理した後に j 番目のリクエストを処理できる」という関係を有向辺で繋ぐとこれは DAG になり，この最小パス被覆を求める問題に帰着できる．
+
+DAG の最小パス被覆は二部マッチングによって解くことができる．
+
+{% include_code lang:cpp aoj/2251.cc %}

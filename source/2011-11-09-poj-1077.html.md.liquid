@@ -1,0 +1,20 @@
+---
+layout: post
+title: "POJ 1077 - Eight"
+---
+[http://poj.org/problem?id=1077](http://poj.org/problem?id=1077)
+
+## 概要
+いわゆる15パズルと同じルールで，8枚の場合のパズルを解き，そのときの動かし方を答える (Special Judge)．
+ただし，解けない場合は「unsolvable」と答える．
+
+## 制約
+特になし
+
+## 解法
+A\* 探索をする．
+ヒューリスティック関数には，最終的な状態とのマンハッタン距離の和を用いた．
+
+盤面を string で持つと TLE だったが，配列として fixed\_string で持ったら 563MS で通った．
+
+{% include_code lang:cpp poj/1077.cc %}

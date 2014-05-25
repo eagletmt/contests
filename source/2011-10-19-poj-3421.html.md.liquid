@@ -1,0 +1,25 @@
+---
+layout: post
+title: "POJ 3421 - X-factor Chains"
+---
+[http://poj.org/problem?id=3421](http://poj.org/problem?id=3421)
+
+## 概要
+正の整数 X に対し，長さ m の X-factor chain は
+
+- X[0] = 1
+- X[m] = X
+- X[i] < X[i+1]
+- X[i+1] は X[i] で割りきれる
+
+というような数列 X[i] である．
+与えられた X に対して，作れる最大の数列の長さ m と，その長さになる数列がいくつあるか答える．
+
+## 制約
+- X <= 2^20
+
+## 解法
+X の素因数で順に割っていってできる数列が最大の長さ．
+そのような数列の数は素因数の重複組み合わせを数えればいい．
+
+{% include_code lang:cpp poj/3421.cc %}

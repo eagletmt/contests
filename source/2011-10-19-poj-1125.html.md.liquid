@@ -1,0 +1,21 @@
+---
+layout: post
+title: "POJ 1125 - Stockbroker Grapevine"
+---
+[http://poj.org/problem?id=1125](http://poj.org/problem?id=1125)
+
+## 概要
+N 人の stockbroker について，ある人 i からある人 j まで噂を伝えるのにかかる時間 t[i][j] が与えられる．
+
+全体に噂が広まるのにかかる時間を最小にしたい．
+そのときに最初に噂を伝えるべき人と，かかる時間を出力する．
+ただし，どの人に伝えても全体に噂が広まらないときは「disjoint」と出力する．
+
+## 制約
+- 1 <= N <= 100
+- 1 <= t[i][j] <= 100
+
+## 解法
+ワーシャルフロイドした後，自分以外の人への最短経路の最大値が最小になる人が答え．
+
+{% include_code lang:cpp poj/1125.cc %}

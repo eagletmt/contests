@@ -1,0 +1,43 @@
+---
+layout: post
+title: "POJ 2796 - Feel Good"
+---
+[http://poj.org/problem?id=2796](http://poj.org/problem?id=2796)
+
+## 概要
+n 個の emotional value の数列が与えられる．
+ある区間の emotional value は，その区間の emotional value の和と，その区間の最小値の積とする．
+
+emotional value が最大になる区間と，そのときの値を答える．
+最大になる区間が複数ある場合，どれを出力しても構わない．
+
+## 制約
+- 1 <= n <= 100000
+- 0 <= emotional value <= 10^6
+
+## 解法
+emotional value は，区間の最小値が同じなら，できるだけ区間は広くしたほうがいいという点に注目する．
+
+まず累積和と RMQ を作っておく．
+RMQ の実装は [Sparce Table algorithm](http://www.topcoder.com/tc?module=Static&d1=tutorials&d2=lowestCommonAncestor#Sparse_Table_\(ST\)_algorithm) を使った．
+これは構築に O(N log N)，クエリに O(1) という実装．
+
+最初は [1, n] という区間から始めて，区間の emotional value を累積和から計算して最大値を更新する．
+そして，区間の最小値のインデックスで区間を左右に分け，再帰的に最大値を更新していく．
+
+例えばサンプルに対しては
+
+- 3 **1** 6 4 5 2
+  - 3
+  - 6 4 5 **2**
+    - 6 **4** 5
+      - 6
+      - 5
+
+というように処理が進む．
+
+はじめ，この処理を再帰関数で実装していたので，昇順・降順な数列について n 段スタックを消費して Runtime Error になっていた．
+そこで queue を使ったループに書き直したら 1907MS で通った．
+何ページか status を眺めてみるとかなり遅いほうで，無理矢理通した感がある (そしてコードも長い…)．
+
+{% include_code lang:cpp poj/2796.cc %}

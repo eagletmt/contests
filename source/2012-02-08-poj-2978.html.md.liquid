@@ -1,0 +1,24 @@
+---
+layout: post
+title: "POJ 2978 - Colored stones"
+---
+[http://poj.org/problem?id=2978](http://poj.org/problem?id=2978)
+
+## 概要
+`\(m\)` 個の石が一直線に並べられており，それぞれ `\(x_i\)` の色で塗られている．
+色は全部で `\(k\)` 種類ある．
+
+任意の同じ色の2つの石について，その2つの石の間にそれとは異なる色の石が無いようにしたい．
+このとき，取り除く必要がある石の最小値を答える．
+
+## 制約
+- `\(1 \le m \le 100\)`
+- `\(1 \le k \le 5\)`
+- `\(1 \le x_i \le k\)`
+
+## 解法
+`$$\mathit{dp}(i, j, s) = \mbox{\(i\) 番目の石までで，最後の色が \(j\) で今までに使った色の状態が \(s\) のときの最小値}$$`
+
+という DP 表を埋めて `\(\mbox{min}_{1 \le j \le k, 0 \le s < 2^k}\{\mathit{dp}(m, j, s)\}\)` が答え．
+
+{% include_code lang:cpp poj/2978.cc %}

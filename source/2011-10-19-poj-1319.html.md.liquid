@@ -1,0 +1,25 @@
+---
+layout: post
+title: "POJ 1319 - Pipe Fitters"
+---
+[http://poj.org/problem?id=1319](http://poj.org/problem?id=1319)
+
+## 概要
+a \* b の長方形の箱に直径 1 の円を最大でいくつ入れることができるかを答える．
+a \* b の長方形は b \* a の長方形とも見なせることに注意．
+
+円の敷き詰め方は grid pattern と skew pattern の2通りに限られる (問題文の図を参照)．
+最大となる敷き詰め方が grid か skew のどちらであるかも答える．
+
+## 制約
+- 0 < a, b < 128
+
+## 解法
+grid pattern の場合は `floor(a) * floor(b)` 個入れることができる．
+
+skew pattern の場合を考える．幅として使うほうを w，高さとして使うほうを h とする．
+
+まず1行にいくつ入るかを考えると，下から奇数行目は `floor(w)` 個で，偶数行目は `floor(w-0.5)` 個．
+次に何列入るかを考えると，下から1行目は高さ1で，それ以降1行積む毎に `sqrt(3)/2` ずつ高さが増えていくので，`floor(2*(h-1)/sqrt(3) + 1` 個．これで計算することができる．
+
+{% include_code lang:cpp poj/1319.cc %}

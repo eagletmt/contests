@@ -1,0 +1,19 @@
+---
+layout: post
+title: "AOJ 2048 - Everlasting...?"
+---
+[http://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=2048](http://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=2048)
+
+## 概要
+正の整数 n の *key number* を「a の最大の素因数から，他の素因数の和を引いたもの」と定義する．
+
+2つの正の整数 a, b が与えられるので，どちらの *key number* が大きいかどうかを答える．
+
+## 制約
+- 2 <= a, b <= 10^6
+- a と b の *key number* が等しくなることはない
+
+## 解法
+やるだけ．10^6 程度なので，素数表を作ったりする必要も無い．
+
+{% include_code lang:cpp aoj/2048.cc %}

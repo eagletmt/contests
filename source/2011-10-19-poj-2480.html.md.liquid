@@ -1,0 +1,23 @@
+---
+layout: post
+title: "POJ 2480 - Longge's problem"
+---
+[http://poj.org/problem?id=2480](http://poj.org/problem?id=2480)
+
+## 概要
+自然数 N に対して `Σgcd(i, N) 1 <= i <= N` を答える．
+
+## 制約
+- 1 < N < 2^31
+
+## 解法
+`gcd(i, N) = m` であることと `gcd(i/m, N/m) = 1` であることは同値であることを利用する．
+
+すると `gcd(i, N) = m` となる i の個数は `φ(N/m)` に等しくなる．
+ここで φ は [オイラーのφ関数](http://ja.wikipedia.org/wiki/%E3%82%AA%E3%82%A4%E3%83%A9%E3%83%BC%E3%81%AE%CF%86%E9%96%A2%E6%95%B0)．
+
+よって N の約数 m について `m * φ(N/m)` の和が答えとなる．
+
+約数の列挙も `φ(N/m)` の計算も `O(sqrt(N))` でできるため，N < 2^31 でも大丈夫．
+
+{% include_code lang:cpp poj/2480.cc %}

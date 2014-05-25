@@ -1,0 +1,42 @@
+---
+layout: post
+title: "POJ 1478 - Island of Logic"
+---
+[http://poj.org/problem?id=1478](http://poj.org/problem?id=1478)
+
+## 概要
+A, B, C, D, E の5人の住人がいる。
+各住人は
+
+- divine
+- human
+- evil
+
+のいずれかの種族である。
+住人との会話が \\(n\\) 個与えられるので、誰がどの種族かを推論して答える。
+また、その会話が行われたのが昼か夜かも推論して答える。
+
+各種族は以下のような性質をもつ。
+
+- divine は常に真実を述べる
+- human は、昼は常に真実を述べるが夜は常に虚偽を述べる
+- evil は常に虚偽を述べる
+
+会話は以下のいずれかの形式で与えられる。ここで X は A, B, C, D, E のいずれかである。
+
+- I am \[not\] \(divine | human | evil | lying\).
+- X is \[not\] \(divine | human | evil | lying\).
+- It is \(day | night\).
+
+どの住人の種族も推論できず、昼か夜かも推論できない場合は「No facts are deducible.」と答える。
+会話の内容に矛盾が生じている場合は「This is impossible.」と答える。
+それ以外の場合は、推論できた事実をすべて答える。
+
+## 制約
+- \\(n \\le 50\\)
+
+## 解法
+種族と昼夜の割り当ては \\(3 ^ 5 \\times 2\\) 通りしか存在しないので全探索。
+実装ゲー。
+
+{% include_code lang:cpp poj/1478.cc %}

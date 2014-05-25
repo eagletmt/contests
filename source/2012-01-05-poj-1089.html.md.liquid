@@ -1,0 +1,17 @@
+---
+layout: post
+title: "POJ 1089 - Intervals"
+---
+[http://poj.org/problem?id=1089](http://poj.org/problem?id=1089)
+
+## 概要
+n 個の整数の区間が与えられるので，それらの和を互いに交差しない区間として昇順に並べて表現したものを答える．
+
+## 制約
+- 3 <= n <= 5 * 10^4
+- 1 <= 整数 <= 10^6
+
+## 解法
+ソートしてから交差している区間をマージする．
+
+{% include_code lang:cpp poj/1089.cc %}

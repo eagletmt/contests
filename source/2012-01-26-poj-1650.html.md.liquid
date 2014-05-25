@@ -1,0 +1,21 @@
+---
+layout: post
+title: "POJ 1650 - Integer Approximation"
+---
+[http://poj.org/problem?id=1650](http://poj.org/problem?id=1650)
+
+## 概要
+小数 \\(A\\) と整数 \\(L\\) が与えられる．
+\\(1 \le N, D \le L\\) なる整数 \\(L, D\\) で，\\(\left|A - \\frac{N}{D}\right|\\) が最小になる組を答える．
+
+## 制約
+- \\(0.1 \le A < 10\\)
+- \\(A\\) は15桁以下
+- \\(1 \le L \le 10 ^ 5\\)
+
+## 解法
+ある \\(D\\) を決めると，\\(\left|A - \\frac{N}{D}\right|\\) を最小にする \\(N\\) は \\(n = \lfloor A D \rfloor\\) に対して \\(n-1, n, n+1\\) のいずれかであるため，全 \\(D\\) に関してこらの最小値をとればよい．
+
+最初，精度が足りないかと思って色々工夫していたが，実は double の精度で十分だった．
+
+{% include_code lang:cpp poj/1650.cc %}

@@ -1,0 +1,18 @@
+---
+layout: post
+title: "AOJ 2296 - Quest of Marchant"
+---
+[http://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=2296](http://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=2296)
+
+## 解法
+買い物に行く街の部分集合 X は 2^N 個程度．
+X に含まれる街を巡って市場へ帰ってくるときの最短距離は全通り試して調べても |X|! で求められる．
+
+X で買える商品を，合計の重さが W 以下になるようにしつつ利益が最大になるように買ったときの利益は，いわゆるナップザック問題なので DP で解ける．
+
+最後に，合計の時間が T 以下になるようにしつつ利益が最大になるように買ったときの利益を，同様の DP で解く．
+
+全体で `O(2^N*(N! + M*W) + 2^N*T)`．
+
+int の範囲に収まらない可能性がある点に注意．
+{% include_code lang:cpp aoj/2296.cc %}

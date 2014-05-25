@@ -1,0 +1,25 @@
+---
+layout: post
+title: "POJ 3276 - Face The Right Way"
+---
+[http://poj.org/problem?id=3276](http://poj.org/problem?id=3276)
+
+## 概要
+N 頭の牛が一列に並んでいて，それぞれが前か後ろを向いている．
+連続した K 頭の牛の向きを逆にする automatic cow turning machine がある．
+ただし automatic cow turning machine は牛の向きだけを変えて，牛の位置は変えないことに注意．
+
+すべての牛が前を向いているようにするために必要な automatic cow turning machine の使用回数を最小にするような最小の K を答える．
+
+## 制約
+- 1 <= N <= 5000
+
+## 解法
+1 <= K <= 5000 を全探索した．
+
+ある K について，題意を達成できるかどうかの判定をナイーブに実装すると最悪 O( K^2 ) かかって，全体で O( K^3 ) で TLE．
+そこで Binary Indexed Tree で判定を O(K log K) でやるようにすると全体で O(K^2 log K) でなんとか通る (1329MS)．
+
+status を見ると普通に数百MSで通されているので，もっとちゃんとした方法がありそう．
+
+{% include_code lang:cpp poj/3276.cc %}

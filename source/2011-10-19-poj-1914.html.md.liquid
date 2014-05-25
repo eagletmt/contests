@@ -1,0 +1,24 @@
+---
+layout: post
+title: "POJ 1914 - Cramer's Rule"
+---
+[http://poj.org/problem?id=1914](http://poj.org/problem?id=1914)
+
+## 概要
+3 \* 3 の行列について，`det(A)` を
+
+![](http://poj.org/images/1914_2.jpg)
+
+のように定める．
+
+A の i 列目を b で置き換えたものを `A_i` とすると，方程式 `Ax = b` は `det(A) != 0` のとき唯一の解 `x_i = det(A_i)` を持つことが知られている．
+
+`det(A_1)`, `det(A_2)`, `det(A_3)`, `det(A)` を答え，唯一の解を持つ場合はその解を，持たない場合は「No unique solution」と出力する．
+
+## 制約
+- すべての数は区間 [-1000, 1000] の整数
+
+## 解法
+やるだけ．計算結果が int の範囲に収まらないケースがあることに注意…
+
+{% include_code lang:cpp poj/1914.cc %}

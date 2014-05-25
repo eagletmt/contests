@@ -1,0 +1,35 @@
+---
+layout: post
+title: "POJ 3711 - Mayan Pyramid"
+---
+[http://poj.org/problem?id=3711](http://poj.org/problem?id=3711)
+
+## 概要
+平面上の三点 A, B, C の座標と h が与えられ，底面が三角形 ABC で高さが h の四面体 ABCP を作る．
+
+P から AB, BC, CD への垂線の足をそれぞれ D, E, F としたとき，`PD^2 + PE^2 + PF^2` が最小になるように点 P の座標を決定する．
+このとき，P を平面 ABC に射影した点 Q の座標を答える．
+
+## 制約
+- 座標の値および高さ < 1000
+- 出力は 10^-2 の精度
+
+## 解法
+まず
+
+- PD^2 = PQ^2 + DQ^2
+- PE^2 = PQ^2 + EQ^2
+- PF^2 = PQ^2 + FQ^2
+
+より，`PD^2 + PE^2 + PF^2` を最小にすることは `DQ^2 + EQ^2 + FQ^2` を最小にすることと同値．
+
+コーシー・シュワルツの不等式から `(DQ^2 + EQ^2 + FQ^2)*(AB^2 + BC^2 + CA^2) >= (DQ*AB + EQ*BC + FQ*CA)^2` であり，
+三角形 ABC の面積を S とすると右辺 = `(2*S)^2` であるため，`DQ^2 + EQ^2 + FQ^2` の最小値は `(2*S)^2/(AB^2 + BC^2 + CA^2)` という定数で与えられる．
+
+等号成立は `DQ/AB = EQ/BC = FQ/CA` のとき．つまり，`DQ : EQ : FQ = AB : BC : CA` となるときである．
+このときの Q の座標は，Q は角 C を `AB : BC` に分ける直線上にあり，かつ角 A を `CA : AB` に分ける直線上にあることから求めることができる．
+
+ちなみにこのような点 Q は Lemoine 点と呼ばれているらしい．
+[http://kikagaku.at-ninja.jp/triangle_geometry/Lemoine_point.html](http://kikagaku.at-ninja.jp/triangle_geometry/Lemoine_point.html)
+
+{% include_code lang:cpp poj/3711.cc %}

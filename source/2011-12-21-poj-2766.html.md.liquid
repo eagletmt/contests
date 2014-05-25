@@ -1,0 +1,21 @@
+---
+layout: post
+title: "POJ 2766 - Laserbox"
+---
+[http://poj.org/problem?id=2766](http://poj.org/problem?id=2766)
+
+## 概要
+n \* n のグリッド上に r 個の right-turner がある．
+right-turner はそこマスに飛んできたレーザーを右に90度回転させる．
+
+n \* n のグリッドの外側のあるマスから内側にレーザーを発射したとき，最終的にグリッドがら出ていく場所を答える．
+
+## 制約
+- 1 <= n <= 50
+- 1 <= r <= 50
+- 同じマスに2つ以上の right-turner が存在することはない
+
+## 解法
+やるだけ．
+
+{% include_code lang:cpp poj/2766.cc %}

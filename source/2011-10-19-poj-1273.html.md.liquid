@@ -1,0 +1,21 @@
+---
+layout: post
+title: "POJ 1273 - Drainage Ditches"
+---
+[http://poj.org/problem?id=1273](http://poj.org/problem?id=1273)
+
+## 概要
+N 本の排水路があり，M 個の交差点がある．1番目の交差点が池で，M 番目の交差点が川．
+i 番目の排水路は S[i] 番目の交差点から E[i] 番目の交差点へ最大で単位時間に C[i] の水を流す．
+
+池から川へ単位時間に流れる最大の水量を答える．
+
+## 制約
+- 0 <= N <= 200
+- 2 <= M <= 200
+- 0 <= C[i] <= 10000000
+
+## 解法
+最大流．
+
+{% include_code lang:cpp poj/1273.cc %}

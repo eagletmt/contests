@@ -1,0 +1,22 @@
+---
+layout: post
+title: "POJ 1962 - Corporative Network"
+---
+[http://poj.org/problem?id=1962](http://poj.org/problem?id=1962)
+
+## 概要
+\\(N\\) 個のノードがあり、\\(Q\\) 個の以下のような2種類の命令を処理する。
+ここではあるノード I からエッジを辿っていった先のノードを center と呼ぶ。
+またノード I とノード J の距離を \\(|I - J| \% 1000\\) とする。
+
+- I I J: ノード I からノード J にエッジを張る。このとき I は center であったことが保証されている。
+- E I: ノード I から I の center までの距離を答える。
+
+## 制約
+- \\(5 \\le N \\le 2 \\cdot 10 ^ 4\\)
+- \\(1 \\le Q \\le 2 \\cdot 10 ^ 5\\)
+
+## 解法
+Union-Find っぽく、距離を聞かれたときに経路圧縮を行う。
+
+{% include_code lang:cpp poj/1962.cc %}

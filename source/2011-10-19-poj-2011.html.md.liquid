@@ -1,0 +1,38 @@
+---
+layout: post
+title: "POJ 2011 - Primary X-Subfactor Series"
+---
+[http://poj.org/problem?id=2011](http://poj.org/problem?id=2011)
+
+## 概要
+ある数 n に対して，n の約数であり部分列でもある1以上の整数を subfactor という．
+
+2, 13, 801, 882, 1324 はどれも 8013824 の部分列であるが，以下は部分列ではない．
+
+- 214 (順番は入れ替えられない)
+- 8334 (元の数字より出現を増やしてはいけない)
+- 8013824 (少なくとも1つの数字を消さなければならない)
+- 01 (leading zero は許されていない)
+
+n に対する x-subfactor series は n[1], ..., n[k] という整数の減少数列で，
+
+- n[1] = n
+- k >= 1
+- for all 1 <= i < k, n[i+1] は n[i] のある subfactor に出現する数字を消して leading zero も消した数
+
+を満たすものであり，x-subfactor は x-subfactor series の x 番目の数である．
+
+例えば n = 2004 のとき，以下の2つの異なる x-subfactor series をもつ．
+
+- 2004 → (subfactor として 2 を採用する) → 4
+- 2004 → (subfactor として 4 を採用する) → 200 → (subfactor として 2 を採用する) → 0
+- 2004 → (subfactor として 4 を採用する) → 200 → (subfactor として 20 を採用する) → 0
+
+primary x-subfactor series は x-subfactor series の中で最も長いものである．もし複数存在する場合，2番目の数が最も小さいものを選び，もしそれも複数存在する場合は3番目の数が最も小さいものを…と選ぶことにする．
+
+与えられた数の primary x-subfactor series を答える．
+
+## 解法
+メモ化しつつ，再帰的に primary x-subfactor series を計算する．
+
+{% include_code lang:cpp poj/2011.cc %}

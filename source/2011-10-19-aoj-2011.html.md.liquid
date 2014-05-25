@@ -1,0 +1,21 @@
+---
+layout: post
+title: "AOJ 2011 - Gather the Maps!"
+---
+[http://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=2011](http://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=2011)
+
+## 概要
+n 人がそれぞれ地図の一部を持っていて，1対1で会って自分の持っている地図を渡していって最終的に一箇所に集めたい．
+それぞれの人の空いている日付のリストが与えられるので，最短で何日に一箇所に集められるかを答える．予定が空いているなら一人が一日に何人と会ってもよい．
+
+30日以内に全て集められないときは -1 を出力する．
+
+## 制約
+- 1 < n <= 50
+- 1 <= 日付 <= 30
+
+## 解法
+i の人が d 日目までに持てる地図の組み合わせを DP 的に更新しながら，最初に誰かが全部持てたときの d を答える．
+
+n <= 50 なので，地図の組み合わせは long long のビットで表現すると楽．
+{% include_code lang:cpp aoj/2011.cc %}

@@ -1,0 +1,26 @@
+---
+layout: post
+title: "POJ 1906 - Three powers"
+---
+[http://poj.org/problem?id=1906](http://poj.org/problem?id=1906)
+
+## 概要
+3のべき乗からなる集合 S
+
+    S = {1, 3, 9, 27, 81, ... }
+
+を考える．
+
+S の部分集合 S' を「S' の要素の和」に関してソートしたとき，n 番目の S' を答える．
+
+ただし，空集合の要素の和は 0 とする．
+
+## 制約
+- n < 10^19
+
+## 解法
+n を二進数とみて，ビットが立っているところの3のべき乗からなる集合が答え．
+
+サンプルからもわかるように BigInteger が要る．
+
+{% include_code lang:cpp poj/1906.java %}

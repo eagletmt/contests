@@ -1,0 +1,17 @@
+---
+layout: post
+title: "POJ 1204 - Word Puzzles"
+---
+[http://poj.org/problem?id=1204](http://poj.org/problem?id=1204)
+
+## 概要
+\\(L \\times C\\) の表が与えられ、各セルには大文字のアルファベットが書かれている。
+\\(W\\) 個の単語が与えられるので、各単語が表中のどの位置から、縦・横・斜めのどの方向に向かって存在するかを答える。
+
+## 制約
+- \\(0 < L, C, W \\le 1000\\)
+
+## 解法
+Aho-Corasick 法の練習。
+
+{% include_code lang:cpp poj/1204.cc %}

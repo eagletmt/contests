@@ -1,0 +1,19 @@
+---
+layout: post
+title: "POJ 1064 - Cable master"
+---
+[http://poj.org/problem?id=1064](http://poj.org/problem?id=1064)
+
+## 概要
+N 本のケーブルから，ある一定の長さ l のケーブルを K 本得たい．
+N 本のそれぞれのケーブルの長さが与えられるので，l の最大値を答える．
+
+## 制約
+- 1 <= N <= 10000
+- 1 <= K <= 10000
+- 1 <= ケーブルの長さ(メートル) <= 10000
+
+## 解法
+l について整数二分探索．
+
+{% include_code lang:cpp poj/1064.cc %}

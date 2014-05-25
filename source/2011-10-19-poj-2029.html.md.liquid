@@ -1,0 +1,21 @@
+---
+layout: post
+title: "POJ 2029 - Get Many Persimmon Trees"
+---
+[http://poj.org/problem?id=2029](http://poj.org/problem?id=2029)
+
+## 概要
+W * H のグリッドが与えられて，そのうち N 個のマスには柿の木が生えている．
+S * T の領域に含まれる柿の木の数を最大化する問題．
+
+## 制約
+- 0 < N < 500
+- 0 < W, H < 100
+
+## 解法
+    a[i][j] = (i,j)の左上の領域にある柿の木の数
+というテーブル a を作っておくと，(i,j) を右下にした S * T の領域にある柿の木の数は
+    a[i][j] - a[i-T][j] - a[i][j-S] + a[i-T][j-S]
+で計算できるので，これを 1 <= i <= H, 1 <= j <= W について計算して最大値をとればいい．
+
+{% include_code lang:cpp poj/2029.cc %}

@@ -1,0 +1,19 @@
+---
+layout: post
+title: "POJ 1060 - Modular multiplication of polynomials"
+---
+[http://poj.org/problem?id=1060](http://poj.org/problem?id=1060)
+
+## 概要
+多項式 \\(f(x), g(x), h(x)\\) が与えられる．
+係数の演算は modulo 2 で行う．
+このとき，\\(f(x) \cdot g(x) \mbox{ modulo } h(x)\\) の係数を答える．
+
+## 制約
+- 多項式の次数は最大で 1000
+
+## 解法
+実際に \\(f(x) \cdot g(x)\\) を計算して \\(h(x)\\) で割って余りを求める．
+係数の計算は xor なので，bitset を使うと実装が楽．
+
+{% include_code lang:cpp poj/1060.cc %}

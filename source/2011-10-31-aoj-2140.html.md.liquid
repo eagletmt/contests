@@ -1,0 +1,27 @@
+---
+layout: post
+title: "AOJ 2140 - Tile Puzzle"
+---
+[http://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=2140](http://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=2140)
+
+## 概要
+N \* N のタイルがあり，最初すべてのタイルの色は 0 である．
+
+あるタイルに触れると，そのタイルと隣接する8マスのタイルの色が1つ進む．
+タイルの色は 7 種類で，色 6 の次は色 0 になる．
+また，一番上のマスと一番下のマスは隣接しているとし，同様に一番左のマスと一番右のマスも隣接しているとする．
+
+最終的な色の配置が与えられるので，どのマスを何回触れればよいかを答える．
+ただし，そのような配置にすることができない場合は -1 のみを出力する．
+
+## 制約
+- 3 <= N <= 15
+
+## 解法
+いわゆる Lights Out とか Flip It と呼ばれるゲーム．
+
+マス (i, j) に触れる回数を `x[i,j]`，最終的な色を `a[i,j]` とすると，`N*N` 個の一次方程式が立つので，連立方程式とみて有限体 F_7 の上でガウスの消去法で解くことで求めることができる．
+
+なぜか AOJ でジャッジができないので，[2008/Practice/夏合宿 - ACM-ICPC Japanese Alumni Group](http://acm-icpc.aitea.net/index.php?2008%2FPractice%2F%B2%C6%B9%E7%BD%C9) からインプットを取ってきて手元で確認した．
+
+{% include_code lang:cpp aoj/2140.cc %}

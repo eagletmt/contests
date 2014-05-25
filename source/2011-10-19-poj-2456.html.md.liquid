@@ -1,0 +1,20 @@
+---
+layout: post
+title: "POJ 2456 - Aggressive cows"
+---
+[http://poj.org/problem?id=2456](http://poj.org/problem?id=2456)
+
+## 概要
+N 個の一直線に並んだ小屋がある．i 番目の小屋は x[i] の位置にある．
+
+これらの小屋に C 頭の牛を，隣りの牛との距離の最小値が最大になるように入れたい．
+そのときの距離の最小値を答える．
+
+## 制約
+- 2 <= C <= N <= 100000
+- 0 <= x[i] <= 1000000000
+
+## 解法
+二分探索．
+
+{% include_code lang:cpp poj/2456.cc %}

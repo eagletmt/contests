@@ -1,0 +1,24 @@
+---
+layout: post
+title: "AOJ 0575 - Festivals in JOI Kingdom"
+---
+[http://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=0575](http://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=0575)
+
+## 解法
+まず各ノード \\(v\\) について、お祭りが開催されているノードまでの最短距離 \\(\\mbox{dist}(v)\\) を求める。
+これはお祭りが開催されているノードからダイクストラをすればよい。
+最短距離を求めてしまえば、エッジの長さの情報は以降不要となる。
+
+次に、各エッジ \\((u, v)\\) の重み \\(w\\) を \\(\\mbox{min}(\\mbox{dist}(u), \\mbox{dist}(v))\\) と設定する。
+これは、このエッジを使うと最大でもお祭りが開催されているノードまでの距離が \\(w\\) のノードを通ることになることを表している。
+このグラフの上で、重みを負とみて最小全域木を求める。
+最適なパスはこの最小全域木に含まれるエッジのみを通って達成できる。
+
+クラスカル法で最小全域木を作るとき、Union-Find で併合した過程を表す二分木を作る。
+このときに新たに追加されるノードは \\(N-1\\) 個である。
+新たに追加するノードの \\(\\mbox{dist}\\) は、併合したときのエッジの重みとする。
+
+このようにして得られた二分木を用いると、\\(S, T\\) 間の最適なパスの距離は二分木上の葉ノードにある \\(S, T\\) の LCA (Lowest Common Ancestor) の \\(\\mbox{dist}\\) となる。
+LCA は平方分割を用いて \\(O(N)\\) で構築、\\(O(\\sqrt[]{N})\\) でクエリに答えることができる。
+TopCoder の [Algorithm Tutorials](http://community.topcoder.com/tc?module=Static&d1=tutorials&d2=lowestCommonAncestor) を参考にした。
+{% include_code lang:cpp aoj/0575.cc %}

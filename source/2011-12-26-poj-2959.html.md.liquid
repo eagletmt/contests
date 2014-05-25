@@ -1,0 +1,20 @@
+---
+layout: post
+title: "POJ 2959 - Ball bearings"
+---
+[http://poj.org/problem?id=2959](http://poj.org/problem?id=2959)
+
+## 概要
+直径 D の大きい円の内側に接するように直径 d の小さい円を並べる．
+小さい円同士が少なくとも s 離れているようにしたとき，最大で何個の小さい円を並べることができるかを答える．
+
+## 制約
+- 10^-4 <= D, d, s <= 500
+- 少なくとも 3 つの小さい円を並べることができる
+
+## 解法
+n 個の小さい円をちょうど s 離れるように並べたとき，それらに接する大きい円の直径は ![\frac{s+d}{\sin\left(\frac{\pi}{n}\right)}+d](http://chart.apis.google.com/chart?cht=tx&chl=%5Cfrac%7Bs%2Bd%7D%7B%5Csin%5Cleft%28%5Cfrac%7B%5Cpi%7D%7Bn%7D%5Cright%29%7D%2Bd) なので，これが D 以下であればよい．
+
+n >= 3 に注意してその不等式を解くと ![n \le \frac{\pi}{\arcsin\left(\frac{s+d}{D-d}\right)}](http://chart.apis.google.com/chart?cht=tx&chl=n%20%5Cle%20%5Cfrac%7B%5Cpi%7D%7B%5Carcsin%5Cleft%28%5Cfrac%7Bs%2Bd%7D%7BD-d%7D%5Cright%29%7D) となり，これを計算するだけ．
+
+{% include_code lang:cpp poj/2959.cc %}

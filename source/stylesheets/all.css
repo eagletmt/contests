@@ -1,0 +1,50 @@
+@charset "utf-8";
+
+body {
+  background-color: #efefef;
+}
+
+#main, #header {
+  max-width: 48em;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+#header {
+  border-bottom-style: solid;
+  border-bottom-width: 1px;
+  border-bottom-color: #cfcfcf;
+}
+
+ol.article-list {
+  padding-left: 0px;
+}
+
+ol li.article-title {
+  list-style-type: none;
+  margin-top: 0.5em;
+  margin-bottom: 0.5em;
+  position: relative;
+}
+
+ol li .article-date {
+  margin-right: 1.5em;
+}
+
+.prev-page {
+  float: left;
+}
+.prev-page:before {
+  content: "←";
+}
+
+.next-page {
+  float: right;
+}
+.next-page:after {
+  content: "→";
+}
+
+.highlight {
+  overflow-x: auto;
+}

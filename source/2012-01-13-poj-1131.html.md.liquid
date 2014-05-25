@@ -1,0 +1,17 @@
+---
+layout: post
+title: "POJ 1131 - Octal Fractions"
+---
+[http://poj.org/problem?id=1131](http://poj.org/problem?id=1131)
+
+## 概要
+八進の小数で表現された0以上1以下の数が与えられるので，それを十進で表現したものを答える．
+八進で小数点以下 n 桁の小数は多くとも小数点以下 3n 桁の十進で表現できる．
+
+## 制約
+- n についてとくに制約は無い
+
+## 解法
+Java の BigDecimal に逃げた．
+
+{% include_code lang:java poj/1131.java %}

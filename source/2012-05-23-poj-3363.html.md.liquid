@@ -1,0 +1,19 @@
+---
+layout: post
+title: "POJ 3363 - Annoying painting tool"
+---
+[http://poj.org/problem?id=3363](http://poj.org/problem?id=3363)
+
+## 概要
+\\(n \\times m\\) の白黒画像が与えられる。
+\\(r \\times c\\) の領域のピクセルを全て反転させる操作ができるとき、全体を 0 のみにするのに必要な最小の手数を答える。
+できないときは -1 を答える。
+
+## 制約
+- \\(1 \\le r \\le n \\le 100\\)
+- \\(1 \\le c \\le m \\le 100\\)
+
+## 解法
+左上から見ていって 1 のピクセルがあったらそこを左上として反転させなければならなく、これが最適な手順。
+
+{% include_code lang:cpp poj/3363.cc %}

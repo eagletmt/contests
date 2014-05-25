@@ -1,0 +1,17 @@
+---
+layout: post
+title: "POJ 1389 - Area of Simple Polygons"
+---
+[http://poj.org/problem?id=1389](http://poj.org/problem?id=1389)
+
+## 概要
+与えられた N 個の長方形によって覆われる面積を答える．
+
+## 制約
+- 1 <= N <= 1000
+- 0 <= 座標 <= 50000
+
+## 解法
+長方形の左右の x 座標で区間を区切り，各区間に存在する長方形に対して y 座標を調べて面積を足していけばいい．
+
+{% include_code lang:cpp poj/1389.cc %}

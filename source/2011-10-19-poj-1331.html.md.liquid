@@ -1,0 +1,19 @@
+---
+layout: post
+title: "POJ 1331 - Multiply"
+---
+[http://poj.org/problem?id=1331](http://poj.org/problem?id=1331)
+
+## 概要
+数字 p, q, r が与えられる．
+これらをある B 進数とみて p \* q == r が成り立つように B を定めたとき，その B を答える．
+ただし，そのような B が存在しないときは 0 を出力する．
+
+## 制約
+- 1 <= p, q, r <= 1000000
+- 2 <= B <= 16
+
+## 解法
+B について全通り試すだけ．
+
+{% include_code lang:cpp poj/1331.cc %}

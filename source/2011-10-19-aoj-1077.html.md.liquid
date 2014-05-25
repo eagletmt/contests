@@ -1,0 +1,19 @@
+---
+layout: post
+title: "AOJ 1077 - The Great Summer Contest"
+---
+[http://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=1077](http://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=1077)
+
+## 解法
+- Math と DP
+- Greedy と Graph
+- Geometry と Other
+
+はそれぞれ区別しなくていい．
+
+なるべく4のコンテストを開いて，残りの問題で特化したコンテストを開けばいいのでは，と思って提出したが WA．
+
+反例は 4 2 4 0 0 0 のようなケースで，これには 3 と答えるべき．
+
+ということで，4 のコンテストを開く回数を (開くことができる最大の数)-2 から調べて，最大となるものを答えた．
+{% include_code lang:cpp aoj/1077.cc %}

@@ -1,0 +1,25 @@
+---
+layout: post
+title: "POJ 3055 - Digital Friends"
+---
+[http://poj.org/problem?id=3055](http://poj.org/problem?id=3055)
+
+## 概要
+同じ十進の数字からなる数同士を friends と呼ぶ．
+例えば 123 と 32331313323213 は friends であり，123 と 22121221 は friends ではない．
+
+片方の数の隣合った2つの数字を変えることで friends になるような数同士で，かつ friends でないものを almost friends と呼ぶ．
+ここで「変える」というのは，隣り合った2つの数字を a, b とすると，それを a-1 と b+1 あるいは a+1 と b-1 にすることとする．
+ただし，変えた結果の数字が 0 から 9 の範囲に収まっており，かつ leading zero を作らないときに限る．
+
+例えば 04 を 13 に変えることで friends になるため 123 と 2223042 は almost friends である．
+
+与えられた2つの数 x, y が friends か almost friends かそのいずれでもないかを答える．
+
+## 制約
+- 0 < x, y < 10^100
+
+## 解法
+やるだけ．
+
+{% include_code lang:cpp poj/3055.cc %}

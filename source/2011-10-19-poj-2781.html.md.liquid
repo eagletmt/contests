@@ -1,0 +1,21 @@
+---
+layout: post
+title: "POJ 2781 - The mysterious X network"
+---
+[http://poj.org/problem?id=2781](http://poj.org/problem?id=2781)
+
+## 概要
+N 人について誰と誰が camarade かの関係が与えられる．
+camarade の関係は対称的である．
+
+c1 から c2 まで camarade の関係にある人同士のみで伝えていったとき，仲介する必要のある人数の最小値を答える．
+
+この camarade 関係による X network は連結であるとする．
+
+## 制約
+- 1 <= N <= 10^5
+
+## 解法
+BFS するだけ．
+
+{% include_code lang:cpp poj/2781.cc %}

@@ -1,0 +1,29 @@
+---
+layout: post
+title: "POJ 3181 - Dollar Dayz"
+---
+[http://poj.org/problem?id=3181](http://poj.org/problem?id=3181)
+
+## 概要
+N ドル使って 1ドル, ..., Kドルの商品を買うとき，買い方が何通りあるか答える．
+
+## 制約
+- 1 <= N <= 1000
+- 1 <= K <= 100
+
+## 解法
+
+    dp[n][k] := n ドルで 1ドル, ..., kドルの商品を買うときの買い方
+
+で DP．
+
+`dp[n][0]` を 1 として，
+
+    dp[n][k] = Σdp[n-i][i]
+
+で更新する．
+
+
+最大ケース `dp[1000][100]` の値は unsigned long long にも収まらないので多倍長計算が必要．
+
+{% include_code lang:java poj/3181.java %}

@@ -1,0 +1,34 @@
+---
+layout: post
+title: "POJ 2082 - Terrible Sets"
+---
+[http://poj.org/problem?id=2082](http://poj.org/problem?id=2082)
+
+## 概要
+数列 w[i], h[i] を i = 1, ..., n に対して
+
+![w_i, h_i \in \mathbb{N}](http://chart.apis.google.com/chart?cht=tx&chl=w_i%2C%20h_i%20%5Cin%20%5Cmathbb%7BN%7D)
+
+![w_0 = 0](http://chart.apis.google.com/chart?cht=tx&chl=w_0%20%3D%200)
+
+とし，さらに
+
+![B = \left{<x, y> \mid x, y \in \mathbb{N}, \exists i > 0, 0 \le y \le h_i, \bigsum_{j = 0}^{i-1}w_i  \le x \le \bigsum_{j = 0}^{i} w_j \right}](http://chart.apis.google.com/chart?cht=tx&chl=B%20%3D%20%5Cleft%7B%3Cx%2C%20y%3E%20%5Cmid%20x%2C%20y%20%5Cin%20%5Cmathbb%7BN%7D%2C%20%5Cexists%20i%20%3E%200%2C%200%20%5Cle%20y%20%5Cle%20h_i%2C%20%5Cbigsum_%7Bj%20%3D%200%7D%5E%7Bi-1%7Dw_i%20%20%5Cle%20x%20%5Cle%20%5Cbigsum_%7Bj%20%3D%200%7D%5E%7Bi%7D%20w_j%20%5Cright%7D)
+
+![S=\left{A\mid W, H \in \mathbb{R}^+, A = WH \wedge \exists x_0, y_0 \in \mathbb{N} \mbox{such that} \left{ <x, y>\mid x_0 \le x \le x_0+W \wedge y_0 \le y \le y_0+H \right} \subseteq B \right}](http://chart.apis.google.com/chart?cht=tx&chl=S%3D%5Cleft%7BA%5Cmid%20W%2C%20H%20%5Cin%20%5Cmathbb%7BR%7D%5E%2B%2C%20A%20%3D%20WH%20%5Cwedge%20%5Cexists%20x_0%2C%20y_0%20%5Cin%20%5Cmathbb%7BN%7D%20%5Cmbox%7Bsuch%20that%7D%20%5Cleft%7B%20%3Cx%2C%20y%3E%5Cmid%20x_0%20%5Cle%20x%20%5Cle%20x_0%2BW%20%5Cwedge%20y_0%20%5Cle%20y%20%5Cle%20y_0%2BH%20%5Cright%7D%20%5Csubseteq%20B%20%5Cright%7D)
+
+と B, S を定義したときの S の最大値を答える．
+
+## 制約
+- 1 <= n <= 50000
+- w[1]\*h[1] + ... + w[n]\*h[n] < 10^9
+
+## 解法
+よく読むと，B は二次元上に 幅 w[i] で高さ h[i] の長方形を地面の上に左から並べていったときの全体の領域を表していて，S はその中に作れる，辺が軸に平行な任意の長方形の面積を表している．
+
+例えばサンプルはそれぞれ図のような 3 つの長方形を表していて，答えは色が塗られた領域の面積である．
+
+![2082-1.svg](/images/poj/2082-1.svg)
+![2082-2.svg](/images/poj/2082-2.svg)
+
+{% include_code lang:cpp poj/2082.cc %}

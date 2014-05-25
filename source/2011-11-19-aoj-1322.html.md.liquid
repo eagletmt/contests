@@ -1,0 +1,27 @@
+---
+layout: post
+title: "AOJ 1322 - ASCII Expression"
+---
+[http://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=1322](http://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=1322)
+
+## 概要
+与えられた BNF に従った二次元で表現された n 個の数式を評価した値を modulo 2011 で答える．
+
+## 制約
+- n <= 20
+- 各行の長さ <= 80
+
+## 解法
+二次元のパースということでかなり重い実装に見えるが，
+
+- top
+- base
+- bottom
+
+の状態が追加されただけで普通に LL(1) なパースをすればいい．
+
+通常は base の行だけを見て処理をし，fraction のときは top, bottom を base の上側と下側に分けて，それぞれの間で base を見つけ，再帰的にパースする．
+
+x/y modulo 2011 はフェルマーの小定理から x * y^2009 で計算できる．
+
+{% include_code lang:cpp aoj/1322.cc %}

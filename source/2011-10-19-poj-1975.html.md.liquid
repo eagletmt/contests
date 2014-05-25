@@ -1,0 +1,19 @@
+---
+layout: post
+title: "POJ 1975 - Median Weight Bead"
+---
+[http://poj.org/problem?id=1975](http://poj.org/problem?id=1975)
+
+## 概要
+N 個のビーズに関して「i 番目のビーズは j 番目のビーズよりも重い」という情報が M 個与えられる．
+
+このとき，中央値になりえないビーズの数を答える．
+
+## 制約
+- 1 <= N <= 99
+- M に関しては無し?
+
+## 解法
+ワーシャル・フロイドっぽく「i 番目のビーズよりも(重い|軽い)ビーズ」の数を求めて数えるだけ．
+
+{% include_code lang:cpp poj/1975.cc %}

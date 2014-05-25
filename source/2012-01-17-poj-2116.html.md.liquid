@@ -1,0 +1,19 @@
+---
+layout: post
+title: "POJ 2116 - Death to Binary?"
+---
+[http://poj.org/problem?id=2116](http://poj.org/problem?id=2116)
+
+## 概要
+0 と 1 の列からなり，右から i 番目のビットの weight がフィボナッチ数列の i 項目であるような Fibonacci-base の数を考える．
+「1 のビットが隣り合ってはならない」とすると，表現は一意になる．この表現のしかたを canonical と呼ぶ．
+
+2つの Fibonacci-base な数 (canonical とは限らない) が与えられたとき，それぞれの canonical な表現と，和の canonical な表現を答える．
+
+## 制約
+- 与えられる数は Fibonacci-base で 40 桁まで
+
+## 解法
+やるだけ．
+
+{% include_code lang:cpp poj/2116.cc %}

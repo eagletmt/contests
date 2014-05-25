@@ -1,0 +1,22 @@
+---
+layout: post
+title: "POJ 3130 - How I Mathematician Wonder What You Are!"
+---
+[http://poj.org/problem?id=3130](http://poj.org/problem?id=3130)
+
+## 概要
+平面図形 F について，任意の点 P ∈ F に対して，線分 CP が F に含まれるような点 C ∈ F が存在するとき，F は *start-shaped* である．
+
+与えられた n 角形が *start-shaped* であるかどうか答える．
+
+## 制約
+- 4 <= n <= 50
+- 0 <= 座標 <= 10000
+- 多角形の座標は反時計回りに与えられる
+- 多角形は simple である．つまり，辺は交差していない
+- 各辺を無限に伸ばしたとしても，3つ以上の辺が1点で交わることはない(?)
+
+## 解法
+[POJ 3335 - Rotating Scoreboard](/blog/poj-3335/) と同じ．
+
+{% include_code lang:cpp poj/3130.cc %}

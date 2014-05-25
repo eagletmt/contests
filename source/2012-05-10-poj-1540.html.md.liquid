@@ -1,0 +1,20 @@
+---
+layout: post
+title: "POJ 1540 - The Finite State Text-Processing"
+---
+[http://poj.org/problem?id=1540](http://poj.org/problem?id=1540)
+
+## 概要
+有限状態オートマトンの仕様が与えられるので、それに従って入力文字列を処理したときの出力を答える。
+オートマトンの仕様の意味はめんどくさいので問題文を参照…
+
+## 制約
+- 状態のラベルの文字列は1文字以上8文字以下であり、case-sensitive であり unique である
+- 最初の状態は START であり、受理状態は END である
+- 入力文字列は必ず受理される
+
+## 解法
+やるだけ。
+実装ゲーではあるものの、単純なオートマトンだしこれといって実装が重いわけではない。
+
+{% include_code lang:cpp poj/1540.cc %}

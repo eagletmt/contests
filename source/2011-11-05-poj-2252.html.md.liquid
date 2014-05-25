@@ -1,0 +1,19 @@
+---
+layout: post
+title: "POJ 2252 - Equation Solver"
+---
+[http://poj.org/problem?id=2252](http://poj.org/problem?id=2252)
+
+## 概要
+与えられた EBNF に従った一次方程式が与えられるので，その解を答える．
+
+ただし，解が無いときは「No solution.」と答え，解が無数にあるときは「Infinitely many solutions.」と答える．
+
+## 制約
+- 1つの式の長さは100文字未満．
+- すべての部分式も一次式になる．つまり `x*x-x*x+x=0` のような入力は無い．
+
+## 解法
+構文解析しながら，一次式の加算・減算・乗算をするだけ．
+
+{% include_code lang:cpp poj/2252.cc %}

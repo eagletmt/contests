@@ -1,0 +1,28 @@
+---
+layout: post
+title: "AOJ 2301 - Sleeping Time"
+---
+[http://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=2301](http://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=2301)
+
+## 概要
+範囲 [R, L) について，T を目指して K 回の二分探索する．
+しかし，確率 P で誤った方を選択してしまう．
+
+このとき，最終的に辿りつく値 T' が `T-E <= T' <= T+E` となる確率を求める．
+
+## 制約
+- 0 <= K <= 30
+- 0 <= R <= L <= 12
+- 0 <= P <= 1
+- 0 <= E <= 12
+- 0 <= T <= 12
+
+## 解法
+シミュレーション．
+一見 2^K になりそうに見えるが，
+
+- [R, L) が T ± E の範囲から完全に外れたら 0
+- [R, L) が T ± E の範囲に完全に含まれたら 1
+
+という枝刈りがかなりできるので大丈夫．
+{% include_code lang:cpp aoj/2301.cc %}

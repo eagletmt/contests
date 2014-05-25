@@ -1,0 +1,17 @@
+---
+layout: post
+title: "POJ 3320 - Jessica's Reading Problem"
+---
+[http://poj.org/problem?id=3320](http://poj.org/problem?id=3320)
+
+## 概要
+P ページの本の各ページが 32bit の符号付き整数に収まる数字で表されている．
+本のすべての内容を含んでいるような連続したページで，最小の長さを答える．
+
+## 制約
+- 1 <= P <= 1000000
+
+## 解法
+最初に map につっこんで数字を正規化しつつ何種類あるのか数えておいて，しゃくとりメソッド的なかんじで先頭から見ていく．
+
+{% include_code lang:cpp poj/3320.cc %}

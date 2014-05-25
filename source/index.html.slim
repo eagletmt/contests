@@ -1,0 +1,15 @@
+---
+pageable: true
+---
+
+ol.article-list
+  - page_articles.each do |article|
+    li.article-title
+      span.article-date= article.date.strftime('%F')
+      = link_to article.title, article.url
+
+footer
+  - if next_page
+    = link_to 'Older', next_page.url, class: 'prev-page'
+  - if prev_page
+    p= link_to 'Newer', prev_page.url, class: 'next-page'

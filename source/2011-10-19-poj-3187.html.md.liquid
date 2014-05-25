@@ -1,0 +1,20 @@
+---
+layout: post
+title: "POJ 3187 - Backward Digit Sums"
+---
+[http://poj.org/problem?id=3187](http://poj.org/problem?id=3187)
+
+## 概要
+1 .. N の N 個の数字を並べて，パスカルの三角形のように隣接する数値を足していくと最後は1つの数値になる．
+N とその数値だけが与えられたとき，一番最初の N 個の数字の並び方を答える．
+
+## 制約
+- 1 <= N <= 10
+
+## 解法
+next_permutation で全探索．
+シミュレーション的に実際に足していくと遅いので，最初の並びが a[0] .. a[N-1] だったときに，最後の値は
+    Σ(a[i] * c[N-1][i])
+であることを利用して計算する(c は combination)．
+
+{% include_code lang:cpp poj/3187.cc %}

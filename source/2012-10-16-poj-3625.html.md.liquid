@@ -1,0 +1,21 @@
+---
+layout: post
+title: "POJ 3625 - Building Roads"
+---
+[http://poj.org/problem?id=3625](http://poj.org/problem?id=3625)
+
+## 概要
+\\(N\\) 個のファームがそれぞれ座標 \\((X\_i, Y\_i)\\) にある。
+すでに \\(M\\) 本の道がファームを双方向に繋いでいる。
+
+すべてのファームを繋ぐのに追加する必要がある最小の道の長さを答える。
+
+## 制約
+- \\(1 \\le N \\le 1000\\)
+- \\(0 \\le X\_i, Y\_i \\le 10 ^ 6\\)
+- \\(1 \\le M \\le 1000\\)
+
+## 解法
+最小全域木を求めるだけ。
+
+{% include_code lang:cpp poj/3625.cc %}

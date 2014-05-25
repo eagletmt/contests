@@ -1,0 +1,21 @@
+---
+layout: post
+title: "POJ 2563 - Demerit Points"
+---
+[http://poj.org/problem?id=2563](http://poj.org/problem?id=2563)
+
+## 概要
+運転免許を得た日付と、事故を起こしたときの日付およびそのときの点数が与えられる。
+merit point が5になるまでの過程を出力する。
+
+demerit point が無いとき、2年毎に merit point が1つ増える。
+demerit point があるとき、1年毎に半分(切り捨て)になる。ただし、demerit が2以下のときは0になる。
+ただし、事故を起こした場合はリセットされ、その時点から再び2年あるいは1年数える。
+
+merit point が無いとき、事故を起こすと demerit point に点数が加算される。
+merit point があるとき、事故を起こすと merit point の2倍の点数でキャンセルできる。
+
+## 解法
+やるだけ。
+
+{% include_code lang:cpp poj/2563.cc %}

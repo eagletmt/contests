@@ -1,0 +1,29 @@
+---
+layout: post
+title: "POJ 3078 - Q"
+---
+[http://poj.org/problem?id=3078](http://poj.org/problem?id=3078)
+
+## 概要
+m 個の要素を持つキューが与えられる．
+n 個の _starting-position_ to _requested-position_ という命令が与えられ，_starting-position_ にある要素を _requested-position_ に移動しろということを表す．
+
+これら n 個の命令は同時に実行される．つまり，
+    item1 item2 item3
+というキューに対して
+
+- 1 to 3
+- 3 to 2
+
+という命令がきたら，結果は
+    item2 item3 item1
+になる．
+
+## 制約
+- 1 <= m, n <= 20
+- 各要素は8文字以下のアルファベットから成る
+
+## 解法
+命令通りにシミュレーション．
+
+{% include_code lang:cpp poj/3078.cc %}

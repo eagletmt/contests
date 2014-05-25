@@ -1,0 +1,15 @@
+---
+layout: post
+title: "AOJ 2298 - Starting Line"
+---
+[http://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=2298](http://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=2298)
+
+## 解法
+ニンジンを使っていないときは，ニンジンをとった地点で使うのが最適．
+
+ニンジンを使っているときは，まだニンジンを持てる場合は，使わずに持っておいて，ニンジンの効果が切れたときに使うのが最適．
+
+これ以上持てない場合は，その場で使ってしまうのが最適．
+
+このような戦略をイベントドリブンなかんじで実装した．
+{% include_code lang:cpp aoj/2298.cc %}

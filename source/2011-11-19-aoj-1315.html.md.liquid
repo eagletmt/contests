@@ -1,0 +1,18 @@
+---
+layout: post
+title: "AOJ 1315 - Gift from the Goddess of Programming"
+---
+[http://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=1315](http://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=1315)
+
+## 概要
+女神とプログラマたちの祭壇への出入りの記録が与えられるので，プログラマが女神と一緒にいた時間の最大値を答える．
+
+ただし祭壇は 00:00 に閉められるため，入力の時間は 00:01 から 23:59 であり，女神やプログラマが 00:00 になっても出ていかないような入力は無い．
+
+## 制約
+- 入力行 <= 1000
+
+## 解法
+日付で区切り，その間の記録を見て女神と一緒にいた時間を足していくだけ．
+
+{% include_code lang:cpp aoj/1315.cc %}

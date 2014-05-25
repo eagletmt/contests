@@ -1,0 +1,19 @@
+---
+layout: post
+title: "POJ 3335 - Rotating Scoreboard"
+---
+[http://poj.org/problem?id=3335](http://poj.org/problem?id=3335)
+
+## 概要
+n 角形のホールが与えられる．
+このホールの中に，ホールの辺上のどの位置からも見えるような場所にスコアボードを置きたい．
+そのような位置が存在するかどうかを答える．
+スコアボードは点と考えてよい．
+
+## 制約
+- 3 <= n <= 100
+
+## 解法
+[POJ 1279 - Art Gallery](/blog/poj-1279) と同様に辺に沿って多角形を切断して，多角形が最後まで残っていたら YES，そうでなかったら NO．
+
+{% include_code lang:cpp poj/3335.cc %}

@@ -1,0 +1,22 @@
+---
+layout: post
+title: "POJ 1144 - Network"
+---
+[http://poj.org/problem?id=1144](http://poj.org/problem?id=1144)
+
+## 概要
+頂点数 N の連結な無向グラフが与えられる．
+
+ノードは交換局を表わし，エッジは電話線を表わしている．
+ある交換局が機能しなくなったときにグラフが連結でなくなるとき，その交換局は critical であると言う．
+critical な交換局が何個あるか答える．
+
+## 制約
+- N < 100
+
+## 解法
+critical な頂点というのは，グラフ理論の言葉では関節点と言う．
+
+関節点は強連結成分分解のときのような DFS によって求めることができる．
+
+{% include_code lang:cpp poj/1144.cc %}

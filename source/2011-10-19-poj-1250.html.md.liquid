@@ -1,0 +1,22 @@
+---
+layout: post
+title: "POJ 1250 - Tanning Salon"
+---
+[http://poj.org/problem?id=1250](http://poj.org/problem?id=1250)
+
+## 概要
+N 個の tanning bed を持つ日焼けサロンがある．
+客がどのタイミングで来て，どのタイミングで出ていったかが与えられる．
+新しく客がきたときにどの tanning bed も空いていないと，その客は店内で空くのを待つことになる．
+tanning bed が空いたときは，待っている客の中で最も早く来ていた客がその tanning bed に入る．
+
+tanning bed に入ることなく出ていった客が何人いたかを答える．
+
+## 制約
+- 1 <= N <= 20
+- 1 <= 客の数 <= 26
+
+## 解法
+実際にシミュレーションして数えるだけ．
+
+{% include_code lang:cpp poj/1250.cc %}

@@ -1,0 +1,35 @@
+---
+layout: post
+title: "POJ 1496 - Word Index"
+---
+[http://poj.org/problem?id=1496](http://poj.org/problem?id=1496)
+
+## 概要
+小文字のアルファベットのみを使ってできる strict lexicographic order な文字列を辞書順に番号を付けていく．
+
+- a -> 1
+- ...
+- z -> 26
+- ab -> 27
+- ...
+- az -> 51
+- bc -> 52
+- ...
+- vwxyz -> 83681
+
+である．
+
+与えられた文字列に対して，その番号を答える．
+ただし，不正な文字列 (strict lexicographic order でない文字列)であった場合は 0 を出力する．
+
+## 制約
+- 答えの番号は 83681 を越えない
+
+## 解法
+文字列 s の番号は，s の長さを L とすると
+
+    Σ(C(26, i+1) - C(26-(s[i]-'a'+1), L-i))
+
+で計算できる．ここで `C(n,k)` は組み合わせの数．
+
+{% include_code lang:cpp poj/1496.cc %}

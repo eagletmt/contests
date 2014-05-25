@@ -1,0 +1,18 @@
+---
+layout: post
+title: "POJ 2160 - Box"
+---
+[http://poj.org/problem?id=2160](http://poj.org/problem?id=2160)
+
+## 概要
+与えられた6つの長方形から直方体が作れるかどうかを答える．
+
+## 制約
+- 各長方形の幅 w, 高さ h は 1 <= w, h <= 10000
+
+## 解法
+やるだけ．
+
+まずちゃんとペアが作れるかどうか確認し，縦横を入れ替えつつ全組み方を試した．
+
+{% include_code lang:cpp poj/2160.cc %}

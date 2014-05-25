@@ -1,0 +1,17 @@
+---
+layout: post
+title: "POJ 3797 - Tiling a Grid With Dominoes"
+---
+[http://poj.org/problem?id=3793](http://poj.org/problem?id=3793)
+
+## 概要
+2 x 1 の長方形を使って何通りの方法で 4 x W の長方形を作ることができるかを答える．
+
+## 制約
+- 答えは 32-bit の整数に収まる
+
+## 解法
+漸化式を立てて計算するだけ．
+W はだいたい 30 くらいまでなのでメモ化は必要無いかなと思いつつ，一応メモ化再帰で計算した．
+
+{% include_code lang:cpp poj/3797.cc %}

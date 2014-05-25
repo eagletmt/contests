@@ -1,0 +1,17 @@
+---
+layout: post
+title: "POJ 3331 - The Idiot of the Year Contest!"
+---
+[http://poj.org/problem?id=3331](http://poj.org/problem?id=3331)
+
+## 概要
+日にち day と0から9までの数字 digit が与えられるので，day の階乗に出現する digit の数を答える．
+
+## 制約
+- 0 <= digit <= 9
+- 明示的に書いてないけど「the day of the year」なのでたぶん 0 <= day <= 366
+
+## 解法
+Java の BigInteger で実際に階乗を計算して数えるだけ．
+
+{% include_code lang:java poj/3331.java %}

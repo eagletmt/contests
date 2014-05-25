@@ -1,0 +1,17 @@
+---
+layout: post
+title: "AOJ 0573 - Night Market"
+---
+[http://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=0573](http://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=0573)
+
+## 解法
+
+    dp[i][j] = 時刻 j に i 番目の店にいるときの満足度の最大値
+
+という DP 表を
+
+    dp[i][j] = max { dp[i-1][j - B[i]] + A[i]  if (S <= j - B[i] || j <= S) }
+
+と埋める。
+
+{% include_code lang:cpp aoj/0573.cc %}

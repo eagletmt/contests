@@ -1,0 +1,23 @@
+---
+layout: post
+title: "POJ 1580 - String Matching"
+---
+[http://poj.org/problem?id=1580](http://poj.org/problem?id=1580)
+
+## 概要
+2つの文字列 word1, word2 に対して、類似度 appx を
+
+    appx(word1, word2) := (2 * common-letters(word1, word2))/(length(word1) + length(word2))
+
+と定義する。
+common-letters(word1, word2) は、word1 の連続する部分文字列であり、かつ word2 の連続する部分文字列であるような最長の文字列の長さである。
+
+与えられた2つの文字列の appx を答える。
+
+## 制約
+- 書かれてないけど、2つの文字列の長さを \\(N, M\\) とすると \\(O(MN)\\) の解法で余裕で通った。
+
+## 解法
+word1, word2 のそれぞれをずらしつつ連続して一致する長さを数えるだけ。
+
+{% include_code lang:cpp poj/1580.cc %}

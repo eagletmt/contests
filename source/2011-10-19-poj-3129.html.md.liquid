@@ -1,0 +1,25 @@
+---
+layout: post
+title: "POJ 3129 - How I Wonder What You Are!"
+---
+[http://poj.org/problem?id=3129](http://poj.org/problem?id=3129)
+
+## 概要
+3次元上の n 個の星の座標 (sx, sy, sz) が与えられる．
+m 個の望遠鏡が原点にあり，その望遠鏡からは原点に関して (tx, ty, tz) となす角が φ 以下にある星を見ることができる．
+
+n 個のうち何個の星を見ることができるかを答える．
+
+## 制約
+- テストケース < 50
+- 0 < n <= 500
+- 0 < m <= 50
+- -1000 <= sx, sy, sz <= 1000, (sx, sy, sz) != (0, 0, 0)
+- -1000 <= tx, ty, tz <= 1000, (tx, ty, tz) != (0, 0, 0)
+- 0 <= φ <= π/2
+- | ある星とある望遠鏡の (tx, ty, tz) のなす角 | > 10^-8
+
+## 解法
+やるだけ．
+
+{% include_code lang:cpp poj/3129.cc %}

@@ -1,0 +1,20 @@
+---
+layout: post
+title: "POJ 3292 - Semi-prime H-numbers"
+---
+[http://poj.org/problem?id=3292](http://poj.org/problem?id=3292)
+
+## 概要
+4n+1 の形で表わされる正の整数を H-numbers と呼ぶ．H-numbers は乗算に関して閉じている．
+
+H-number h が単位元ではなく，そして2つの H-number の積で表わしたとき 1 * h の1通りしかないとき，h は H-prime であると呼ぶ．
+
+2つの H-prime の積で表わされる H-number を H-semi-prime とするとき，与えられた H-number h 以下の H-semi-prime がいくつあるか答える．
+
+## 制約
+- h <= 1000001
+
+## 解法
+あらかじめ，エラトステネスの篩の要領で H-prime をすべて生成し，H-semi-prime をすべて生成して数を数えておく．
+
+{% include_code lang:cpp poj/3292.cc %}

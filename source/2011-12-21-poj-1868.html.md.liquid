@@ -1,0 +1,19 @@
+---
+layout: post
+title: "POJ 1868 - Antiarithmetic?"
+---
+[http://poj.org/problem?id=1868](http://poj.org/problem?id=1868)
+
+## 概要
+順列 p について，長さが2より大きい等差数列をなしている部分列が存在しないとき，p を antiarithmetic と呼ぶ．
+たとえば 2, 0, 1, 4, 3 は antiarithmetic であり，0, 5, 4, 3, 1, 2 は部分列 0, 1, 2 が長さ3の等差数列をなしているので antiarithmetic ではない．
+
+与えられた大きさ n の順列が antiarithmetic であるかどうか答える．
+
+## 制約
+- 3 <= n <= 10^4
+
+## 解法
+与えられるのは順列なので，`a[i] = i が何番目にあるか` という配列をつくって，`a[i] < a[i+d] < a[i+2*d]` または `a[i] > a[i+d] > a[i+2*d]` となるようなものが存在するかどうかチェックすればいい．
+
+{% include_code lang:cpp poj/1868.cc %}

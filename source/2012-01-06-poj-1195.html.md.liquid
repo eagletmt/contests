@@ -1,0 +1,31 @@
+---
+layout: post
+title: "POJ 1195 - Mobile phones"
+---
+[http://poj.org/problem?id=1195](http://poj.org/problem?id=1195)
+
+## 概要
+行列について，以下の命令を処理する
+
+- 0 S
+  - S * S の行列のすべての要素を 0 で初期化する
+- 1 X Y A
+  - (X, Y) の要素の値に A を足す (A は負の値も取り得る)
+- 2 L B R T
+  - L <= X <= R, B <= Y <= T なるすべての (X, Y) の要素の和を答える
+- 3
+  - 終了する
+
+## 制約
+- 1 <= S <= 1024
+- 各要素の値 V: 0 <= V <= 32767
+- -32768 <= A <= 32767
+- 処理の途中で V が負になるような A はこない
+- 命令の数 U: 3 <= U <= 60002
+- 行列全体の要素の和 M: M <= 2^30
+
+## 解法
+二次元の BinaryIndexedTree．
+ちなみに一次元の BinaryIndexedTree の配列でも 4047MS で通った．
+
+{% include_code lang:cpp poj/1195.cc %}

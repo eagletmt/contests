@@ -1,0 +1,19 @@
+---
+layout: post
+title: "POJ 3903 - Stock Exchange"
+---
+[http://poj.org/problem?id=3903](http://poj.org/problem?id=3903)
+
+## 概要
+L 個の要素からなる数列 p[i] が与えられ，
+    p[i[1]] < p[i[2]] < ... < p[i[k]] with i[1] < i[2] < ... < i[k]
+を満たす部分列を作れる最大の k を答える．
+
+## 制約
+- L <= 100000
+
+## 解法
+いわゆる最長増加部分列 (Longest Increasing Subsequence) 問題．
+二分探索で O(L log L)．
+
+{% include_code lang:cpp poj/3903.cc %}

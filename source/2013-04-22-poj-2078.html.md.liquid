@@ -1,0 +1,19 @@
+---
+layout: post
+title: "POJ 2078 - Matrix"
+---
+[http://poj.org/problem?id=2078](http://poj.org/problem?id=2078)
+
+## 概要
+\\(n \\times n\\) の行列 \\(A\_{i, j}\\) が与えられる。
+ある \\(i\\) 番目の行について、任意の数だけ要素を右にずらす操作を SHIFT という。
+うまく SHIFT 操作を行って、\\(\\mbox{max}\_{0 \\le j < n} \\{c\_j | c\_j = \\Sigma\_{0 \\le i < n} A\_{i, j} \\}\\) を最小化したときの値を答える。
+
+## 制約
+- \\(1 \\le n \\le 7\\)
+- \\(|A\_{i, j}| < 10 ^ 4\\)
+
+## 解法
+SHIFT のやり方は \\(n ^ n \\le 7 ^ 7 = 823543\\) 通りしかないので、全通り試して最小値をとるだけ。
+
+{% include_code lang:cpp poj/2078.cc %}

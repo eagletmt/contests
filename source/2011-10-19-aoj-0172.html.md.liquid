@@ -1,0 +1,14 @@
+---
+layout: post
+title: "AOJ 0172 - Doctor's Research Rooms"
+---
+[http://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=0172](http://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=0172)
+
+## 解法
+- 今どの部屋にいるか
+- 各部屋の電気が点いているかどうか
+
+を状態として BFS．
+
+今いる部屋の電気を消さないことと，電気を操作するのは部屋番号について昇順と指定されていることに注意．
+{% include_code lang:cpp aoj/0172.cc %}

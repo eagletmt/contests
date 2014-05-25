@@ -1,0 +1,28 @@
+---
+layout: post
+title: "AOJ 2293 - Dangerous Tower"
+---
+[http://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=2293](http://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=2293)
+
+## 解法
+[2011/Practice/夏合宿/講評 - ACM-ICPC Japanese Alumni Group](http://acm-icpc.aitea.net/index.php?2011%2FPractice%2F%B2%C6%B9%E7%BD%C9%2F%B9%D6%C9%BE) を参照．
+
+解説スライドにあるように，横の長さが異なるように積み木を選べばそれらをすべて使える点に注目して最小費用流の問題に落とす．
+
+積み木 i の使い方は
+
+- A[i] を横にして +B[i]
+- B[i] を横にして +A[i]
+- 使わずに +0
+
+の3つ．これらを
+
+- A[i] のノードへコスト -B[i] のエッジ
+- B[i] のノードへコスト -A[i] のエッジ
+- ダミーノードへコスト 0 のエッジ
+
+で表す．
+
+同じ横の長さは1つまでしか使えないことを，横の長さのノードからシンクへの容量1のエッジで表す．
+ダミーノードからシンクへのエッジの容量は無限大．
+{% include_code lang:cpp aoj/2293.cc %}

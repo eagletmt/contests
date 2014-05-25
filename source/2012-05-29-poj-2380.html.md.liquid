@@ -1,0 +1,22 @@
+---
+layout: post
+title: "POJ 2380 - Sales Report"
+---
+[http://poj.org/problem?id=2380](http://poj.org/problem?id=2380)
+
+## 概要
+セールスポイントが \\(s\_i\\) の商品 \\(q\_i\\) が \\(v\_i\\) 個売れた、という形式の記録が
+\\(N\\) 個与えられる。
+それぞれの商品とセールスポイントについて合計でどれだけ売れたかを表の形で答える。
+
+## 制約
+- \\(1 \\le N \\le 5 \\cdot 10 ^ 5\\)
+- \\(1 \\le q\_1, s\_i, v\_i \\le 10 ^ 9\\)
+- 表のマスの数は 10^8 以下
+- 表の各マスの値は 2^31 - 1 以下
+
+## 解法
+やるだけだが数が多くて TLE しやすい。
+Java ルール + HashMap + 出力行を StringBuilder で構築してから println で無理矢理通した。
+
+{% include_code lang:cpp poj/2380.java %}

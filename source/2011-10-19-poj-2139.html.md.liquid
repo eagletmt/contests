@@ -1,0 +1,23 @@
+---
+layout: post
+title: "POJ 2139 - Six Degrees of Cowvin Bacon"
+---
+[http://poj.org/problem?id=2139](http://poj.org/problem?id=2139)
+
+## 概要
+N 頭の牛に関して，M 本の各映画について，それぞれどの牛が出演したかの情報が与えられる．
+
+同じ映画にある2頭の牛が出演したとき，互いに「1 degree away」であるという．
+同じ映画に出演したことはないが，どちらもある別の牛となら同じ映画に出演したことがあるなら，互いに「2 degree away」といい，以降同様に degree を定める．
+
+degree の平均が最も小さい牛に興味がある．その牛の degree の平均値の100倍の値を整数値(切り捨て)で答える．
+
+## 制約
+- 2 <= N <= 300
+- 1 <= M <= 10000
+- ある牛から別の牛への relationship path は必ず存在する
+
+## 解法
+ワーシャルフロイドするだけ．
+
+{% include_code lang:cpp poj/2139.cc %}

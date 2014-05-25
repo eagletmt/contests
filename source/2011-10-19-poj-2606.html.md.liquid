@@ -1,0 +1,20 @@
+---
+layout: post
+title: "POJ 2606 - Rabbit hunt"
+---
+[http://poj.org/problem?id=2606](http://poj.org/problem?id=2606)
+## 概要
+2次元平面上の整数値の座標に N 匹のウサギがいる．
+
+一直線に並んでいるウサギは同時に撃つことができる．
+
+最大で同時に何匹撃てるかを答える．
+
+## 制約
+- 2 <= N <= 200
+- -100 <= x,y <= 1000
+
+## 解法
+`O(N^3)` で全通り試して数える．
+
+{% include_code lang:cpp poj/2606.cc %}

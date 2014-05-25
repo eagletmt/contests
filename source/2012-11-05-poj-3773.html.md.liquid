@@ -1,0 +1,17 @@
+---
+layout: post
+title: "POJ 3773 - String-Matching Automata"
+---
+[http://poj.org/problem?id=3773](http://poj.org/problem?id=3773)
+
+## 概要
+与えられた文字列にマッチするようなオートマトンを構成したときの遷移表を答える。
+
+## 制約
+- 文字列は小文字のアルファベットのみからなる
+- 文字列の長さは \\(10 ^ 4\\) 以下
+
+## 解法
+辞書の文字列が1つと考えると Aho Corasick 法がそのまま使える。
+
+{% include_code lang:cpp poj/3773.cc %}

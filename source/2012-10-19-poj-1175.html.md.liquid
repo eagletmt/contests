@@ -1,0 +1,26 @@
+---
+layout: post
+title: "POJ 1175 - Starry Night"
+---
+[http://poj.org/problem?id=1175](http://poj.org/problem?id=1175)
+
+## 概要
+\\(W \\times H\\) の 0, 1 からなるグリッドが与えられ、1 はそこに星があることを表す。
+水平方向、垂直方向、あるいは対角線方向に隣接しているような空でない星の集まりを cluster と呼ぶ。
+
+ある cluster 同士が similar とは、星の数が同じであり、向きを無視した場合の形が同じであるようなものを言う。
+一般に、1つの cluster について8種類の向きが考えられる (figure 1)。
+
+similar な cluster には同じ名前をつけるようにして、すべての cluster に名前をつけたものを答える。
+名前とは小文字のアルファベット1文字で、左上から順に a, b, ... とつける。
+
+## 制約
+- \\(0 \\le W, H \\le 100\\)
+- \\(0 \\le \\mbox{cluster の数} \\le 500\\)
+- \\(1 \\le \\mbox{1つの cluster に属する星の数} \\le 160\\)
+
+## 解法
+がんばって実装するだけ。
+cluster は set で座標の集合として表現した。
+
+{% include_code lang:cpp poj/1175.cc %}

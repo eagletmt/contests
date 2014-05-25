@@ -1,0 +1,19 @@
+---
+layout: post
+title: "POJ 1258 - Agri-Net"
+---
+[http://poj.org/problem?id=1258](http://poj.org/problem?id=1258)
+
+## 概要
+N 個の農場を光ファイバーで繋ぐ．
+ある農場と別の農場を繋ぐのに必要なコストが与えられる．
+
+どの農場から別のどの農場への経路が存在するように繋いだとき，それに必要な最小のコストを答える．
+
+## 制約
+- 3 <= N <= 100
+
+## 解法
+最小全域木．なぜか priority_queue を使ってた．
+
+{% include_code lang:cpp poj/1258.cc %}

@@ -1,0 +1,26 @@
+---
+layout: post
+title: "POJ 3067 - Japan"
+---
+[http://poj.org/problem?id=3067](http://poj.org/problem?id=3067)
+
+## 概要
+N 個の東海岸の街と M 個の西海岸の街の間に K 本の真っ直ぐな superhighway をつくる．
+それぞれの街は北から 1, 2 ... と番号が割り当てられている．
+そのときに，superhighway が交差している箇所が何箇所あるかを答える．
+
+一箇所で交差している superhighway は高々2本と考えてよい．
+
+## 制約
+- N, M <= 1000
+- K についての制約は無い?
+
+## 解法
+superhighway が結ぶ街の番号の大小関係が逆転している数を数えればいい．
+
+これをナイーブに数えると O( K^2 ) かかる．
+K についての制約が無いので N*M = 10^6 くらいまできてもおかしくないので，これだと TLE する．
+
+そこで Binary Indexed Tree を使うことでこれを O(K log K) で数えた．
+
+{% include_code lang:cpp poj/3067.cc %}

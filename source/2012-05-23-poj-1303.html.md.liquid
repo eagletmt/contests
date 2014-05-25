@@ -1,0 +1,21 @@
+---
+layout: post
+title: "POJ 1303 - Byte Me!"
+---
+[http://poj.org/problem?id=1303](http://poj.org/problem?id=1303)
+
+## 概要
+\\(N\\) 人の子と1人の親で8ビットの値で510ぴったりを狙うブラックジャックをやる。
+
+子はヒットをせず、最初に配られたカードのみで勝負する。
+
+自分は親であり、問題文で指定された規則に従って bytes あるいは nibbles の山から最大4回ヒットする。
+ヒットの過程と、子との勝負の結果を Win!, Lose!, Bust! のいずれかで答える。
+
+## 制約
+- \\(1 \\le N \\le N\\)
+
+## 解法
+やるだけ。
+
+{% include_code lang:cpp poj/1303.cc %}

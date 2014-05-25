@@ -1,0 +1,18 @@
+---
+layout: post
+title: "POJ 1406 - Starship Hakodate-maru"
+---
+[http://poj.org/problem?id=1406](http://poj.org/problem?id=1406)
+
+## 概要
+2つの燃料容器があり，1つは立方数 n^3 の燃料しか入れられず，もう1つは四面体数 n(n+1)(n+2)/6 の燃料しか入れられない．
+
+N 個の燃料が与えられたとき，2つの燃料容器で合わせて最大でどれだけの燃料を入れることができるかを答える．
+
+## 制約
+- N <= 151200
+
+## 解法
+全通り試して最大の数を答える．
+
+{% include_code lang:cpp poj/1406.cc %}

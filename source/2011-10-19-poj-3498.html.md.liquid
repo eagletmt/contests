@@ -1,0 +1,33 @@
+---
+layout: post
+title: "POJ 3498 - March of the Penguins"
+---
+[http://poj.org/problem?id=3498](http://poj.org/problem?id=3498)
+
+## 概要
+N 個の氷塊の上にペンギンがいる．
+ペンギンは距離 D までの氷塊に飛び移ることができる．
+
+i 番目の氷塊は座標 (x[i], y[i]) にあり，最初にペンギンが n[i] 頭乗っている．
+氷塊は脆いので，i 番目の氷塊からジャンプできるのは m[i] 回までである．
+氷塊に着地するときは関係無い．
+
+すべてのペンギンがある1つの氷塊に辿りつけるような氷塊をすべて出力する．
+ただし，そのような氷塊が1つも無い場合は -1 を出力する．
+
+## 制約
+- 1 <= N <= 100
+- 0 <= D <= 100000
+- -10000 <= x[i], y[i] <= 10000
+- 0 <= n[i] <= 10
+- 1 <= m[i] <= 200
+
+## 解法
+i 番目の氷塊にすべてのペンギンが来れるかどうかは，ジャンプの回数を容量として表現したグラフ上で i 番目の氷塊への最大流がペンギンの頭数に一致するかどうかでわかる．
+
+これをすべての i に関して調べればよい．
+
+N 回最大流を解くことになるため，TL が 8000MS とはいえ高速に求める必要がある．
+[Edmonds-Karp](http://www.prefield.com/algorithm/graph/edmonds_karp.html) だと TLE だったが，[Dinic](http://www.prefield.com/algorithm/graph/dinic.html) だと間に合った (3469MS)．
+
+{% include_code lang:cpp poj/3498.cc %}

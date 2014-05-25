@@ -1,0 +1,18 @@
+---
+layout: post
+title: "AOJ 2304 - Reverse Roads"
+---
+[http://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=2304](http://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=2304)
+
+## 概要
+ノード数 N，エッジ数 M の有向グラフが与えられる．
+このうち何本かのエッジの向きを変えて S から T への最大流を最大化したい．
+そのときの最大流と，向きを変えたエッジを出力する．
+
+## 制約
+- 2 <= N <= 300
+- 0 <= M <= min(1000, N(N-1)/2)
+
+## 解法
+無向グラフと見て最大流を求め，そのときのフローと最初に与えられた有向グラフを比較して逆方向に流れているところのエッジを出力する．
+{% include_code lang:cpp aoj/2304.cc %}

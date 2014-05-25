@@ -1,0 +1,16 @@
+---
+layout: post
+title: "POJ 1306 - Combinations"
+---
+[http://poj.org/problem?id=1306](http://poj.org/problem?id=1306)
+
+## 概要
+`C(n,m)` を計算して答える
+
+## 制約
+- 5 <= m <= n <= 100
+
+## 解法
+DP 的に `C(n,m)` を予め計算しておいてから答える．
+
+{% include_code lang:cpp poj/1306.cc %}

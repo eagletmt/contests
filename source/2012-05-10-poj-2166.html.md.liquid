@@ -1,0 +1,20 @@
+---
+layout: post
+title: "POJ 2166 - Heapsort"
+---
+[http://poj.org/problem?id=2166](http://poj.org/problem?id=2166)
+
+## 概要
+ソートすると \\(1, 2, \\ldots, n\\) となるような配列のうち、ヒープソートを行ったときに shifting operation における入れ替えの回数が最大となるような配列を答える。
+
+## 制約
+- \\(1 \\le n \\le 5 \\cdot 10 ^ 4\\)
+
+## 解法
+各ステップで入れ替えの回数を最大にするには、shifting operation を行うときにルートに 1 があればよく、
+そのためには extract-max のときに 1 が a[i] の位置にあればよい。
+そのようにしながら、ヒープソートの逆を行えばよい。
+
+なぜか G++ だと TLE したけど C++ だと通った。
+
+{% include_code lang:cpp poj/2166.cc %}

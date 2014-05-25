@@ -1,0 +1,17 @@
+---
+layout: post
+title: "POJ 2225 - Asteroids!"
+---
+[http://poj.org/problem?id=2225](http://poj.org/problem?id=2225)
+
+## 概要
+N \* N \* N の三次元のマップが与えられ，与えられたスタート地点からゴール地点までの最短距離を答える．
+ただしゴール地点に辿りつけない場合は「NO ROUTE」と出力する．
+
+## 制約
+- 1 <= N <= 10
+
+## 解法
+BFS するだけ．
+
+{% include_code lang:cpp poj/2225.cc %}

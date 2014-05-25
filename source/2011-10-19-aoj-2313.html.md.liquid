@@ -1,0 +1,15 @@
+---
+layout: post
+title: "AOJ 2313 - Box Witch"
+---
+[http://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=2313](http://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=2313)
+
+## 解法
+まず初期状態のネットワークで最大流とそのときのフローを求める．
+
+接続クエリがきたときは，そこの容量を1にして augment path を探し，見つかったらフローを更新して最大流を1増やす．
+
+切断クエリがきたとき，そこにフローが流れていなければ単に容量を0にするだけ．
+そうでないときは，最大流を1減らして，そこに流れていた1のフローを BFS して打ち消す．
+その後，augment path を探して，見つかったらフローを更新して最大流を1増やす(元に戻す)．
+{% include_code lang:cpp aoj/2313.cc %}

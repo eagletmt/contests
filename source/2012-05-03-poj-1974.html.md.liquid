@@ -1,0 +1,21 @@
+---
+layout: post
+title: "POJ 1974 - The Happy Worm"
+---
+[http://poj.org/problem?id=1974](http://poj.org/problem?id=1974)
+
+## 概要
+\\(m \\times n\\) のグリッド上に \\(k\\) 個の石が置かれている。
+The Happy Worm は水平方向あるいは垂直方向に、石や壁が無い限りできるだけ体を長くして寝る。
+ただし The Happy Worm は2マスよりも小さい領域には寝ることはない。
+
+このとき、The Happy Worm が寝る位置は何通りあるか答える。
+
+## 制約
+- \\(1 \\le m, n, k \\le 131072\\)
+
+## 解法
+水平方向と垂直方向の両方に対して、石の間隔が2マス以上離れている箇所の数を数える。
+壁のある位置にダミーの石があるとしてやるとやりやすい。
+
+{% include_code lang:cpp poj/1974.cc %}

@@ -1,0 +1,22 @@
+---
+layout: post
+title: "AOJ 1320 - City Merger"
+---
+[http://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=1320](http://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=1320)
+
+## 概要
+n 個の名前が与えられ，それらすべてをマージしてできる名前の長さの最小値を答える．
+
+例えば FUKUOKA, OKAYAMA, YAMAGUCHI の3つをマージしてできる最小の長さの名前は FUKUOKAYAMAGUCHI である．
+
+## 制約
+- n <= 14
+- 名前の長さ <= 20
+
+## 解法
+まず，他の名前の部分文字列になっているような名前は考慮しなくてよいので除外する．
+
+あとは i 番目の名前の後ろに j 番目の名前をマージしたときに被る文字列の長さを予め計算しておき，
+巡回セールスマン問題の要領で今までに使った名前の状態と最後に使った名前でビット DP すればよい．
+
+{% include_code lang:cpp aoj/1320.cc %}

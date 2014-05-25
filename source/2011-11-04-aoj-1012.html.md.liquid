@@ -1,0 +1,33 @@
+---
+layout: post
+title: "AOJ 1012 - Operations with Finite Sets"
+---
+[http://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=1012](http://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=1012)
+
+## 概要
+1個から5個の有限集合が与えられ，さらに集合演算を表す式が与えられるのでその結果を答える．
+ただし，結果が空集合のときは「NULL」と答える．
+
+集合演算には
+
+- 集合和 AuB
+- 集合積 AiB
+- 集合差 AdB
+- 対称差 AsB
+- 補集合 cA
+
+がある．問題文には明記されていないけど，すべての二項演算子は左結合．
+
+補集合をとるときの全体集合とは，与えられた集合の和集合とする．
+
+## 制約
+- 集合の名前は A, B, C, D, E のいずれか
+- 1つの集合の要素は 1 以上 100 以下
+
+## 解法
+構文解析の後，言われた通りに集合演算するだけ．
+
+入力の最後を検出するのがめんどくさい．
+eofbit は「読み込んでみたら EOF だった」ときに立つので，ignore() した後に peek() することで eofbit を立てることができる．
+
+{% include_code lang:cpp aoj/1012.cc %}

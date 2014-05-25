@@ -1,0 +1,19 @@
+---
+layout: post
+title: "POJ 2336 - Ferry Loading II"
+---
+[http://poj.org/problem?id=2336](http://poj.org/problem?id=2336)
+
+## 概要
+同時に n 個の車を載せて t 分で川を渡れるフェリーがある．
+与えられたスケジュールに従って m 個の車がくるので，すべての車を向こう岸に運ぶのにかかる時間を最小化する問題．
+最小になるように運んだときのフェリーの往復回数も答える．
+
+## 制約
+- 0 < n, t, m < 1440
+
+## 解法
+    dp[i] = i 番目までの車を運んだときの最短時間
+という DP．
+
+{% include_code lang:cpp poj/2336.cc %}

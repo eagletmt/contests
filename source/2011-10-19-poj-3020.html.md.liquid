@@ -1,0 +1,22 @@
+---
+layout: post
+title: "POJ 3020 - Antenna Placement"
+---
+[http://poj.org/problem?id=3020](http://poj.org/problem?id=3020)
+
+## 概要
+w \* h のグリッド上にいくつか interest がある (interest の意味がわからなかった…)．
+interest のある位置にアンテナを置くと，その interest をカバーすることができる．
+さらに，アンテナを (c,r) の位置に置いたとすると，(c+1,r), (c,r+1), (c-1,r), (c,r-1) のいずれかの位置の interest もカバーすることができる．
+
+すべての interest をカバーするのに必要な最小のアンテナの数を答える．
+
+## 制約
+- 1 <= h <= 40
+- 0 < w <= 10
+
+## 解法
+1つのアンテナに同時にカバーされるペアをなるべく多く作ればいい．
+同時にカバーされうる点同士を結ぶと二部グラフになり，`点の数 - 最大マッチング` が答えになる．
+
+{% include_code lang:cpp poj/3020.cc %}

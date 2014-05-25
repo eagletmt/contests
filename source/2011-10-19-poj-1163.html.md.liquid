@@ -1,0 +1,18 @@
+---
+layout: post
+title: "POJ 1163 - The Triangle"
+---
+[http://poj.org/problem?id=1163](http://poj.org/problem?id=1163)
+
+## 概要
+長さ N の三角形に並べられた数字が与えられる．
+一番上からスタートして左斜め下か右斜め下に移動しながら数を足していったとき，最終的な和の最大値を答える．
+
+## 制約
+- 1 < N <= 100
+- 0 <= 数値 <= 99
+
+## 解法
+典型的なDP．
+
+{% include_code lang:cpp poj/1163.cc %}

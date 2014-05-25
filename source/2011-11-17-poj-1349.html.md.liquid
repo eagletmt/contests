@@ -1,0 +1,20 @@
+---
+layout: post
+title: "POJ 1349 - Coding of Permutations"
+---
+[http://poj.org/problem?id=1349](http://poj.org/problem?id=1349)
+
+## 概要
+1 .. n の順列である p が何番目の順列であるかを答える．
+
+例えば n=4, p=(2,3,4,1) のとき，これはは10番目であり，p=(4,2,1,3) は21番目である．
+
+## 制約
+- n <= 50
+
+## 解法
+「i 番目の数字が，残っている数の中で何番目か」を a[i] として，`factorial(a[i])` を BigInteger で足していくだけ．
+
+入力の形式が無意味に面倒．
+
+{% include_code lang:java poj/1349.java %}

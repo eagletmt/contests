@@ -1,0 +1,21 @@
+---
+layout: post
+title: "POJ 1248 - Safecracker"
+---
+[http://poj.org/problem?id=1248](http://poj.org/problem?id=1248)
+
+## 概要
+ターゲットの整数 \\(T\\) と，相異なる大文字のアルファベットの列 \\(W\\) が与えられる．
+\\(W\\) に含まれる大文字のアルファベットについて，\\(A = 1, B = 2, \\cdots, Z = 26\\) と整数を関連付ける．
+
+\\(v - w ^ 2 + x ^ 3 - y ^ 4 + z ^ 5 = T\\) となるように相異なる \\((v, w, x, y, z)\\) を \\(W\\) から選んだとき，
+その中で辞書順が最も遅いものを答える．
+ただしそのような5つ組が存在しないときは「no solution」と答える．
+
+## 制約
+- \\(5 \le W \\mbox{の長さ} \le 12\\)
+
+## 解法
+5つ組の組み合わせは \\(\\begin{eqnarray}{}\_{12}\\mathrm{P}\_5\\end{eqnarray} = 95040\\) 通りしかないので全探索．
+
+{% include_code lang:cpp poj/1248.cc %}

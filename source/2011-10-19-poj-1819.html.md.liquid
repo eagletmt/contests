@@ -1,0 +1,27 @@
+---
+layout: post
+title: "POJ 1819 - Disks"
+---
+[http://poj.org/problem?id=1819](http://poj.org/problem?id=1819)
+
+## 概要
+N 個の円盤が与えられ，i 番目の円盤は半径 r[i] である．
+
+円盤を与えられた順に x 軸上に並べていく．
+i 番目の円盤は y 軸か別の円盤と接するまでできるだけ -x 方向に置く．
+
+「その円盤を取り除いても，全体の幅が変わらない」ような円盤を dispensable と呼ぶ．
+このとき，dispensable な円盤の数とそれらのインデックスをを全て答える．
+
+## 制約
+- N <= 1000
+
+## 解法
+dispensable な円盤は，
+
+- i 番目と j 番目 (i < j) の円盤が接しているとき，i < k < j なる k 番目の円盤
+- 最も +x 方向に伸びている円盤が r 番目だったとすると，r < k なる k 番目の円盤
+
+に限る．
+
+{% include_code lang:cpp poj/1819.cc %}

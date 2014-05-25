@@ -1,0 +1,26 @@
+---
+layout: post
+title: "AOJ 1314 - Matrix Calculator"
+---
+[http://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=1314](http://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=1314)
+
+## 概要
+n 個の与えられた行列に関する代入式を評価した結果を出力する．
+
+## 制約
+- 1 <= n <= 10
+- 入力は構文的に正しい
+- 入力は意味的に正しい．つまり行列のサイズが合わない，インデックスが範囲外，未定義の変数の参照等は発生しない
+- 評価中に表れる行列のサイズは 100x100 以下
+
+## 解法
+がんばって実装するだけ．
+
+matrix が単に数字のみからなっていれば楽だが，問題文中の例にある
+`[[1 2 3;4 5 6] [7 8;9 10] [11;12];13 14 15 16 17 18]`
+のように，row の要素として任意の expr をとることができ，それを適切に展開しなければならない．
+
+自分はまずすべての値を行列で表現し，row を `vector<matrix>` で受け取り，row-seq を一旦 `vector<vector<matrix> >` で受け取った後，
+最終的な行列のサイズを計算してから展開するようにした．
+
+{% include_code lang:cpp aoj/1314.cc %}

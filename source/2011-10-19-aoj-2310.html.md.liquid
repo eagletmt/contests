@@ -1,0 +1,36 @@
+---
+layout: post
+title: "AOJ 2310 - Rose Garden Witch"
+---
+[http://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=2310](http://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=2310)
+
+## 解法
+直線を原点を中心に徐々に回転させていったとき，
+分割数が増えるのは
+
+    ..
+    .#
+
+と
+
+    ##
+    #.
+
+の2パターン．
+
+また，分割数が減るのは
+
+    #.
+    ..
+
+と
+
+    .#
+    ##
+
+の2パターン．
+
+ただし，増えるパターンの点と減るパターンの点が同一直線上にあるときは，その点の前後で分割数は変わらないことに注意．
+これは減るパターンを先に処理することで対処することができる．
+
+{% include_code lang:cpp aoj/2310.cc %}

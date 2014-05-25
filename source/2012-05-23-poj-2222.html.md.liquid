@@ -1,0 +1,19 @@
+---
+layout: post
+title: "POJ 2222 - Deeper Blue"
+---
+[http://poj.org/problem?id=2222](http://poj.org/problem?id=2222)
+
+## 概要
+\\(w \\times h\\) のチェス盤があり、この上に \\(k\\) 個の駒が乗っている。
+ここからいくつか駒を取り除いて、どの駒も取れる駒が無いような状態にしたい。
+このとき、最小でもいくつ取り除かなければならないかを答える。
+
+## 制約
+- \\(1 \\le w, h \\le 10\\)
+- \\(0 \\le k \\le 15\\)
+
+## 解法
+全探索 + ちょっと枝刈り。
+
+{% include_code lang:cpp poj/2222.cc %}

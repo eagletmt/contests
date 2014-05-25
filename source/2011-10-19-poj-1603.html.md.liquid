@@ -1,0 +1,18 @@
+---
+layout: post
+title: "POJ 1603 - Risk"
+---
+[http://poj.org/problem?id=1603](http://poj.org/problem?id=1603)
+
+## 概要
+20 個の国の隣接関係が与えられたとき，ある国から別のある国までの最短距離を答える．
+
+## 制約
+- 1 <= 聞かれる最短距離の数 <= 100
+
+## 解法
+ワーシャルフロイドするだけ．
+
+入力の最後を検知するのが若干めんどい．
+
+{% include_code lang:cpp poj/1603.cc %}

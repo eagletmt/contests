@@ -1,0 +1,19 @@
+---
+layout: post
+title: "POJ 3842 - An Industrial Spy"
+---
+[http://poj.org/problem?id=3842](http://poj.org/problem?id=3842)
+
+## 概要
+与えられた文字列の一部(全部でもいい)を好きな順に並べてできる数字のうち，素数はいくつあるか答える．
+
+## 制約
+- 文字列の長さ <= 7
+- テストケースの数 <= 200
+
+## 解法
+10^7 未満のエラトステネスの篩を作っておいて，各文字列に関して全探索 + unique．
+
+unique が必要無いようにうまく next\_permutation 的なものを自分で実装すると高速に通るらしい．
+
+{% include_code lang:cpp poj/3842.cc %}

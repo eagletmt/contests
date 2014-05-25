@@ -1,0 +1,31 @@
+---
+layout: post
+title: "POJ 3170 - Knights of Ni"
+---
+[http://poj.org/problem?id=3170](http://poj.org/problem?id=3170)
+
+## 概要
+W \* H のグリッドが与えられ，各マスの数は
+
+- 0 は通れるマス
+- 1 は通れないマス
+- 2 はスタート地点 (自由に通れる)
+- 3 はゴール地点 (shrubbery を持っていないと通れない)
+- 4 は shrubbery (自由に通れる)
+
+を表している．
+
+スタート地点から shrubbery を1つ以上とってゴール地点へ行くときの最小のステップ数を答える．
+
+## 制約
+- 1 <= W, H <= 1000
+- ゴールできることは保証されている
+
+## 解法
+
+- スタート地点から各 shrubbery
+- ゴール地点から各 shrubbery
+
+と2回 BFS して，各 shrubbery のマスについてその2つの距離の和の最小値をとればいい．
+
+{% include_code lang:cpp poj/3170.cc %}

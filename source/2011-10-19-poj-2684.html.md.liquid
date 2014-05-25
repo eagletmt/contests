@@ -1,0 +1,16 @@
+---
+layout: post
+title: "POJ 2684 - Polygonal Line Search"
+---
+[http://poj.org/problem?id=2684](http://poj.org/problem?id=2684)
+
+## 概要，制約
+日本語の問題文を参照．
+[Problem B: Polygonal Line Search](http://www.teu.ac.jp/icpc/jp/domestic/ICPC2005_Problems_Domestic/B/B_ja.html)
+
+## 解法
+0度，90度，180度，270度回転させたもののいずれかが，相対的に同じように線を引いていたら同じ形状．
+
+回転に加えて，折れ線が逆方向になっていることもあるので，計16通り試す．
+
+{% include_code lang:cpp poj/2684.cc %}

@@ -1,0 +1,15 @@
+---
+layout: post
+title: "AOJ 1082 - 11224111122411"
+---
+[http://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=1082](http://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=1082)
+
+## 解法
+文字種が5の場合，n 文字連続して入力したときの文字列の数を `dp1[n]` とすると，
+
+    dp1[n] = 1 + dp1[n-1] + dp1[n-2] + dp1[n-3] + dp1[n-4] + dp1[n-5]
+
+で計算できる．
+
+文字種が3の数字の場合も同様．
+{% include_code lang:cpp aoj/1082.cc %}

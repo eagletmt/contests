@@ -1,0 +1,22 @@
+---
+layout: post
+title: "POJ 3450 - Corporate Identity"
+---
+[http://poj.org/problem?id=3450](http://poj.org/problem?id=3450)
+
+## 概要
+\\(N\\) 個の文字列が与えられるので、すべての文字列の連続した部分文字列で長さが最大であるものを答える。
+複数存在する場合は辞書式順序で最小のものを答える。
+そのような連続した部分文字列が存在しない場合は「IDENTITY LOST」と答える。
+
+## 制約
+- \\(2 \\le N \\le 4000\\)
+- \\(1 \\le \\mbox{文字列の長さ} \\le 200 = L\\)
+
+## 解法
+Suffix Array を構築し、最初の文字列の各 Suffix Array について、それ以外の文字列と何文字マッチするかを調べる。
+
+\\(L\\) はそんなに大きくないので、普通にソートして \\(O(L ^ 2 \\log L\\)) で \\(N\\) 個の Suffix Array を構築しても間に合う。
+とはいえ string をコピーしまくるようなコードでは TLE したので配列で書き直して 329MS で通した。
+
+{% include_code lang:cpp poj/3450.cc %}

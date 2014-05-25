@@ -1,0 +1,17 @@
+---
+layout: post
+title: "POJ 2330 - Advanced ASCII Cubes"
+---
+[http://poj.org/problem?id=2330](http://poj.org/problem?id=2330)
+
+## 概要
+\\(N \\times M\\) の長方形の各マスにいくつの立方体が積み重なっているかを示す行列 \\(A\_{i, j}\\) が与えられるので、
+それを ASCII 表現したものを答える。
+
+## 制約
+- \\(1 \\le N, M, A\_{i, j} \\le 50 \\)
+
+## 解法
+がんばって左奥のほうから順に立方体を描いていくだけ。
+
+{% include_code lang:cpp poj/2330.cc %}

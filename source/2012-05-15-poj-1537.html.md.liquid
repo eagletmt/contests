@@ -1,0 +1,21 @@
+---
+layout: post
+title: "POJ 1537 - Identifying Legal Pascal Real Constants"
+---
+[http://poj.org/problem?id=1537](http://poj.org/problem?id=1537)
+
+## 概要
+Pascal の実数定数として正しいかどうかを答える。
+
+- 通常の数字に加え、小数点、あるいは scale factor (e または E)、あるいはその両方をもつ
+- 小数点を持つ場合、その両側にそれぞれ少なくとも1つは数字がある
+- 実数定数あるいは指数の前に符号 (+ または -) があってもよい
+- 指数は整数
+- 実数定数の前後に空白があってもよいが、実数定数の途中にはない
+- 実数定数の値の範囲に制限はない
+
+## 解法
+やるだけ。
+sscanf とか std::istringstream で楽できないかと思ったけど、一から実装したほうが楽だった…
+
+{% include_code lang:cpp poj/1537.cc %}

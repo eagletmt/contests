@@ -1,0 +1,11 @@
+---
+layout: post
+title: "AOJ 0574 - Nails"
+---
+[http://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=0574](http://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=0574)
+
+## 解法
+\\((i, j)\\) の位置にサイズ \\(X\\) の輪ゴムがあるとき、\\((i+1, j)\\) の位置と \\((i+1, j+1)\\) の位置にサイズ \\(X-1\\) の輪ゴムがあるとみなすことができる。
+
+よって、これを DP 的に左上のほうから更新していき、サイズ 1 以上の輪ゴムに囲われている釘の数を数えればよい。
+{% include_code lang:cpp aoj/0574.cc %}

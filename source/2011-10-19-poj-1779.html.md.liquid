@@ -1,0 +1,29 @@
+---
+layout: post
+title: "POJ 1779 - Boolean Logic"
+---
+[http://poj.org/problem?id=1779](http://poj.org/problem?id=1779)
+
+## 概要
+論理式が与えられるので，それの真理値表を答える．
+
+- 小文字のアルファベットは論理式
+- P が論理式ならば，(!P) も論理式 (negation)
+- P, Q が論理式ならば，
+  - (P&Q) (conjunction)
+  - (P|Q) (disjunction)
+  - (P-->Q) (implication)
+  - (P<->Q) (equivalence)
+
+  も論理式
+
+## 制約
+特になし．
+変数が小文字のアルファベットなので，最大でも26種類であることはわかる．
+
+## 解法
+真理値表を出力するときに，空白を保存しつつシンボルや演算子の位置に出力しなければならないのがめんどくさい．
+
+論理式をパースするときに，そのシンボルや演算子があったインデックスを覚えておくようにした．
+
+{% include_code lang:cpp poj/1779.cc %}

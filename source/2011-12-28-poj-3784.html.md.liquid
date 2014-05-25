@@ -1,0 +1,17 @@
+---
+layout: post
+title: "POJ 3784 - Running Median"
+---
+[http://poj.org/problem?id=3784](http://poj.org/problem?id=3784)
+
+## 概要
+M 個の数列が与えられるので，各奇数番目の数が読まれた時点での中央値を答える．
+
+## 制約
+- 数列の要素は符号付き 32bit 整数値
+- 1 <= M <= 9999, M は奇数
+
+## 解法
+M 個すべて読んでからソートし，後から追加されたものを取り除きながら中央値を逆から求める．
+
+{% include_code lang:cpp poj/3784.cc %}

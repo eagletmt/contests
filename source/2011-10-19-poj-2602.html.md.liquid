@@ -1,0 +1,18 @@
+---
+layout: post
+title: "POJ 2602 - Superlong sums"
+---
+[http://poj.org/problem?id=2602](http://poj.org/problem?id=2602)
+
+## 概要
+最大で N 桁の2つの数の和を答える．
+
+## 制約
+- N <= 1000000
+
+## 解法
+BigInteger でやろうとしたがなぜか WA だった…
+
+単に一回足すだけなので文字列として処理した．
+
+{% include_code lang:cpp poj/2602.cc %}

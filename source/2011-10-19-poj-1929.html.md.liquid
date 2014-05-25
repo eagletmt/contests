@@ -1,0 +1,29 @@
+---
+layout: post
+title: "POJ 1929 - Calories from Fat"
+---
+[http://poj.org/problem?id=1929](http://poj.org/problem?id=1929)
+
+## 概要
+- fat は 9 C/g
+- protein, sugar, starch は 4C/g
+- alcohol は 7C/g
+
+とする．
+fat, protein, sugar, starch, alcohol の摂取量が g か C か % のいずれかの単位で表され，
+
+- _n_g := _n_ グラム摂取した
+- _n_C := _n_ カロリー摂取した
+- _n_% := 全体のカロリーに対して _n_ % のカロリーをそれで摂取した
+
+という意味．
+
+全体のカロリーに対して fat で摂取したカロリーが何%であるか四捨五入して整数で答える．
+
+## 制約
+- 5つのうち，必ず一つは g か C の単位で表されている
+
+## 解法
+問題文の理解に一番時間がかかった．やるだけ．
+
+{% include_code lang:cpp poj/1929.cc %}

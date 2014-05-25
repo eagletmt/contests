@@ -1,0 +1,18 @@
+---
+layout: post
+title: "POJ 1146 - ID Codes"
+---
+[http://poj.org/problem?id=1146](http://poj.org/problem?id=1146)
+
+## 概要
+小文字のアルファベットからなる文字列が与えられる．
+その文字の集合から生成できるすべての文字列を辞書順に並べたとき，与えられ文字列の次の文字列を答える．
+ただし，与えられた文字列が最後の文字列だったときは「No Successor」と出力する．
+
+## 制約
+- 文字列の長さ <= 50
+
+## 解法
+next_permutation するだけ．
+
+{% include_code lang:cpp poj/1146.cc %}

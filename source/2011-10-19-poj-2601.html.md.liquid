@@ -1,0 +1,28 @@
+---
+layout: post
+title: "POJ 2601 - Simple calculations"
+---
+[http://poj.org/problem?id=2601](http://poj.org/problem?id=2601)
+
+## 概要
+n+2 個の要素からなる数列 a[0], ..., a[n+1] を
+
+    a[i] = (a[i-1] + a[i+1])/2 - c[i]
+
+と定める．
+
+a[0], a[n+1], c[1], ..., c[n] が与えられたとき，a[1] の値を答える．
+
+## 制約
+- n <= 3000
+
+## 解法
+漸化式を解くと
+
+    a[1] = (a[n+1] + n*a[0] - 2*Σ((n-i)*c[i]))/(n+1)
+
+となるので，これを計算するだけ．
+
+あるいは a[1] の値に対して a[n+1] は単調に増加することを利用して二分探索という方法もある．
+
+{% include_code lang:cpp poj/2601.cc %}

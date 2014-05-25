@@ -1,0 +1,30 @@
+---
+layout: post
+title: "POJ 3007 - Organize Your Train part II"
+---
+[http://poj.org/problem?id=3007](http://poj.org/problem?id=3007)
+
+## 概要
+ある文字列に対して，任意の位置で文字列を s, t の2つに分けて
+
+- s + t
+- s + reverse(t)
+- reverse(s) + t
+- reverse(s) + reverse(t)
+- t + s
+- t + reverse(s)
+- reverse(t) + s
+- reverse(t) + reverse(s)
+
+の8種類の変形ができるとして，変形後の文字列の種類を重複無く数えて答える．
+
+## 制約
+- 2 <= 文字列の長さ <= 72
+
+## 解法
+可能な文字列を全部生成して set につっこむなり sort + unique するなり．
+
+TLE がやや厳しめで set<string> につっこむと通らないが，固定長の文字列のクラスを用意して set<fixed_string> だと通ったりする．
+あと Java で HashSet<String> でも通る．
+
+{% include_code lang:cpp poj/3007.cc %}

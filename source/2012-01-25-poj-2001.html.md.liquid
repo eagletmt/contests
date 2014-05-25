@@ -1,0 +1,19 @@
+---
+layout: post
+title: "POJ 2001 - Shortest Prefixes"
+---
+[http://poj.org/problem?id=2001](http://poj.org/problem?id=2001)
+
+## 概要
+\\(N\\) 個の単語が与えられる．
+各単語について，その単語が \\(N\\) 個の単語の中でユニークになるような最短の prefix を答える．
+
+## 制約
+- \\(1 \le N \le 1000\\)
+- 各単語は1文字以上20文字以下小文字のアルファベットのみからなる
+
+## 解法
+各単語の全 prefix を map に入れてカウントしてから，各単語について個数が1の最も短い prefix を答えればよい．
+キーを std::string にしても間に合いそうだったが，念のため固定長の文字列でやった．
+
+{% include_code lang:cpp poj/2001.cc %}

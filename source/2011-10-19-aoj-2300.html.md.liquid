@@ -1,0 +1,20 @@
+---
+layout: post
+title: "AOJ 2300 - Calendar Colors"
+---
+[http://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=2300](http://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=2300)
+
+## 概要
+N 個の色の中から，距離の合計が最大になるように M 個選んだときの距離の合計を答える．
+
+2つの色の距離は，各要素の二乗和とする．
+
+## 制約
+- 0 <= M <= N <= 20
+- 0.0 <= L <= 100.0
+- -134.0 <= a <= 220.0
+- -140.0 <= b <= 122.0
+
+## 解法
+`C(N, M)` 通りしかないので全探索．
+{% include_code lang:cpp aoj/2300.cc %}

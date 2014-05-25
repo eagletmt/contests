@@ -1,0 +1,23 @@
+---
+layout: post
+title: "POJ 1326 - Mileage Bank"
+---
+[http://poj.org/problem?id=1326](http://poj.org/problem?id=1326)
+
+## 概要
+フライトの距離とクラスに応じて得られる ACMPerk mileage を答える．
+
+- First Class のときは，距離 + 100% のボーナス
+- Business Class のときは，距離 + 50% のボーナス
+- Economy Class のときは，500マイル以下なら 500，500マイル以上ならその分の mileage
+
+答えが小数になる場合は切り上げて計算する．
+
+## 制約
+特になし
+
+## 解法
+やるだけ．
+都市の名前は答えに関係無い．
+
+{% include_code lang:cpp poj/1326.cc %}

@@ -1,0 +1,18 @@
+---
+layout: post
+title: "AOJ 2318 - Set-constructiong Witch"
+---
+[http://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=2318](http://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=2318)
+
+## 解法
+魔女 `i` を作るのに必要なグリーフシードの数を `dist[i]` で表すと，
+合成法則 `G = S_1 + ... + S_c` から，
+`dist[G]` は `dist[S_1]`, ..., `dist[S_c]` を降順に並べてから `max(dist[S'_1] + 0, ..., dist[S'_c] + c-1)` で得られる．
+
+そこで，合成法則に従って枝を張ったグラフを考える．
+`dist[i]` を
+
+    dist[i] = W_i ? 1 : INF
+
+と初期化し，ベルマン・フォード法の要領で緩和して最終的な `dist[T]` が答えになる．
+{% include_code lang:cpp aoj/2318.cc %}

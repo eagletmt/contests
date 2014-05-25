@@ -1,0 +1,22 @@
+---
+layout: post
+title: "POJ 2591 - Set Definition"
+---
+[http://poj.org/problem?id=2591](http://poj.org/problem?id=2591)
+
+## 概要
+集合 S を
+
+- 1 ∈ S
+- x ∈ S ならば，2x+1 ∈ S，3x+1 ∈ S
+- S は以上を満たす最小の集合
+
+と定め，S の要素を昇順に並べたときの N 番目の要素を答える．
+
+## 制約
+- 1 <= N <= 10000000
+
+## 解法
+[POJ 1338 - Ugly Numbers](/blog/poj-1338/) と同じようにして具体的に S を作って答える．
+
+{% include_code lang:cpp poj/2591.cc %}

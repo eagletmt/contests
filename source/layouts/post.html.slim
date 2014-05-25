@@ -1,0 +1,12 @@
+= wrap_layout :layout do
+  article.post
+    h1= current_page.data.title
+    == yield
+    - next_article = find_next_article(current_page)
+    - prev_article = find_prev_article(current_page)
+    footer
+      p= "Posted on #{current_page.date.strftime('%F')}"
+      - if prev_article
+        = link_to prev_article.title, prev_article.url, class: 'prev-page'
+      - if next_article
+        = link_to next_article.title, next_article.url, class: 'next-page'

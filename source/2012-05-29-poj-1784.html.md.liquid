@@ -1,0 +1,30 @@
+---
+layout: post
+title: "POJ 1784 - Huffman's Greed"
+---
+[http://poj.org/problem?id=1784](http://poj.org/problem?id=1784)
+
+## 概要
+\\(n\\) 個の値 \\(K\_1, \\cdots, K\_n (K\_1 < \\cdots < K\_n)\\) に対する二分探索木を考える。
+\\(p\_i\\) を \\(K\_i\\) の値が探される確率、\\(q\_i\\) を \\(K\_i\\) より大きく \\(K\_{i+1}\\) より小さい値が探される確率とする。
+ここで \\(q\_0\\) は \\(K\_1\\) より小さい値が探される確率、\\(q\_n\\) は \\(K\_n\\) より大きい値が探される確率とする。
+
+このとき、コストが最小となる二分探索木のコストを答える。
+コストは \\(\\Sigma\_{i=1 \\ldots n} p\_i \\cdot (1 + \\mathit{level}(K\_i)) + \\Sigma\_{i=0 \\ldots n} q\_i \\cdot \\mathit{levelbetween}(K\_i, K\_{i+1})\\) で計算する。
+level はそのノードの深さ (ルートの深さを 0 とする) であり、levelbetween はその間の葉ノードの深さである。
+
+## 制約
+- \\(1 \\le n \\le 200\\)
+- \\(1 \\le \\Sigma\_{i=1 \\ldots n} p\_i + \\Sigma\_{i=0 \\ldots n} q\_i \\le 10 ^ 6\\)
+
+## 解法
+    dp[i][j] = K_i から K_j までの区間で作る二分探索木の最小コスト
+
+という DP。
+区間の大きさ d を大きくしながら
+
+    dp[i][i+d] = min { dp[i][k] + dp[k+1][i+d] + (新たに K_k をルートとする二分探索木を作ることで level が1つ上がって生じる q_i + p_i + … + q_k + q_{k+1} + p_{k+1} + … + q_j)
+
+と更新していく。
+
+{% include_code lang:cpp poj/1784.cc %}

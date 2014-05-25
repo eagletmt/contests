@@ -1,0 +1,24 @@
+---
+layout: post
+title: "AOJ 2305 - Beautiful Currency"
+---
+[http://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=2305](http://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=2305)
+
+## 概要
+N 種類の貨幣があり，それぞれ価値は `a[1]`, ..., `a[N]` である．
+
+すべての i (1 <= i <= N-1) について，`a[i+1] % a[i] == 0` となるとき，_beautiful_ であるという．
+
+ある貨幣の価値を `a[i]` から `b[i]` に変えたときの confution ratio を `|a[i] - b[i]|/a[i]` と定義する．
+confusion ratio の最大値が最小になるように `a[1]`, ..., `a[N]` を beautiful に変えたとき，そのときの confusion ratio の最大値を答える．
+
+## 制約
+- 1 <= N <= 20
+- 1 <= a[i] < a[2] < ... < a[N] < 10^5
+
+## 解法
+    dp[i][i 番目の貨幣の変更後の価値] = confusion ratio の最大値
+という DP．
+「i 番目の貨幣の変更後の価値」の最大値は 10^5 ではない点に注意．
+とりあえず2倍の 2 * 10^5 にして通った．
+{% include_code lang:cpp aoj/2305.cc %}

@@ -1,0 +1,17 @@
+---
+layout: post
+title: "POJ 3197 - Continuous Fractions"
+---
+[http://poj.org/problem?id=3197](http://poj.org/problem?id=3197)
+
+## 概要
+整数 `\(p, q\)` が与えられるので，`\(\frac{p}{q}\)` を連分数展開したものを答える．
+
+## 制約
+- `\(0 < q < p < 10^{20}\)`
+
+## 解法
+連分数展開するにはユークリッドの互除法を使えばよい．
+出力の整形がかなり面倒．
+
+{% include_code lang:java poj/3197.java %}

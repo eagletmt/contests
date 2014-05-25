@@ -1,0 +1,16 @@
+---
+layout: post
+title: "AOJ 2285 - Anipero"
+---
+[http://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=2285](http://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=2285)
+
+## 解法
+シークレットアーティストの選び方は全通り試す．
+
+すると残りの資金 L で満足度を最大化するようにスタンダードアーティストを選べばよく，これはナップザック DP で解ける．
+このとき，選んだ人数も同時に記録していき X 以上のときだけを採用するようにする．
+
+計算量が怪しいが 1:77 で通った．
+
+最初にスタンダードアーティストを雇用金に関してソートしてその順で更新していくのを忘れて一回 WA してた．
+{% include_code lang:cpp aoj/2285.cc %}

@@ -1,0 +1,22 @@
+---
+layout: post
+title: "POJ 2661 - Factstone Benchmark"
+---
+[http://poj.org/problem?id=2661](http://poj.org/problem?id=2661)
+
+## 概要
+Amtel は1960年に4-bitのコンピュータをリリースし，以降10年毎に倍のワード長を持つコピュータをリリースしている．
+
+新しいチップの性能を，n! をそのワード長で符号無し整数として表現できるような最大の n で示している．
+これを Factstone rating と言う．
+
+y 年における最新のチップでの Factstone rating を答える．
+
+## 制約
+- 1960 <= y <= 2160
+
+## 解法
+実際に階乗を計算して最初にテーブルを作っておいて答えるだけ．
+double の精度で問題無い．
+
+{% include_code lang:cpp poj/2661.cc %}

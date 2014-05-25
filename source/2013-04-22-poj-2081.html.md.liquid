@@ -1,0 +1,23 @@
+---
+layout: post
+title: "POJ 2081 - Recaman's Sequence"
+---
+[http://poj.org/problem?id=2081](http://poj.org/problem?id=2081)
+
+## 概要
+Recaman 数列を
+
+- \\(a\_0 = 0\\)
+- \\(a\_m = a\_{m-1} - m\\) (\\(a\_{m-1} - m > 0\\) かつ \\(a\_{m-1} - m\\) がここまでの要素に現れないとき)
+- \\(a\_m = a\_{m-1} + m\\) (otherwise)
+
+と定める。
+与えられた \\(k\\) について、\\(a\_k\\) を答える。
+
+## 制約
+- \\(0 \\le k \\le 5 \\cdot 10 ^ 5\\)
+
+## 解法
+事前計算してやるだけ。
+
+{% include_code lang:cpp poj/2081.cc %}

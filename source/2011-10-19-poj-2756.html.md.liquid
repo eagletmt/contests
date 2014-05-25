@@ -1,0 +1,21 @@
+---
+layout: post
+title: "POJ 2756 - Autumn is a Genius"
+---
+[http://poj.org/problem?id=2756](http://poj.org/problem?id=2756)
+
+## 概要
+2つの整数 A, B が与えられるので，A + B を答える．
+
+ただし，A, B が非負の整数のとき，'+' が先頭に存在しうる．
+
+## 制約
+- A, B < 32768
+
+## 解法
+A, B の最大値は示されているものの，最小値が示されていないというトラップ．
+実は多倍長演算が必要．
+
+Scanner#nextBigInteger() だと先頭の + に自分で対応しなければならないが，Scanner#nextBigDecimal() だと先頭の + を気にしなくてもいいため楽．
+
+{% include_code lang:java poj/2756.java %}

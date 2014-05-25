@@ -1,0 +1,21 @@
+---
+layout: post
+title: "POJ 3678 - Katu Puzzle"
+---
+[http://poj.org/problem?id=3678](http://poj.org/problem?id=3678)
+
+## 概要
+ノード N 個，エッジ M 個の有向グラフが与えられ，各エッジには AND, OR, XOR のいずれかと真偽値がラベルされている．
+
+ノードを変数とみたとき，すべての AND, OR, XOR の関係を満たすような真偽値を割り当てが存在するかどうか答える．
+
+## 制約
+- 1 <= N <= 1000
+- 1 <= M <= 1000000
+
+## 解法
+いわゆる [2-SAT](http://en.wikipedia.org/wiki/2-satisfiability) 問題．
+
+2-SAT は，論理式を (A→B)∧(C→D)∧…∧(Y→Z) (A, ..., Z は単なる変数かそれの否定)のような形に変形し，implication の関係を有向グラフで表して，同じ強連結成分に同じ変数の肯定と否定の両方が含まれているかどうか調べることで解くことができる．
+
+{% include_code lang:cpp poj/3678.cc %}

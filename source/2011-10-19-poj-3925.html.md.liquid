@@ -1,0 +1,25 @@
+---
+layout: post
+title: "POJ 3925 - Minimal Ratio Tree"
+---
+[http://poj.org/problem?id=3925](http://poj.org/problem?id=3925)
+
+## 概要
+すべてのノードとエッジに重みがある木に対して，ratio を
+
+    Ratio := Σedge_weight / Σnode_weight
+
+と定める．
+
+与えられた n 個のノードからなる重み付きグラフのサブグラフのうち，m 個のノードからなる ratio が最小の木を答える．
+
+## 制約
+- 2 <= m <= n <= 15
+
+## 解法
+m 個のノードの選び方は全探索．
+
+すると Σnode_weight が決まるので，Ratio を小さくするには Σedge_weight を小さくすればよい．
+これは最小全域木を求めればいい．
+
+{% include_code lang:cpp poj/3925.cc %}

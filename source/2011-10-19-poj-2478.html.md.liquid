@@ -1,0 +1,20 @@
+---
+layout: post
+title: "POJ 2478 - Farey Sequence"
+---
+[http://poj.org/problem?id=2478](http://poj.org/problem?id=2478)
+
+## 概要
+ファレイ数列とは，ある n について，既約分数 a/b (0 < a < b <= n) からなる数列である．
+
+n 番目のファレイ数列の項数を答える．
+
+## 制約
+- 2 <= n <= 10^6
+
+## 解法
+n 番目のファレイ数列の項数を F[n] とすると，F[n] = F[n-1] + (n の約数の数) で計算できる．
+
+n の約数の数はオイラーのφ関数で計算できる．
+
+{% include_code lang:cpp poj/2478.cc %}

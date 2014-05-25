@@ -1,0 +1,28 @@
+---
+layout: post
+title: "POJ 2992 - Divisors"
+---
+[http://poj.org/problem?id=2992](http://poj.org/problem?id=2992)
+
+## 概要
+`C(n,k)` の約数の数を答える．
+
+## 制約
+- 0 <= k <= n <= 431
+- 答えは 2^63 - 1 を越えない
+
+## 解法
+しばらく TLE から抜け出せず，[Problems Statement: CTU Open 2005 Contest](http://contest.felk.cvut.cz/05prg/solved/) からインプットをとってきてみると，93528行もあった…
+
+`n!` が素因数として `p` を `f(n,p)` 個持っているとすると，`C(n,k)` は `p` を素因数として `f(n,p) - f(k,p) - f(n-k,p)` 個持っている．
+これをすべての素数 p に関して計算して，1を足したものの積をとれば `C(n,k)` の約数が求まる．
+
+`f(n,p)` は，`n` を `p^i` (i = 1, 2, ...) で割ったときの商の和をとることで計算できる．
+
+この `f(n,p)` を毎回計算しても TLE するので，n, p でメモ化するか，下のように予め計算してテーブルを作っておくとやっと通るようになった (610MS)．
+
+しかし，なぜかこのゴルフしたコードのほうがかなり速かった (235MS)．
+{% codeblock lang:c %}
+p[431],s[999],t[432][432],*q=p,j,N,K;long long a;main(i){for(i=2;i<432;i++)if(!s[i])for(*q++=j=i;j<432;s[j+=i]=1);for(i=0;i<432;i++)for(q=p;*q;q++)for(j=*q;j<=i;j*=*q)t[i][*q]+=i/j;for(;~scanf("%d%d",&N,&K);printf("%lld\n",a))for(a=1,q=p;i=*q;q++)a*=1+t[N][i]-t[K][i]-t[N-K][i];}
+{% endcodeblock %}
+{% include_code lang:c poj/2992.c %}

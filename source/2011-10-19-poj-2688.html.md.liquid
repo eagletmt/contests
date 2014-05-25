@@ -1,0 +1,16 @@
+---
+layout: post
+title: "POJ 2688 - Cleaning Robot"
+---
+[http://poj.org/problem?id=2688](http://poj.org/problem?id=2688)
+
+## 概要，制約
+日本語の問題文を参照．
+[Problem F: Cleaning Robot](http://www.teu.ac.jp/icpc/jp/domestic/ICPC2005_Problems_Domestic/F/F_ja.html)
+
+## 解法
+各点同士の最短経路を求めてから巡回セールスマン問題として解く．
+
+TLE が厳しめな気がする．
+
+{% include_code lang:cpp poj/2688.cc %}

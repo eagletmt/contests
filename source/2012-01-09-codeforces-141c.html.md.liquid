@@ -1,0 +1,24 @@
+---
+layout: post
+title: "Codeforces Round #101 (Div. 2) C - Queue"
+---
+[http://codeforces.com/contest/141/problem/C](http://codeforces.com/contest/141/problem/C)
+
+## 概要
+n 人の人が各々「自分より前に自分より背の高い人は a[i] 人いる」という情報を覚えている．
+
+a[0], ..., a[n-1] が与えられたとき，矛盾無く一列に並べることができるかどうか答える．
+矛盾無く一列に並べることができる場合，先頭の人から順に身長 h[i] の具体例も答える．
+
+## 制約
+- 1 <= n <= 3000
+- 0 <= a[i] <= n-1
+- 1 <= h[i] <= 10^9
+
+## 解法
+a を昇順にソートし，a[i] > i となる i が存在するときは NO．
+
+そうでないときは，先頭から h[i] = i-a[i] を割り当てる．
+このとき，それに応じて i より前の人の割り当てをインクリメントして帳尻を合わせる．
+
+{% include_code lang:cpp codeforces/141c.cc %}

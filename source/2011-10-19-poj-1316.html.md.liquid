@@ -1,0 +1,21 @@
+---
+layout: post
+title: "POJ 1316 - Self Numbers"
+---
+[http://poj.org/problem?id=1316](http://poj.org/problem?id=1316)
+
+## 概要
+`d(n)` を「n 自身と，n を十進表記したときの各位の和」と定義する．
+
+m = d(n) に対して，n を m の generator とする．
+例えば d(91) = 101 なので，99 は 101 の generator であり，また d(100) = 101 なので 100 も 101 の generator である．
+
+どの数の generator でもない数を self-number という．
+例えば 1 は self-number である．
+
+10000 以下のすべての self-number を昇順に答える．
+
+## 解法
+やるだけ．
+
+{% include_code lang:cpp poj/1316.cc %}

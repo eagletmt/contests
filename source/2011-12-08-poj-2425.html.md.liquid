@@ -1,0 +1,25 @@
+---
+layout: post
+title: "POJ 2425 - A Chess Game"
+---
+[http://poj.org/problem?id=2425](http://poj.org/problem?id=2425)
+
+## 概要
+N 個のノードからなる閉路のない有向なグラフが与えられる．
+このうち M 個のノード a[1], ..., a[M] に駒が置かれている．
+
+2人のプレイヤーは交互に，1つの駒をそのノードから出ているエッジに沿って1つ進めることができる．
+そして，どの駒も動かせないときそのプレイヤーは負けとなる．
+
+両プレイヤーが最適な手を選択したとき，先手が勝つか負けるかを答える．
+
+## 制約
+- 1 <= N <= 1000
+- 1 <= M <= 10
+
+## 解法
+grundy number で解く．
+
+ちょうど [http://community.topcoder.com/tc?module=Static&d1=tutorials&d2=algorithmGames](http://community.topcoder.com/tc?module=Static&d1=tutorials&d2=algorithmGames) の後半の例とほぼ同じように解ける．
+
+{% include_code lang:cpp poj/2425.cc %}

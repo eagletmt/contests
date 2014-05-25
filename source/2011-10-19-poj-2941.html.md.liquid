@@ -1,0 +1,30 @@
+---
+layout: post
+title: "POJ 2941 - Homogeneous Squares"
+---
+[http://poj.org/problem?id=2941](http://poj.org/problem?id=2941)
+
+## 概要
+n x n のボードが与えられ，各マスに数字が割り当てられている．
+x1 != x2 && y1 != y2 のとき，ポジション (x1, y1) と (x2, y2) は independent である，と呼ぶ．
+n 個のうち任意の2つのポジションが independent のとき，その n 個のポジションは n independent と呼ぶ．
+したがって n independent な n 個のポジションの選び方は n! 通りある．
+
+n independent なマスに書かれている数値の合計がその選び方にかかわらず一致するとき，そのボードを homogeneous と呼ぶ．
+与えられたボードが homogeneous かどうか判定する問題．
+
+## 制約
+- 1 <= n <= 1000
+- -1000000 <= 各マスの数値 <= 1000000
+
+## 解法
+(i, j) の数値を a[i][j] とすると，任意の i, j について
+
+    a[i][j] + a[i+1][j+1] == a[i][j+1] + a[i+1][j]
+
+となっていればいい．
+
+もしこの等式が成り立たないと，左辺のケースでも右辺のケースでも残りのマスを全く同じように選ぶことができるので，最終的な合計も一致しなくなってしまう．
+
+
+{% include_code lang:cpp poj/2941.cc %}

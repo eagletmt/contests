@@ -1,0 +1,20 @@
+---
+layout: post
+title: "POJ 2065 - SETI"
+---
+[http://poj.org/problem?id=2065](http://poj.org/problem?id=2065)
+
+## 概要
+数列 \\(a\_0, \\ldots, a\_\{n-1\}\\) と素数 \\(p\\) を用いて，関数 \\(f(k)\\) を \\(f(k) = \\sum\_\{0 \\le i \\le n-1\} a\_i k ^ i\\) と定める．
+\\(f(k)\\) は \\(1 \\le k \\le n\\) に対して \\(0 \\le f(k) \\le 26\\) を満たすとする．
+
+\\(p\\) と \\(f(1), \\ldots, f(n)\\) の値が与えられるので，\\(a\_0, \\ldots, a\_\{n-1\}\\) を答える．
+
+## 制約
+- \\(\\mbox\{max\}(n, 26) \\lt p \\le 30000\\)
+- \\(0 \\le a\_i \\lt p\\)
+
+## 解法
+\\(a\_\{i\}\\) に関する連立方程式を \\(\\mbox\{GF\}(p)\\) の上で解くだけ．
+
+{% include_code lang:cpp poj/2065.cc %}

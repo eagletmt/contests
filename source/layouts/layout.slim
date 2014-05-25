@@ -1,0 +1,20 @@
+doctype html
+html
+  head
+    meta charset="utf-8"
+    meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible"
+    title== "#{data.page.title} - #{data.config.title}"
+
+    == stylesheet_link_tag "normalize", "pygments", "all"
+    == javascript_include_tag  "all"
+    == javascript_include_tag "https://c328740.ssl.cf1.rackcdn.com/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"
+
+  body class="#{page_classes}"
+    #header
+      h1= data.config.title
+      p
+        |POJ/AOJ を中心に解いた問題のコードと簡単な解説。
+        br
+        |ライブラリは #{link_to 'https://github.com/osak/ICPCLibrary'}
+    #main
+      == yield

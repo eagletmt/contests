@@ -1,0 +1,25 @@
+---
+layout: post
+title: "POJ 3614 - Sunscreen"
+---
+[http://poj.org/problem?id=3614](http://poj.org/problem?id=3614)
+
+## 概要
+C 頭の牛がおり，それぞれ SPF の値が minSPF[i] 以上 maxSPF[i] 以下の日焼止めを必要としている．
+日焼止めは L 個あり，それぞれ SPF の値は SPF[i] で，cover[i] 頭の牛に塗ることができる．
+
+このとき，最大で何頭の牛の要求を満たせるかを答える．
+
+## 制約
+- 1 <= C <= 2500
+- 1 <= L <= 2500
+- 1 <= minSPF[i] <= 1000
+- minSPF[i] <= maxSPF[i] <= 1000
+- 1 <= SPF[i] <= 1000
+
+## 解法
+普通(?)に最大流だけど，ノード数が最大で V = C+L+2 = 5002，エッジ数が最大で E = C + C*L + L = 6,255,000 と大きめなので実装に注意が要る．
+
+アルゴリズムは Dinic を使って TLE を回避し，グラフは隣接リストで表現して容量やフローも V * V の配列ではなくエッジに持たせるようにして MLE を回避した．
+
+{% include_code lang:cpp poj/3614.cc %}

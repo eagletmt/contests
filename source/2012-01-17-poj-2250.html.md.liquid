@@ -1,0 +1,18 @@
+---
+layout: post
+title: "POJ 2250 - Compromise"
+---
+[http://poj.org/problem?id=2250](http://poj.org/problem?id=2250)
+
+## 概要
+2つの単語の列が与えられるので，それらの最長共通部分列を答える．
+
+## 制約
+- 単語は小文字のアルファベットのみからなる
+- 単語の長さは 30 以下
+- 単語の数は 100 個以下
+
+## 解法
+LCS の DP + 経路復元．
+
+{% include_code lang:cpp poj/2250.cc %}

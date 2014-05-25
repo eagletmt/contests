@@ -1,0 +1,31 @@
+---
+layout: post
+title: "POJ 2568 - Decode the Tree"
+---
+[http://poj.org/problem?id=2568](http://poj.org/problem?id=2568)
+
+## 概要
+Prufer code が与えられるので、それで表された根付き木を1つ答える (Special Judge)。
+Prufer code は [POJ 2567 - Code the Tree](/blog/poj-2567) を参照。
+
+## 制約
+- \\(1 \\le n \\le 50\\)
+
+## 解法
+たとえば最初の Sample Input の場合、Prufer code の性質から
+
+- 5は2つの子ノードをもつ
+- 2は3つの子ノードをもつ
+- 6は1つの子ノードをもつ
+- 8は1つの子ノードをもつ
+- 1, 3, 4, 7 は子ノードをもたない (葉ノード)
+
+ということがわかる。
+
+Prufer code の順に葉ノードの集合から最も小さいものを子ノードとして追加していく。
+子ノードを追加した結果そのノードにこれ以上子ノードを追加できなくなった場合、そのノードを新たに葉ノードの集合に加える。
+このとき葉ノードの集合は priority\_queue で管理して小さいノードから取り出せるようにしておく。
+
+コーナーケースとして、サイズが1の木の Prufer code は空文字列、つまり空行として入力がくることに注意する (これで何度も Runtime Error を出した…)。
+
+{% include_code lang:cpp poj/2568.cc %}

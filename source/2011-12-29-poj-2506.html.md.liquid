@@ -1,0 +1,22 @@
+---
+layout: post
+title: "POJ 2506 - Tiling"
+---
+[http://poj.org/problem?id=2506](http://poj.org/problem?id=2506)
+
+## 概要
+2x1 のタイルと 2x2 のタイルがある．
+これらで何通りの 2xn の長方形を作れるか答える．
+
+## 制約
+- 0 <= n <= 250
+
+## 解法
+
+    dp[n] = dp[n-1] + 2 * dp[n-2]
+
+という DP．
+
+サンプルを見ての通り long long にも余裕で収まらないので BigInteger．
+
+{% include_code lang:cpp poj/2506.java %}

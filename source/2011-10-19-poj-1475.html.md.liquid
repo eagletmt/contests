@@ -1,0 +1,19 @@
+---
+layout: post
+title: "POJ 1475 - Pushing Boxes"
+---
+[http://poj.org/problem?id=1475](http://poj.org/problem?id=1475)
+
+## 概要
+r \* c の二次元の迷路にスタート位置と箱の位置とゴールの位置が設定されている．
+
+箱をゴールまで押して移動させたときの，最短のステップを答える．
+ただし，移動させることができないときは「Impossible」と出力する．
+
+## 制約
+- r, c <= 20
+
+## 解法
+箱について BFS しつつ，1マス分動かす度に人を BFS で移動させる．
+
+{% include_code lang:cpp poj/1475.cc %}

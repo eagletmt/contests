@@ -1,0 +1,20 @@
+---
+layout: post
+title: "AOJ 2051 - Rotation Estimation"
+---
+[http://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=2051](http://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=2051)
+
+## 概要
+n 個の星の位置を表す写真が2種類与えられるので，最小でどれくらい回転させればその2つの写真が一致するかどうかを答える．
+
+## 制約
+- n <= 1000
+- |座標| <= 100
+- 2つの写真が一致するような角度は必ず存在する
+
+## 解法
+回転させても重心の位置は変わらないので，まず2つの写真を重心が原点になるように平行移動させる．
+
+あとはある2点を決めて，それが一致するように片方を回転させたとき，他の星もすべて一致するかどうかを調べる．
+
+{% include_code lang:cpp aoj/2051.cc %}

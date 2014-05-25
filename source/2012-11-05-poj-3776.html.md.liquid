@@ -1,0 +1,31 @@
+---
+layout: post
+title: "POJ 3776 - Passing the Message"
+---
+[http://poj.org/problem?id=3776](http://poj.org/problem?id=3776)
+
+## 概要
+\\(N\\) 人の子供が一列に並んでいる。
+各子供の left messenger と right messenger はそれぞれ何番目の子供か答える。
+
+- A の left messenger とは、A の left follower のうち最も背が高い子供である
+- A の left follower とは、A より左側にいて、A より背が低く、A から見える子供である (もちろん、複数存在しうる)
+- A の左側にいる子供のうち、A より背が高い最も近い子供までのすべての子供を、A は見ることができる
+- right messenger の定義も同様
+
+## 制約
+- \\(0 < N \\le 50000\\)
+- 子供の高さ \\(h < 2 ^ {31} - 1\\)
+- 子供の高さはユニーク
+
+## 解法
+半区間 \\([0, N-1)\\) からスタートし、
+半区間内で最も背の高い子供を \\(I\\) とすると、
+\\(I\\) の left follower は半区間 \\([0, I)\\) で最も背が高い子供であり、
+再帰的にその半区間内でも同様の処理を行う。
+\\(I\\) の right follower は半区間 \\([I+1, N)\\) で最も背が高い子供であり、
+再帰的にその半区間内でも同様の処理を行う。
+
+半区間内で最も背の高い子供を見つけるのには SegmentTree を使った。
+
+{% include_code lang:cpp poj/3776.cc %}

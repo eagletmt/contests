@@ -1,0 +1,16 @@
+---
+layout: post
+title: "POJ 1472 - Instant Complexity"
+---
+[http://poj.org/problem?id=1472](http://poj.org/problem?id=1472)
+
+## 概要
+BNF に従ったプログラムが渡されるので，それの計算量を答える．
+
+## 制約
+- LOOP のネストは10段まで．つまり計算量は最大でも10次の多項式
+
+## 解法
+普通に構文解析して多項式を足したり掛けたりするだけ．
+
+{% include_code lang:cpp poj/1472.cc %}
