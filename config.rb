@@ -16,7 +16,8 @@ class IncludeCodeTag < Liquid::Tag
 
   def render(context)
     path = "source/code/#{@path}"
-    %Q{<pre>#{Pygments.highlight(File.read(path), lexer: @language, options: { linenos: 'inline' })}</pre>}
+    link = "/contests/code/#{@path}"
+    %Q{<pre>#{Pygments.highlight(File.read(path), lexer: @language, options: { linenos: 'inline' })}</pre><a href="#{link}">#{@path}</a>}
   end
 end
 
@@ -42,7 +43,7 @@ end
 
 set :css_dir, 'stylesheets'
 #set :js_dir, 'javascripts'
-#set :images_dir, 'images'
+set :images_dir, 'images'
 
 set :markdown_engine, :redcarpet
 set :http_prefix, '/contests'
@@ -56,9 +57,6 @@ activate :blog do |blog|
   blog.paginate = true
   blog.page_link = 'blog/page/{num}'
   blog.per_page = 20
-  blog.summary_generator = lambda do |blog_article, rendered, length, ellipsis|
-    "#{blog_article.date.strftime('%F')} #{blog_article.title}"
-  end
 end
 
 activate :livereload
