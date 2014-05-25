@@ -1,0 +1,26 @@
+digraph g1 {
+  graph [rankdir = LR];
+  source -> 1 [label = "1 / 0"];
+  source -> 3 [label = "1 / 0"];
+  source -> 5 [label = "1 / 0"];
+  source -> 22 [label = "1 / 0"];
+  source -> 7 [label = "1 / 0"];
+  source -> 10 [label = "1 / 0"];
+  1 -> "20'" [label = "1 / -1000"];
+  3 -> "25'" [label = "1 / -10000"];
+  5 -> "15'" [label = "1 / -5000"];
+  22 -> "300'" [label = "1 / -5500"];
+  7 -> "7'" [label = "1 / -6000"];
+  10 -> "295'" [label = "1 / -9000"];
+  "20'" -> sink [label = "1 / 0"];
+  "25'" -> sink [label = "1 / 0"];
+  "15'" -> sink [label = "1 / 0"];
+  "300'" -> sink [label = "1 / 0"];
+  "7'" -> sink [label = "1 / 0"];
+  "295'" -> sink [label = "1 / 0"];
+
+  "20'" -> 22 [label = "1 / 0"];
+  "15'" -> 22 [label = "1 / 0"];
+  "7'" -> 22 [label = "1 / 0"];
+  "7'" -> 10 [label = "1 / 0"];
+}

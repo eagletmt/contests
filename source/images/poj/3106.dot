@@ -1,0 +1,18 @@
+digraph g {
+  I -> A [label = A];
+  I -> H [label = H];
+  A -> AA [label = A];
+  A -> HAAA [label = H];
+  AA -> AAA [label = A];
+  AA -> HAA [label = H];
+  AAA -> I [label = A];
+  AAA -> HA [label = H];
+  H -> HA [label = A];
+  H -> I [label = H];
+  HA -> HAA [label = A];
+  HA -> AAA [label = H];
+  HAA -> HAAA [label = A];
+  HAA -> AA [label = H];
+  HAAA -> H [label = A];
+  HAAA -> A [label = H];
+}

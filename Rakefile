@@ -20,3 +20,14 @@ namespace :pygments do
     end
   end
 end
+
+namespace :images do
+  desc 'Generate SVG from dot'
+  task :generate do
+    Dir.glob('source/images/**/*.dot').each do |dot|
+      dot_path = Pathname.new(dot)
+      svg_path = dot_path.sub_ext('.svg')
+      sh 'dot', '-Tsvg', '-o', svg_path.to_s, dot_path.to_s
+    end
+  end
+end
