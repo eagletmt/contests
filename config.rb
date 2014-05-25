@@ -23,6 +23,10 @@ end
 Liquid::Template.register_tag('include_code', IncludeCodeTag)
 
 helpers do
+  def simple_link_to(link)
+    link_to link, link
+  end
+
   def find_next_article(blog_article)
     index = blog.articles.find_index(blog_article)
     if index > 0
