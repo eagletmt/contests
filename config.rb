@@ -41,16 +41,16 @@ set :css_dir, 'stylesheets'
 #set :images_dir, 'images'
 
 set :markdown_engine, :redcarpet
+set :http_prefix, '/contests'
 
 configure :build do
   activate :asset_hash
-  activate :relative_assets
 end
 
 activate :blog do |blog|
-  blog.permalink = 'contests/blog/{title}.html'
+  blog.permalink = 'blog/{title}.html'
   blog.paginate = true
-  blog.page_link = 'contests/blog/page/{num}'
+  blog.page_link = 'blog/page/{num}'
   blog.per_page = 20
   blog.summary_generator = lambda do |blog_article, rendered, length, ellipsis|
     "#{blog_article.date.strftime('%F')} #{blog_article.title}"
