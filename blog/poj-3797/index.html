@@ -1,0 +1,50 @@
+<!DOCTYPE html><html><head><meta charset="utf-8" /><meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible" /><title>POJ 3797 - Tiling a Grid With Dominoes - プログラミングコンテストの記録</title><link rel="alternate" type="application/atom+xml" title="Atom Feed" href="/contests/blog/feed.xml" /><link href="/contests/stylesheets/normalize-ef7858ef.css" rel="stylesheet" type="text/css" /><link href="/contests/stylesheets/pygments-61d6ee10.css" rel="stylesheet" type="text/css" /><link href="/contests/stylesheets/all-1916dece.css" rel="stylesheet" type="text/css" /><script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script></head><body class="blog blog_poj-3797 blog_poj-3797_index"><div id="header"><h1>プログラミングコンテストの記録</h1><p>POJ/AOJ を中心に解いた問題のコードと簡単な解説。<br />ライブラリは <a href="https://github.com/osak/ICPCLibrary">https://github.com/osak/ICPCLibrary</a></p></div><div id="main"><article class="post"><h1>POJ 3797 - Tiling a Grid With Dominoes</h1><p><a href="http://poj.org/problem?id=3793">http://poj.org/problem?id=3793</a></p>
+
+<h2>概要</h2>
+
+<p>2 x 1 の長方形を使って何通りの方法で 4 x W の長方形を作ることができるかを答える．</p>
+
+<h2>制約</h2>
+
+<ul>
+<li>答えは 32-bit の整数に収まる</li>
+</ul>
+
+<h2>解法</h2>
+
+<p>漸化式を立てて計算するだけ．
+W はだいたい 30 くらいまでなのでメモ化は必要無いかなと思いつつ，一応メモ化再帰で計算した．</p>
+
+<p><pre><div class="highlight"><pre><span class="lineno"> 1</span> <span class="cp">#include &lt;iostream&gt;</span>
+<span class="lineno"> 2</span> <span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+<span class="lineno"> 3</span> 
+<span class="lineno"> 4</span> <span class="kt">int</span> <span class="n">dp</span><span class="p">[</span><span class="mi">30</span><span class="p">];</span>
+<span class="lineno"> 5</span> <span class="kt">int</span> <span class="nf">f</span><span class="p">(</span><span class="kt">int</span> <span class="n">w</span><span class="p">)</span>
+<span class="lineno"> 6</span> <span class="p">{</span>
+<span class="lineno"> 7</span>   <span class="kt">int</span> <span class="o">&amp;</span><span class="n">a</span> <span class="o">=</span> <span class="n">dp</span><span class="p">[</span><span class="n">w</span><span class="p">];</span>
+<span class="lineno"> 8</span>   <span class="k">if</span> <span class="p">(</span><span class="n">a</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+<span class="lineno"> 9</span>     <span class="k">return</span> <span class="n">a</span><span class="p">;</span>
+<span class="lineno">10</span>   <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+<span class="lineno">11</span>     <span class="n">a</span> <span class="o">+=</span> <span class="n">f</span><span class="p">(</span><span class="n">w</span><span class="o">-</span><span class="mi">1</span><span class="p">);</span>
+<span class="lineno">12</span>     <span class="n">a</span> <span class="o">+=</span> <span class="mi">4</span><span class="o">*</span><span class="n">f</span><span class="p">(</span><span class="n">w</span><span class="o">-</span><span class="mi">2</span><span class="p">);</span>
+<span class="lineno">13</span>     <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">3</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;=</span> <span class="n">w</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+<span class="lineno">14</span>       <span class="n">a</span> <span class="o">+=</span> <span class="p">(</span><span class="n">i</span> <span class="o">&amp;</span> <span class="mi">1</span> <span class="o">?</span> <span class="mi">2</span> <span class="o">:</span> <span class="mi">3</span><span class="p">)</span> <span class="o">*</span> <span class="n">f</span><span class="p">(</span><span class="n">w</span><span class="o">-</span><span class="n">i</span><span class="p">);</span>
+<span class="lineno">15</span>     <span class="p">}</span>
+<span class="lineno">16</span>     <span class="k">return</span> <span class="n">a</span><span class="p">;</span>
+<span class="lineno">17</span>   <span class="p">}</span>
+<span class="lineno">18</span> <span class="p">}</span>
+<span class="lineno">19</span> 
+<span class="lineno">20</span> <span class="kt">int</span> <span class="nf">main</span><span class="p">()</span>
+<span class="lineno">21</span> <span class="p">{</span>
+<span class="lineno">22</span>   <span class="n">dp</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">dp</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+<span class="lineno">23</span>   <span class="kt">int</span> <span class="n">T</span><span class="p">;</span>
+<span class="lineno">24</span>   <span class="n">cin</span> <span class="o">&gt;&gt;</span> <span class="n">T</span><span class="p">;</span>
+<span class="lineno">25</span>   <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">Ti</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="n">Ti</span> <span class="o">&lt;=</span> <span class="n">T</span><span class="p">;</span> <span class="n">Ti</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+<span class="lineno">26</span>     <span class="kt">int</span> <span class="n">w</span><span class="p">;</span>
+<span class="lineno">27</span>     <span class="n">cin</span> <span class="o">&gt;&gt;</span> <span class="n">w</span><span class="p">;</span>
+<span class="lineno">28</span>     <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">Ti</span> <span class="o">&lt;&lt;</span> <span class="sc">&#39; &#39;</span> <span class="o">&lt;&lt;</span> <span class="n">f</span><span class="p">(</span><span class="n">w</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+<span class="lineno">29</span>   <span class="p">}</span>
+<span class="lineno">30</span>   <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="lineno">31</span> <span class="p">}</span>
+</pre></div></pre><a href="/contests/code/poj/3797.cc">poj/3797.cc</a></p>
+<footer><p>Posted on 2012-01-22</p><a class="prev-page" href="/contests/blog/poj-2065/">POJ 2065 - SETI</a><a class="next-page" href="/contests/blog/poj-3025/">POJ 3025 - Rings</a></footer></article></div></body></html>

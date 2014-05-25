@@ -1,0 +1,145 @@
+<!DOCTYPE html><html><head><meta charset="utf-8" /><meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible" /><title>AOJ 1012 - Operations with Finite Sets - プログラミングコンテストの記録</title><link rel="alternate" type="application/atom+xml" title="Atom Feed" href="/contests/blog/feed.xml" /><link href="/contests/stylesheets/normalize-ef7858ef.css" rel="stylesheet" type="text/css" /><link href="/contests/stylesheets/pygments-61d6ee10.css" rel="stylesheet" type="text/css" /><link href="/contests/stylesheets/all-1916dece.css" rel="stylesheet" type="text/css" /><script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script></head><body class="blog blog_aoj-1012 blog_aoj-1012_index"><div id="header"><h1>プログラミングコンテストの記録</h1><p>POJ/AOJ を中心に解いた問題のコードと簡単な解説。<br />ライブラリは <a href="https://github.com/osak/ICPCLibrary">https://github.com/osak/ICPCLibrary</a></p></div><div id="main"><article class="post"><h1>AOJ 1012 - Operations with Finite Sets</h1><p><a href="http://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=1012">http://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=1012</a></p>
+
+<h2>概要</h2>
+
+<p>1個から5個の有限集合が与えられ，さらに集合演算を表す式が与えられるのでその結果を答える．
+ただし，結果が空集合のときは「NULL」と答える．</p>
+
+<p>集合演算には</p>
+
+<ul>
+<li>集合和 AuB</li>
+<li>集合積 AiB</li>
+<li>集合差 AdB</li>
+<li>対称差 AsB</li>
+<li>補集合 cA</li>
+</ul>
+
+<p>がある．問題文には明記されていないけど，すべての二項演算子は左結合．</p>
+
+<p>補集合をとるときの全体集合とは，与えられた集合の和集合とする．</p>
+
+<h2>制約</h2>
+
+<ul>
+<li>集合の名前は A, B, C, D, E のいずれか</li>
+<li>1つの集合の要素は 1 以上 100 以下</li>
+</ul>
+
+<h2>解法</h2>
+
+<p>構文解析の後，言われた通りに集合演算するだけ．</p>
+
+<p>入力の最後を検出するのがめんどくさい．
+eofbit は「読み込んでみたら EOF だった」ときに立つので，ignore() した後に peek() することで eofbit を立てることができる．</p>
+
+<p><pre><div class="highlight"><pre><span class="lineno">  1</span> <span class="cp">#include &lt;iostream&gt;</span>
+<span class="lineno">  2</span> <span class="cp">#include &lt;vector&gt;</span>
+<span class="lineno">  3</span> <span class="cp">#include &lt;iterator&gt;</span>
+<span class="lineno">  4</span> <span class="cp">#include &lt;algorithm&gt;</span>
+<span class="lineno">  5</span> <span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+<span class="lineno">  6</span> 
+<span class="lineno">  7</span> <span class="k">typedef</span> <span class="n">string</span><span class="o">::</span><span class="n">const_iterator</span> <span class="n">Iterator</span><span class="p">;</span>
+<span class="lineno">  8</span> 
+<span class="lineno">  9</span> <span class="k">struct</span> <span class="n">evaluator</span>
+<span class="lineno"> 10</span> <span class="p">{</span>
+<span class="lineno"> 11</span>   <span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">all</span><span class="p">;</span>
+<span class="lineno"> 12</span>   <span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">sets</span><span class="p">[</span><span class="mi">5</span><span class="p">];</span>
+<span class="lineno"> 13</span> 
+<span class="lineno"> 14</span>   <span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">factor</span><span class="p">(</span><span class="n">Iterator</span><span class="o">&amp;</span> <span class="n">it</span><span class="p">,</span> <span class="k">const</span> <span class="n">Iterator</span><span class="o">&amp;</span> <span class="n">last</span><span class="p">)</span> <span class="k">const</span>
+<span class="lineno"> 15</span>   <span class="p">{</span>
+<span class="lineno"> 16</span>     <span class="k">if</span> <span class="p">(</span><span class="o">*</span><span class="n">it</span> <span class="o">==</span> <span class="sc">&#39;(&#39;</span><span class="p">)</span> <span class="p">{</span>
+<span class="lineno"> 17</span>       <span class="o">++</span><span class="n">it</span><span class="p">;</span>
+<span class="lineno"> 18</span>       <span class="k">const</span> <span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">r</span> <span class="o">=</span> <span class="n">expr</span><span class="p">(</span><span class="n">it</span><span class="p">,</span> <span class="n">last</span><span class="p">);</span>
+<span class="lineno"> 19</span>       <span class="o">++</span><span class="n">it</span><span class="p">;</span>
+<span class="lineno"> 20</span>       <span class="k">return</span> <span class="n">r</span><span class="p">;</span>
+<span class="lineno"> 21</span>     <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+<span class="lineno"> 22</span>       <span class="k">const</span> <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="o">*</span><span class="n">it</span><span class="o">-</span><span class="sc">&#39;A&#39;</span><span class="p">;</span>
+<span class="lineno"> 23</span>       <span class="o">++</span><span class="n">it</span><span class="p">;</span>
+<span class="lineno"> 24</span>       <span class="k">return</span> <span class="n">sets</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+<span class="lineno"> 25</span>     <span class="p">}</span>
+<span class="lineno"> 26</span>   <span class="p">}</span>
+<span class="lineno"> 27</span> 
+<span class="lineno"> 28</span>   <span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">term</span><span class="p">(</span><span class="n">Iterator</span><span class="o">&amp;</span> <span class="n">it</span><span class="p">,</span> <span class="k">const</span> <span class="n">Iterator</span><span class="o">&amp;</span> <span class="n">last</span><span class="p">)</span> <span class="k">const</span>
+<span class="lineno"> 29</span>   <span class="p">{</span>
+<span class="lineno"> 30</span>     <span class="k">if</span> <span class="p">(</span><span class="o">*</span><span class="n">it</span> <span class="o">==</span> <span class="sc">&#39;c&#39;</span><span class="p">)</span> <span class="p">{</span>
+<span class="lineno"> 31</span>       <span class="o">++</span><span class="n">it</span><span class="p">;</span>
+<span class="lineno"> 32</span>       <span class="k">const</span> <span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">s</span> <span class="o">=</span> <span class="n">factor</span><span class="p">(</span><span class="n">it</span><span class="p">,</span> <span class="n">last</span><span class="p">);</span>
+<span class="lineno"> 33</span>       <span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">r</span><span class="p">;</span>
+<span class="lineno"> 34</span>       <span class="n">set_difference</span><span class="p">(</span><span class="n">all</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">all</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span> <span class="n">s</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">s</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span> <span class="n">back_inserter</span><span class="p">(</span><span class="n">r</span><span class="p">));</span>
+<span class="lineno"> 35</span>       <span class="k">return</span> <span class="n">r</span><span class="p">;</span>
+<span class="lineno"> 36</span>     <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+<span class="lineno"> 37</span>       <span class="k">return</span> <span class="n">factor</span><span class="p">(</span><span class="n">it</span><span class="p">,</span> <span class="n">last</span><span class="p">);</span>
+<span class="lineno"> 38</span>     <span class="p">}</span>
+<span class="lineno"> 39</span>   <span class="p">}</span>
+<span class="lineno"> 40</span> 
+<span class="lineno"> 41</span>   <span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">expr</span><span class="p">(</span><span class="n">Iterator</span><span class="o">&amp;</span> <span class="n">it</span><span class="p">,</span> <span class="k">const</span> <span class="n">Iterator</span><span class="o">&amp;</span> <span class="n">last</span><span class="p">)</span> <span class="k">const</span>
+<span class="lineno"> 42</span>   <span class="p">{</span>
+<span class="lineno"> 43</span>     <span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">r</span> <span class="o">=</span> <span class="n">term</span><span class="p">(</span><span class="n">it</span><span class="p">,</span> <span class="n">last</span><span class="p">);</span>
+<span class="lineno"> 44</span>     <span class="k">while</span> <span class="p">(</span><span class="n">it</span> <span class="o">!=</span> <span class="n">last</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="o">*</span><span class="n">it</span> <span class="o">==</span> <span class="sc">&#39;u&#39;</span> <span class="o">||</span> <span class="o">*</span><span class="n">it</span> <span class="o">==</span> <span class="sc">&#39;i&#39;</span> <span class="o">||</span> <span class="o">*</span><span class="n">it</span> <span class="o">==</span> <span class="sc">&#39;d&#39;</span> <span class="o">||</span> <span class="o">*</span><span class="n">it</span> <span class="o">==</span> <span class="sc">&#39;s&#39;</span><span class="p">))</span> <span class="p">{</span>
+<span class="lineno"> 45</span>       <span class="k">const</span> <span class="kt">char</span> <span class="n">op</span> <span class="o">=</span> <span class="o">*</span><span class="n">it</span><span class="p">;</span>
+<span class="lineno"> 46</span>       <span class="o">++</span><span class="n">it</span><span class="p">;</span>
+<span class="lineno"> 47</span>       <span class="k">const</span> <span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">l</span> <span class="o">=</span> <span class="n">term</span><span class="p">(</span><span class="n">it</span><span class="p">,</span> <span class="n">last</span><span class="p">);</span>
+<span class="lineno"> 48</span>       <span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">o</span><span class="p">;</span>
+<span class="lineno"> 49</span>       <span class="k">switch</span> <span class="p">(</span><span class="n">op</span><span class="p">)</span> <span class="p">{</span>
+<span class="lineno"> 50</span>         <span class="k">case</span> <span class="sc">&#39;u&#39;</span><span class="o">:</span>
+<span class="lineno"> 51</span>           <span class="n">set_union</span><span class="p">(</span><span class="n">r</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">r</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span> <span class="n">l</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">l</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span> <span class="n">back_inserter</span><span class="p">(</span><span class="n">o</span><span class="p">));</span>
+<span class="lineno"> 52</span>           <span class="k">break</span><span class="p">;</span>
+<span class="lineno"> 53</span>         <span class="k">case</span> <span class="sc">&#39;i&#39;</span><span class="o">:</span>
+<span class="lineno"> 54</span>           <span class="n">set_intersection</span><span class="p">(</span><span class="n">r</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">r</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span> <span class="n">l</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">l</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span> <span class="n">back_inserter</span><span class="p">(</span><span class="n">o</span><span class="p">));</span>
+<span class="lineno"> 55</span>           <span class="k">break</span><span class="p">;</span>
+<span class="lineno"> 56</span>         <span class="k">case</span> <span class="sc">&#39;d&#39;</span><span class="o">:</span>
+<span class="lineno"> 57</span>           <span class="n">set_difference</span><span class="p">(</span><span class="n">r</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">r</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span> <span class="n">l</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">l</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span> <span class="n">back_inserter</span><span class="p">(</span><span class="n">o</span><span class="p">));</span>
+<span class="lineno"> 58</span>           <span class="k">break</span><span class="p">;</span>
+<span class="lineno"> 59</span>         <span class="k">case</span> <span class="sc">&#39;s&#39;</span><span class="o">:</span>
+<span class="lineno"> 60</span>           <span class="n">set_symmetric_difference</span><span class="p">(</span><span class="n">r</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">r</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span> <span class="n">l</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">l</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span> <span class="n">back_inserter</span><span class="p">(</span><span class="n">o</span><span class="p">));</span>
+<span class="lineno"> 61</span>           <span class="k">break</span><span class="p">;</span>
+<span class="lineno"> 62</span>       <span class="p">}</span>
+<span class="lineno"> 63</span>       <span class="n">swap</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">o</span><span class="p">);</span>
+<span class="lineno"> 64</span>     <span class="p">}</span>
+<span class="lineno"> 65</span>     <span class="k">return</span> <span class="n">r</span><span class="p">;</span>
+<span class="lineno"> 66</span>   <span class="p">}</span>
+<span class="lineno"> 67</span> <span class="p">};</span>
+<span class="lineno"> 68</span> 
+<span class="lineno"> 69</span> <span class="kt">int</span> <span class="nf">main</span><span class="p">()</span>
+<span class="lineno"> 70</span> <span class="p">{</span>
+<span class="lineno"> 71</span>   <span class="k">while</span> <span class="p">(</span><span class="o">!</span><span class="n">cin</span><span class="p">.</span><span class="n">eof</span><span class="p">())</span> <span class="p">{</span>
+<span class="lineno"> 72</span>     <span class="n">string</span> <span class="n">name</span><span class="p">;</span>
+<span class="lineno"> 73</span>     <span class="kt">int</span> <span class="n">n</span><span class="p">;</span>
+<span class="lineno"> 74</span>     <span class="n">evaluator</span> <span class="n">e</span><span class="p">;</span>
+<span class="lineno"> 75</span>     <span class="k">while</span> <span class="p">(</span><span class="n">cin</span> <span class="o">&gt;&gt;</span> <span class="n">name</span> <span class="o">&gt;&gt;</span> <span class="n">n</span> <span class="o">&amp;&amp;</span> <span class="n">name</span> <span class="o">!=</span> <span class="s">&quot;R&quot;</span><span class="p">)</span> <span class="p">{</span>
+<span class="lineno"> 76</span>       <span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;&amp;</span> <span class="n">s</span> <span class="o">=</span> <span class="n">e</span><span class="p">.</span><span class="n">sets</span><span class="p">[</span><span class="n">name</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">-</span><span class="sc">&#39;A&#39;</span><span class="p">];</span>
+<span class="lineno"> 77</span>       <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">n</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+<span class="lineno"> 78</span>         <span class="kt">int</span> <span class="n">x</span><span class="p">;</span>
+<span class="lineno"> 79</span>         <span class="n">cin</span> <span class="o">&gt;&gt;</span> <span class="n">x</span><span class="p">;</span>
+<span class="lineno"> 80</span>         <span class="n">e</span><span class="p">.</span><span class="n">all</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">x</span><span class="p">);</span>
+<span class="lineno"> 81</span>         <span class="n">s</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">x</span><span class="p">);</span>
+<span class="lineno"> 82</span>       <span class="p">}</span>
+<span class="lineno"> 83</span>       <span class="n">sort</span><span class="p">(</span><span class="n">s</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">s</span><span class="p">.</span><span class="n">end</span><span class="p">());</span>
+<span class="lineno"> 84</span>     <span class="p">}</span>
+<span class="lineno"> 85</span>     <span class="n">sort</span><span class="p">(</span><span class="n">e</span><span class="p">.</span><span class="n">all</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">e</span><span class="p">.</span><span class="n">all</span><span class="p">.</span><span class="n">end</span><span class="p">());</span>
+<span class="lineno"> 86</span>     <span class="n">e</span><span class="p">.</span><span class="n">all</span><span class="p">.</span><span class="n">erase</span><span class="p">(</span><span class="n">unique</span><span class="p">(</span><span class="n">e</span><span class="p">.</span><span class="n">all</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">e</span><span class="p">.</span><span class="n">all</span><span class="p">.</span><span class="n">end</span><span class="p">()),</span> <span class="n">e</span><span class="p">.</span><span class="n">all</span><span class="p">.</span><span class="n">end</span><span class="p">());</span>
+<span class="lineno"> 87</span> 
+<span class="lineno"> 88</span>     <span class="n">string</span> <span class="n">s</span><span class="p">;</span>
+<span class="lineno"> 89</span>     <span class="n">cin</span> <span class="o">&gt;&gt;</span> <span class="n">s</span><span class="p">;</span>
+<span class="lineno"> 90</span>     <span class="n">Iterator</span> <span class="n">it</span> <span class="o">=</span> <span class="n">s</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">last</span> <span class="o">=</span> <span class="n">s</span><span class="p">.</span><span class="n">end</span><span class="p">();</span>
+<span class="lineno"> 91</span>     <span class="k">const</span> <span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">r</span> <span class="o">=</span> <span class="n">e</span><span class="p">.</span><span class="n">expr</span><span class="p">(</span><span class="n">it</span><span class="p">,</span> <span class="n">last</span><span class="p">);</span>
+<span class="lineno"> 92</span>     <span class="k">if</span> <span class="p">(</span><span class="n">r</span><span class="p">.</span><span class="n">empty</span><span class="p">())</span> <span class="p">{</span>
+<span class="lineno"> 93</span>       <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;NULL&quot;</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+<span class="lineno"> 94</span>     <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+<span class="lineno"> 95</span>       <span class="k">for</span> <span class="p">(</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;::</span><span class="n">const_iterator</span> <span class="n">it</span> <span class="o">=</span> <span class="n">r</span><span class="p">.</span><span class="n">begin</span><span class="p">();</span> <span class="n">it</span> <span class="o">!=</span> <span class="n">r</span><span class="p">.</span><span class="n">end</span><span class="p">();</span> <span class="o">++</span><span class="n">it</span><span class="p">)</span> <span class="p">{</span>
+<span class="lineno"> 96</span>         <span class="k">if</span> <span class="p">(</span><span class="n">it</span> <span class="o">!=</span> <span class="n">r</span><span class="p">.</span><span class="n">begin</span><span class="p">())</span> <span class="p">{</span>
+<span class="lineno"> 97</span>           <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="sc">&#39; &#39;</span><span class="p">;</span>
+<span class="lineno"> 98</span>         <span class="p">}</span>
+<span class="lineno"> 99</span>         <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="o">*</span><span class="n">it</span><span class="p">;</span>
+<span class="lineno">100</span>       <span class="p">}</span>
+<span class="lineno">101</span>       <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+<span class="lineno">102</span>     <span class="p">}</span>
+<span class="lineno">103</span> 
+<span class="lineno">104</span>     <span class="n">cin</span><span class="p">.</span><span class="n">ignore</span><span class="p">();</span>
+<span class="lineno">105</span>     <span class="n">cin</span><span class="p">.</span><span class="n">peek</span><span class="p">();</span>
+<span class="lineno">106</span>   <span class="p">}</span>
+<span class="lineno">107</span>   <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="lineno">108</span> <span class="p">}</span>
+</pre></div></pre><a href="/contests/code/aoj/1012.cc">aoj/1012.cc</a></p>
+<footer><p>Posted on 2011-11-04</p><a class="prev-page" href="/contests/blog/aoj-2051/">AOJ 2051 - Rotation Estimation</a><a class="next-page" href="/contests/blog/poj-2252/">POJ 2252 - Equation Solver</a></footer></article></div></body></html>

@@ -1,0 +1,73 @@
+<!DOCTYPE html><html><head><meta charset="utf-8" /><meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible" /><title>POJ 2082 - Terrible Sets - プログラミングコンテストの記録</title><link rel="alternate" type="application/atom+xml" title="Atom Feed" href="/contests/blog/feed.xml" /><link href="/contests/stylesheets/normalize-ef7858ef.css" rel="stylesheet" type="text/css" /><link href="/contests/stylesheets/pygments-61d6ee10.css" rel="stylesheet" type="text/css" /><link href="/contests/stylesheets/all-1916dece.css" rel="stylesheet" type="text/css" /><script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script></head><body class="blog blog_poj-2082 blog_poj-2082_index"><div id="header"><h1>プログラミングコンテストの記録</h1><p>POJ/AOJ を中心に解いた問題のコードと簡単な解説。<br />ライブラリは <a href="https://github.com/osak/ICPCLibrary">https://github.com/osak/ICPCLibrary</a></p></div><div id="main"><article class="post"><h1>POJ 2082 - Terrible Sets</h1><p><a href="http://poj.org/problem?id=2082">http://poj.org/problem?id=2082</a></p>
+
+<h2>概要</h2>
+
+<p>数列 w[i], h[i] を i = 1, ..., n に対して</p>
+
+<p><img alt="w_i, h_i \in \mathbb{N}" src="http://chart.apis.google.com/chart?cht=tx&amp;chl=w_i%2C%20h_i%20%5Cin%20%5Cmathbb%7BN%7D" /></p>
+
+<p><img alt="w_0 = 0" src="http://chart.apis.google.com/chart?cht=tx&amp;chl=w_0%20%3D%200" /></p>
+
+<p>とし，さらに</p>
+
+<p><img alt="B = \left{&lt;x, y&gt; \mid x, y \in \mathbb{N}, \exists i &gt; 0, 0 \le y \le h_i, \bigsum_{j = 0}^{i-1}w_i  \le x \le \bigsum_{j = 0}^{i} w_j \right}" src="http://chart.apis.google.com/chart?cht=tx&amp;chl=B%20%3D%20%5Cleft%7B%3Cx%2C%20y%3E%20%5Cmid%20x%2C%20y%20%5Cin%20%5Cmathbb%7BN%7D%2C%20%5Cexists%20i%20%3E%200%2C%200%20%5Cle%20y%20%5Cle%20h_i%2C%20%5Cbigsum_%7Bj%20%3D%200%7D%5E%7Bi-1%7Dw_i%20%20%5Cle%20x%20%5Cle%20%5Cbigsum_%7Bj%20%3D%200%7D%5E%7Bi%7D%20w_j%20%5Cright%7D" /></p>
+
+<p><img alt="S=\left{A\mid W, H \in \mathbb{R}^+, A = WH \wedge \exists x_0, y_0 \in \mathbb{N} \mbox{such that} \left{ &lt;x, y&gt;\mid x_0 \le x \le x_0+W \wedge y_0 \le y \le y_0+H \right} \subseteq B \right}" src="http://chart.apis.google.com/chart?cht=tx&amp;chl=S%3D%5Cleft%7BA%5Cmid%20W%2C%20H%20%5Cin%20%5Cmathbb%7BR%7D%5E%2B%2C%20A%20%3D%20WH%20%5Cwedge%20%5Cexists%20x_0%2C%20y_0%20%5Cin%20%5Cmathbb%7BN%7D%20%5Cmbox%7Bsuch%20that%7D%20%5Cleft%7B%20%3Cx%2C%20y%3E%5Cmid%20x_0%20%5Cle%20x%20%5Cle%20x_0%2BW%20%5Cwedge%20y_0%20%5Cle%20y%20%5Cle%20y_0%2BH%20%5Cright%7D%20%5Csubseteq%20B%20%5Cright%7D" /></p>
+
+<p>と B, S を定義したときの S の最大値を答える．</p>
+
+<h2>制約</h2>
+
+<ul>
+<li>1 &lt;= n &lt;= 50000</li>
+<li>w[1]*h[1] + ... + w[n]*h[n] &lt; 10^9</li>
+</ul>
+
+<h2>解法</h2>
+
+<p>よく読むと，B は二次元上に 幅 w[i] で高さ h[i] の長方形を地面の上に左から並べていったときの全体の領域を表していて，S はその中に作れる，辺が軸に平行な任意の長方形の面積を表している．</p>
+
+<p>例えばサンプルはそれぞれ図のような 3 つの長方形を表していて，答えは色が塗られた領域の面積である．</p>
+
+<p><img alt="2082-1.svg" src="/contests/images/poj/2082-1-8557127c.svg" />
+<img alt="2082-2.svg" src="/contests/images/poj/2082-2-a91d75e0.svg" /></p>
+
+<p><pre><div class="highlight"><pre><span class="lineno"> 1</span> <span class="cp">#include &lt;cstdio&gt;</span>
+<span class="lineno"> 2</span> <span class="cp">#include &lt;stack&gt;</span>
+<span class="lineno"> 3</span> <span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+<span class="lineno"> 4</span> 
+<span class="lineno"> 5</span> <span class="kt">int</span> <span class="nf">main</span><span class="p">()</span>
+<span class="lineno"> 6</span> <span class="p">{</span>
+<span class="lineno"> 7</span>   <span class="kt">int</span> <span class="n">N</span><span class="p">;</span>
+<span class="lineno"> 8</span>   <span class="k">while</span> <span class="p">(</span><span class="n">scanf</span><span class="p">(</span><span class="s">&quot;%d&quot;</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">N</span><span class="p">)</span> <span class="o">!=</span> <span class="n">EOF</span> <span class="o">&amp;&amp;</span> <span class="n">N</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+<span class="lineno"> 9</span>     <span class="n">stack</span><span class="o">&lt;</span><span class="n">pair</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span><span class="kt">int</span><span class="o">&gt;</span> <span class="o">&gt;</span> <span class="n">stk</span><span class="p">;</span>
+<span class="lineno">10</span>     <span class="kt">int</span> <span class="n">prev_h</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+<span class="lineno">11</span>     <span class="kt">int</span> <span class="n">ans</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+<span class="lineno">12</span>     <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">N</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+<span class="lineno">13</span>       <span class="kt">int</span> <span class="n">w</span><span class="p">,</span> <span class="n">h</span><span class="p">;</span>
+<span class="lineno">14</span>       <span class="n">scanf</span><span class="p">(</span><span class="s">&quot;%d %d&quot;</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">w</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">h</span><span class="p">);</span>
+<span class="lineno">15</span>       <span class="k">if</span> <span class="p">(</span><span class="n">h</span> <span class="o">&gt;=</span> <span class="n">prev_h</span><span class="p">)</span> <span class="p">{</span>
+<span class="lineno">16</span>         <span class="n">stk</span><span class="p">.</span><span class="n">push</span><span class="p">(</span><span class="n">make_pair</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="n">h</span><span class="p">));</span>
+<span class="lineno">17</span>       <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+<span class="lineno">18</span>         <span class="kt">int</span> <span class="n">width</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+<span class="lineno">19</span>         <span class="k">while</span> <span class="p">(</span><span class="o">!</span><span class="n">stk</span><span class="p">.</span><span class="n">empty</span><span class="p">()</span> <span class="o">&amp;&amp;</span> <span class="n">stk</span><span class="p">.</span><span class="n">top</span><span class="p">().</span><span class="n">second</span> <span class="o">&gt;</span> <span class="n">h</span><span class="p">)</span> <span class="p">{</span>
+<span class="lineno">20</span>           <span class="n">width</span> <span class="o">+=</span> <span class="n">stk</span><span class="p">.</span><span class="n">top</span><span class="p">().</span><span class="n">first</span><span class="p">;</span>
+<span class="lineno">21</span>           <span class="n">ans</span> <span class="o">=</span> <span class="n">max</span><span class="p">(</span><span class="n">ans</span><span class="p">,</span> <span class="n">width</span> <span class="o">*</span> <span class="n">stk</span><span class="p">.</span><span class="n">top</span><span class="p">().</span><span class="n">second</span><span class="p">);</span>
+<span class="lineno">22</span>           <span class="n">stk</span><span class="p">.</span><span class="n">pop</span><span class="p">();</span>
+<span class="lineno">23</span>         <span class="p">}</span>
+<span class="lineno">24</span>         <span class="n">width</span> <span class="o">+=</span> <span class="n">w</span><span class="p">;</span>
+<span class="lineno">25</span>         <span class="n">stk</span><span class="p">.</span><span class="n">push</span><span class="p">(</span><span class="n">make_pair</span><span class="p">(</span><span class="n">width</span><span class="p">,</span> <span class="n">h</span><span class="p">));</span>
+<span class="lineno">26</span>       <span class="p">}</span>
+<span class="lineno">27</span>       <span class="n">prev_h</span> <span class="o">=</span> <span class="n">h</span><span class="p">;</span>
+<span class="lineno">28</span>     <span class="p">}</span>
+<span class="lineno">29</span> 
+<span class="lineno">30</span>     <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">width</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="o">!</span><span class="n">stk</span><span class="p">.</span><span class="n">empty</span><span class="p">();</span> <span class="n">stk</span><span class="p">.</span><span class="n">pop</span><span class="p">())</span> <span class="p">{</span>
+<span class="lineno">31</span>       <span class="n">width</span> <span class="o">+=</span> <span class="n">stk</span><span class="p">.</span><span class="n">top</span><span class="p">().</span><span class="n">first</span><span class="p">;</span>
+<span class="lineno">32</span>       <span class="n">ans</span> <span class="o">=</span> <span class="n">max</span><span class="p">(</span><span class="n">ans</span><span class="p">,</span> <span class="n">width</span> <span class="o">*</span> <span class="n">stk</span><span class="p">.</span><span class="n">top</span><span class="p">().</span><span class="n">second</span><span class="p">);</span>
+<span class="lineno">33</span>     <span class="p">}</span>
+<span class="lineno">34</span>     <span class="n">printf</span><span class="p">(</span><span class="s">&quot;%d</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">ans</span><span class="p">);</span>
+<span class="lineno">35</span>   <span class="p">}</span>
+<span class="lineno">36</span>   <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="lineno">37</span> <span class="p">}</span>
+</pre></div></pre><a href="/contests/code/poj/2082.cc">poj/2082.cc</a></p>
+<footer><p>Posted on 2011-10-19</p><a class="prev-page" href="/contests/blog/poj-3335/">POJ 3335 - Rotating Scoreboard</a><a class="next-page" href="/contests/blog/aoj-2297/">AOJ 2297 - Rectangular Stamps</a></footer></article></div></body></html>

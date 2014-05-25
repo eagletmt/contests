@@ -1,0 +1,58 @@
+<!DOCTYPE html><html><head><meta charset="utf-8" /><meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible" /><title>POJ 2626 - Chess - プログラミングコンテストの記録</title><link rel="alternate" type="application/atom+xml" title="Atom Feed" href="/contests/blog/feed.xml" /><link href="/contests/stylesheets/normalize-ef7858ef.css" rel="stylesheet" type="text/css" /><link href="/contests/stylesheets/pygments-61d6ee10.css" rel="stylesheet" type="text/css" /><link href="/contests/stylesheets/all-1916dece.css" rel="stylesheet" type="text/css" /><script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script></head><body class="blog blog_poj-2626 blog_poj-2626_index"><div id="header"><h1>プログラミングコンテストの記録</h1><p>POJ/AOJ を中心に解いた問題のコードと簡単な解説。<br />ライブラリは <a href="https://github.com/osak/ICPCLibrary">https://github.com/osak/ICPCLibrary</a></p></div><div id="main"><article class="post"><h1>POJ 2626 - Chess</h1><p><a href="http://poj.org/problem?id=2626">http://poj.org/problem?id=2626</a></p>
+
+<h2>概要</h2>
+
+<p>30人のチェスプレイヤーを選出したい．
+30人のうち，15人は白でプレイし，残りの15人は黒でプレイする．
+各プレイヤーには白での能力値と黒での能力値がそれぞれ設定されている．
+このとき，能力値の合計を最大化する問題．</p>
+
+<h2>制約</h2>
+
+<ul>
+<li>30 &lt;= プレイヤーの人数 &lt;= 1000</li>
+<li>1 &lt;= 能力値 &lt;= 100</li>
+</ul>
+
+<h2>解法</h2>
+
+<pre><code>dp[i][j][k] = i 人目までの選手で，白のプレイヤーを j 人，黒のプレイヤーを k 人選んだときの，能力値の合計の最大値
+</code></pre>
+
+<p>という DP．</p>
+
+<p><pre><div class="highlight"><pre><span class="lineno"> 1</span> <span class="cp">#include &lt;iostream&gt;</span>
+<span class="lineno"> 2</span> <span class="cp">#include &lt;vector&gt;</span>
+<span class="lineno"> 3</span> <span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+<span class="lineno"> 4</span> 
+<span class="lineno"> 5</span> <span class="kt">int</span> <span class="nf">main</span><span class="p">()</span>
+<span class="lineno"> 6</span> <span class="p">{</span>
+<span class="lineno"> 7</span>   <span class="n">vector</span><span class="o">&lt;</span><span class="n">pair</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span><span class="kt">int</span><span class="o">&gt;</span> <span class="o">&gt;</span> <span class="n">v</span><span class="p">;</span>
+<span class="lineno"> 8</span>   <span class="kt">int</span> <span class="n">w</span><span class="p">,</span> <span class="n">b</span><span class="p">;</span>
+<span class="lineno"> 9</span>   <span class="k">while</span> <span class="p">(</span><span class="n">cin</span> <span class="o">&gt;&gt;</span> <span class="n">w</span> <span class="o">&gt;&gt;</span> <span class="n">b</span><span class="p">)</span> <span class="p">{</span>
+<span class="lineno">10</span>     <span class="n">v</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">make_pair</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="n">b</span><span class="p">));</span>
+<span class="lineno">11</span>   <span class="p">}</span>
+<span class="lineno">12</span> 
+<span class="lineno">13</span>   <span class="k">const</span> <span class="kt">int</span> <span class="n">N</span> <span class="o">=</span> <span class="n">v</span><span class="p">.</span><span class="n">size</span><span class="p">();</span>
+<span class="lineno">14</span>   <span class="n">vector</span><span class="o">&lt;</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="o">&gt;</span> <span class="o">&gt;</span> <span class="n">dp</span><span class="p">(</span><span class="n">N</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="n">vector</span><span class="o">&lt;</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="o">&gt;</span><span class="p">(</span><span class="mi">16</span><span class="p">,</span> <span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="p">(</span><span class="mi">16</span><span class="p">,</span> <span class="mi">0</span><span class="p">)));</span>
+<span class="lineno">15</span>   <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">N</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+<span class="lineno">16</span>     <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">j</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">j</span> <span class="o">&lt;=</span> <span class="mi">15</span><span class="p">;</span> <span class="n">j</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+<span class="lineno">17</span>       <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">k</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">k</span> <span class="o">&lt;=</span> <span class="mi">15</span><span class="p">;</span> <span class="n">k</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+<span class="lineno">18</span>         <span class="c1">// skip i</span>
+<span class="lineno">19</span>         <span class="n">dp</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">][</span><span class="n">j</span><span class="p">][</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">max</span><span class="p">(</span><span class="n">dp</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">][</span><span class="n">j</span><span class="p">][</span><span class="n">k</span><span class="p">],</span> <span class="n">dp</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">][</span><span class="n">k</span><span class="p">]);</span>
+<span class="lineno">20</span>         <span class="c1">// choose i as white</span>
+<span class="lineno">21</span>         <span class="k">if</span> <span class="p">(</span><span class="n">j</span><span class="o">+</span><span class="mi">1</span> <span class="o">&lt;=</span> <span class="mi">15</span><span class="p">)</span> <span class="p">{</span>
+<span class="lineno">22</span>           <span class="n">dp</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">][</span><span class="n">j</span><span class="o">+</span><span class="mi">1</span><span class="p">][</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">max</span><span class="p">(</span><span class="n">dp</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">][</span><span class="n">j</span><span class="o">+</span><span class="mi">1</span><span class="p">][</span><span class="n">k</span><span class="p">],</span> <span class="n">dp</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">][</span><span class="n">k</span><span class="p">]</span> <span class="o">+</span> <span class="n">v</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">first</span><span class="p">);</span>
+<span class="lineno">23</span>         <span class="p">}</span>
+<span class="lineno">24</span>         <span class="c1">// choose i as black</span>
+<span class="lineno">25</span>         <span class="k">if</span> <span class="p">(</span><span class="n">k</span><span class="o">+</span><span class="mi">1</span> <span class="o">&lt;=</span> <span class="mi">15</span><span class="p">)</span> <span class="p">{</span>
+<span class="lineno">26</span>           <span class="n">dp</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">][</span><span class="n">j</span><span class="p">][</span><span class="n">k</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">max</span><span class="p">(</span><span class="n">dp</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">][</span><span class="n">j</span><span class="p">][</span><span class="n">k</span><span class="o">+</span><span class="mi">1</span><span class="p">],</span> <span class="n">dp</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">][</span><span class="n">k</span><span class="p">]</span> <span class="o">+</span> <span class="n">v</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">second</span><span class="p">);</span>
+<span class="lineno">27</span>         <span class="p">}</span>
+<span class="lineno">28</span>       <span class="p">}</span>
+<span class="lineno">29</span>     <span class="p">}</span>
+<span class="lineno">30</span>   <span class="p">}</span>
+<span class="lineno">31</span>   <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">dp</span><span class="p">[</span><span class="n">N</span><span class="p">][</span><span class="mi">15</span><span class="p">][</span><span class="mi">15</span><span class="p">]</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+<span class="lineno">32</span>   <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="lineno">33</span> <span class="p">}</span>
+</pre></div></pre><a href="/contests/code/poj/2626.cc">poj/2626.cc</a></p>
+<footer><p>Posted on 2011-10-19</p><a class="prev-page" href="/contests/blog/poj-3407/">POJ 3407 - Brookebond s'en va en guerre...</a><a class="next-page" href="/contests/blog/aoj-2283/">AOJ 2283 - Seishun 18 Kippu</a></footer></article></div></body></html>

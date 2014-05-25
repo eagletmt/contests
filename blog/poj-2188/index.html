@@ -1,0 +1,52 @@
+<!DOCTYPE html><html><head><meta charset="utf-8" /><meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible" /><title>POJ 2188 - Cow Laundry - プログラミングコンテストの記録</title><link rel="alternate" type="application/atom+xml" title="Atom Feed" href="/contests/blog/feed.xml" /><link href="/contests/stylesheets/normalize-ef7858ef.css" rel="stylesheet" type="text/css" /><link href="/contests/stylesheets/pygments-61d6ee10.css" rel="stylesheet" type="text/css" /><link href="/contests/stylesheets/all-1916dece.css" rel="stylesheet" type="text/css" /><script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script></head><body class="blog blog_poj-2188 blog_poj-2188_index"><div id="header"><h1>プログラミングコンテストの記録</h1><p>POJ/AOJ を中心に解いた問題のコードと簡単な解説。<br />ライブラリは <a href="https://github.com/osak/ICPCLibrary">https://github.com/osak/ICPCLibrary</a></p></div><div id="main"><article class="post"><h1>POJ 2188 - Cow Laundry</h1><p><a href="http://poj.org/problem?id=2188">http://poj.org/problem?id=2188</a></p>
+
+<h2>概要</h2>
+
+<p>N 本の糸が上下に張られており，これを交差が無いようにしたい．
+上側か下側の隣接した糸を入れ替える操作しかできないとして，交差が無い形にするために必要な最小の操作回数を答える．</p>
+
+<p><em>i</em> 行目のインプット <em>a</em>, <em>b</em> は「<em>i</em> 本目の糸が上側の左から <em>a</em> 番目と下側の左から <em>b</em> 番目を結んでいる」という意味．
+この意味を理解するのに一番時間がかかった…</p>
+
+<h2>制約</h2>
+
+<ul>
+<li>1 &lt;= N &lt;= 1000</li>
+</ul>
+
+<h2>解法</h2>
+
+<p><a href="/blog/poj-3067/">POJ 3067 - Japan</a> と同様に大小関係が逆転している組み合わせの数を数えるだけ．</p>
+
+<p>今回は N &lt;= 1000 なので，ナイーブに O( N^2 ) で数えても十分間に合う．</p>
+
+<p><pre><div class="highlight"><pre><span class="lineno"> 1</span> <span class="cp">#include &lt;iostream&gt;</span>
+<span class="lineno"> 2</span> <span class="cp">#include &lt;vector&gt;</span>
+<span class="lineno"> 3</span> <span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+<span class="lineno"> 4</span> 
+<span class="lineno"> 5</span> <span class="kt">int</span> <span class="nf">main</span><span class="p">()</span>
+<span class="lineno"> 6</span> <span class="p">{</span>
+<span class="lineno"> 7</span>   <span class="kt">int</span> <span class="n">N</span><span class="p">;</span>
+<span class="lineno"> 8</span>   <span class="n">cin</span> <span class="o">&gt;&gt;</span> <span class="n">N</span><span class="p">;</span>
+<span class="lineno"> 9</span>   <span class="n">vector</span><span class="o">&lt;</span><span class="n">pair</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span><span class="kt">int</span><span class="o">&gt;</span> <span class="o">&gt;</span> <span class="n">wires</span><span class="p">(</span><span class="n">N</span><span class="p">);</span>
+<span class="lineno">10</span>   <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">N</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+<span class="lineno">11</span>     <span class="kt">int</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">;</span>
+<span class="lineno">12</span>     <span class="n">cin</span> <span class="o">&gt;&gt;</span> <span class="n">a</span> <span class="o">&gt;&gt;</span> <span class="n">b</span><span class="p">;</span>
+<span class="lineno">13</span>     <span class="o">--</span><span class="n">a</span><span class="p">;</span>  <span class="o">--</span><span class="n">b</span><span class="p">;</span>
+<span class="lineno">14</span>     <span class="n">wires</span><span class="p">[</span><span class="n">a</span><span class="p">].</span><span class="n">first</span> <span class="o">=</span> <span class="n">wires</span><span class="p">[</span><span class="n">b</span><span class="p">].</span><span class="n">second</span> <span class="o">=</span> <span class="n">i</span><span class="p">;</span>
+<span class="lineno">15</span>   <span class="p">}</span>
+<span class="lineno">16</span> 
+<span class="lineno">17</span>   <span class="kt">int</span> <span class="n">ans</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+<span class="lineno">18</span>   <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">N</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+<span class="lineno">19</span>     <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">j</span> <span class="o">=</span> <span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">;</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="n">N</span><span class="p">;</span> <span class="n">j</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+<span class="lineno">20</span>       <span class="k">if</span> <span class="p">((</span><span class="n">wires</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">first</span> <span class="o">-</span> <span class="n">wires</span><span class="p">[</span><span class="n">j</span><span class="p">].</span><span class="n">first</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">wires</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">second</span> <span class="o">-</span> <span class="n">wires</span><span class="p">[</span><span class="n">j</span><span class="p">].</span><span class="n">second</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+<span class="lineno">21</span>         <span class="o">++</span><span class="n">ans</span><span class="p">;</span>
+<span class="lineno">22</span>       <span class="p">}</span>
+<span class="lineno">23</span>     <span class="p">}</span>
+<span class="lineno">24</span>   <span class="p">}</span>
+<span class="lineno">25</span>   <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">ans</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+<span class="lineno">26</span> 
+<span class="lineno">27</span>   <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="lineno">28</span> <span class="p">}</span>
+</pre></div></pre><a href="/contests/code/poj/2188.cc">poj/2188.cc</a></p>
+<footer><p>Posted on 2011-10-19</p><a class="prev-page" href="/contests/blog/poj-1383/">POJ 1383 - Labyrinth</a><a class="next-page" href="/contests/blog/aoj-2302/">AOJ 2302 - On or Off</a></footer></article></div></body></html>

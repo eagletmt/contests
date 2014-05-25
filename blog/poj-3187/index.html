@@ -1,0 +1,72 @@
+<!DOCTYPE html><html><head><meta charset="utf-8" /><meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible" /><title>POJ 3187 - Backward Digit Sums - プログラミングコンテストの記録</title><link rel="alternate" type="application/atom+xml" title="Atom Feed" href="/contests/blog/feed.xml" /><link href="/contests/stylesheets/normalize-ef7858ef.css" rel="stylesheet" type="text/css" /><link href="/contests/stylesheets/pygments-61d6ee10.css" rel="stylesheet" type="text/css" /><link href="/contests/stylesheets/all-1916dece.css" rel="stylesheet" type="text/css" /><script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script></head><body class="blog blog_poj-3187 blog_poj-3187_index"><div id="header"><h1>プログラミングコンテストの記録</h1><p>POJ/AOJ を中心に解いた問題のコードと簡単な解説。<br />ライブラリは <a href="https://github.com/osak/ICPCLibrary">https://github.com/osak/ICPCLibrary</a></p></div><div id="main"><article class="post"><h1>POJ 3187 - Backward Digit Sums</h1><p><a href="http://poj.org/problem?id=3187">http://poj.org/problem?id=3187</a></p>
+
+<h2>概要</h2>
+
+<p>1 .. N の N 個の数字を並べて，パスカルの三角形のように隣接する数値を足していくと最後は1つの数値になる．
+N とその数値だけが与えられたとき，一番最初の N 個の数字の並び方を答える．</p>
+
+<h2>制約</h2>
+
+<ul>
+<li>1 &lt;= N &lt;= 10</li>
+</ul>
+
+<h2>解法</h2>
+
+<p>next_permutation で全探索．
+シミュレーション的に実際に足していくと遅いので，最初の並びが a[0] .. a[N-1] だったときに，最後の値は
+    Σ(a[i] * c[N-1][i])
+であることを利用して計算する(c は combination)．</p>
+
+<p><pre><div class="highlight"><pre><span class="lineno"> 1</span> <span class="cp">#include &lt;iostream&gt;</span>
+<span class="lineno"> 2</span> <span class="cp">#include &lt;vector&gt;</span>
+<span class="lineno"> 3</span> <span class="cp">#include &lt;algorithm&gt;</span>
+<span class="lineno"> 4</span> <span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+<span class="lineno"> 5</span> 
+<span class="lineno"> 6</span> <span class="kt">int</span> <span class="n">comb</span><span class="p">[</span><span class="mi">11</span><span class="p">][</span><span class="mi">11</span><span class="p">];</span>
+<span class="lineno"> 7</span> 
+<span class="lineno"> 8</span> <span class="kt">int</span> <span class="nf">sum</span><span class="p">(</span><span class="k">const</span> <span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;&amp;</span> <span class="n">a</span><span class="p">)</span>
+<span class="lineno"> 9</span> <span class="p">{</span>
+<span class="lineno">10</span>   <span class="k">const</span> <span class="kt">int</span> <span class="n">N</span> <span class="o">=</span> <span class="n">a</span><span class="p">.</span><span class="n">size</span><span class="p">();</span>
+<span class="lineno">11</span>   <span class="kt">int</span> <span class="n">s</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+<span class="lineno">12</span>   <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">N</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+<span class="lineno">13</span>     <span class="n">s</span> <span class="o">+=</span> <span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">*</span> <span class="n">comb</span><span class="p">[</span><span class="n">N</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="n">i</span><span class="p">];</span>
+<span class="lineno">14</span>   <span class="p">}</span>
+<span class="lineno">15</span>   <span class="k">return</span> <span class="n">s</span><span class="p">;</span>
+<span class="lineno">16</span> <span class="p">}</span>
+<span class="lineno">17</span> 
+<span class="lineno">18</span> <span class="kt">int</span> <span class="nf">main</span><span class="p">()</span>
+<span class="lineno">19</span> <span class="p">{</span>
+<span class="lineno">20</span>   <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;=</span> <span class="mi">10</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+<span class="lineno">21</span>     <span class="n">comb</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+<span class="lineno">22</span>     <span class="n">comb</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+<span class="lineno">23</span>   <span class="p">}</span>
+<span class="lineno">24</span>   <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">n</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="n">n</span> <span class="o">&lt;=</span> <span class="mi">10</span><span class="p">;</span> <span class="n">n</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+<span class="lineno">25</span>     <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">k</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="n">k</span> <span class="o">&lt;</span> <span class="n">n</span><span class="p">;</span> <span class="n">k</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+<span class="lineno">26</span>       <span class="n">comb</span><span class="p">[</span><span class="n">n</span><span class="p">][</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">comb</span><span class="p">[</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="n">k</span><span class="p">]</span> <span class="o">+</span> <span class="n">comb</span><span class="p">[</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="n">k</span><span class="o">-</span><span class="mi">1</span><span class="p">];</span>
+<span class="lineno">27</span>     <span class="p">}</span>
+<span class="lineno">28</span>   <span class="p">}</span>
+<span class="lineno">29</span> 
+<span class="lineno">30</span>   <span class="kt">int</span> <span class="n">N</span><span class="p">,</span> <span class="n">S</span><span class="p">;</span>
+<span class="lineno">31</span>   <span class="n">cin</span> <span class="o">&gt;&gt;</span> <span class="n">N</span> <span class="o">&gt;&gt;</span> <span class="n">S</span><span class="p">;</span>
+<span class="lineno">32</span>   <span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">a</span><span class="p">(</span><span class="n">N</span><span class="p">);</span>
+<span class="lineno">33</span>   <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">N</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+<span class="lineno">34</span>     <span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">;</span>
+<span class="lineno">35</span>   <span class="p">}</span>
+<span class="lineno">36</span> 
+<span class="lineno">37</span>   <span class="k">do</span> <span class="p">{</span>
+<span class="lineno">38</span>     <span class="k">if</span> <span class="p">(</span><span class="n">sum</span><span class="p">(</span><span class="n">a</span><span class="p">)</span> <span class="o">==</span> <span class="n">S</span><span class="p">)</span> <span class="p">{</span>
+<span class="lineno">39</span>       <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">N</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+<span class="lineno">40</span>         <span class="k">if</span> <span class="p">(</span><span class="n">i</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+<span class="lineno">41</span>           <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="sc">&#39; &#39;</span><span class="p">;</span>
+<span class="lineno">42</span>         <span class="p">}</span>
+<span class="lineno">43</span>         <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+<span class="lineno">44</span>       <span class="p">}</span>
+<span class="lineno">45</span>       <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+<span class="lineno">46</span>       <span class="k">break</span><span class="p">;</span>
+<span class="lineno">47</span>     <span class="p">}</span>
+<span class="lineno">48</span>   <span class="p">}</span> <span class="k">while</span> <span class="p">(</span><span class="n">next_permutation</span><span class="p">(</span><span class="n">a</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">a</span><span class="p">.</span><span class="n">end</span><span class="p">()));</span>
+<span class="lineno">49</span>   <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="lineno">50</span> <span class="p">}</span>
+</pre></div></pre><a href="/contests/code/poj/3187.cc">poj/3187.cc</a></p>
+<footer><p>Posted on 2011-10-19</p><a class="prev-page" href="/contests/blog/poj-2336/">POJ 2336 - Ferry Loading II</a><a class="next-page" href="/contests/blog/poj-3505/">POJ 3505 - Tower Parking</a></footer></article></div></body></html>

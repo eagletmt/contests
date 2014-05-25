@@ -1,0 +1,65 @@
+<!DOCTYPE html><html><head><meta charset="utf-8" /><meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible" /><title>POJ 2663 - Tri Tiling - プログラミングコンテストの記録</title><link rel="alternate" type="application/atom+xml" title="Atom Feed" href="/contests/blog/feed.xml" /><link href="/contests/stylesheets/normalize-ef7858ef.css" rel="stylesheet" type="text/css" /><link href="/contests/stylesheets/pygments-61d6ee10.css" rel="stylesheet" type="text/css" /><link href="/contests/stylesheets/all-1916dece.css" rel="stylesheet" type="text/css" /><script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script></head><body class="blog blog_poj-2663 blog_poj-2663_index"><div id="header"><h1>プログラミングコンテストの記録</h1><p>POJ/AOJ を中心に解いた問題のコードと簡単な解説。<br />ライブラリは <a href="https://github.com/osak/ICPCLibrary">https://github.com/osak/ICPCLibrary</a></p></div><div id="main"><article class="post"><h1>POJ 2663 - Tri Tiling</h1><p><a href="http://poj.org/problem?id=2663">http://poj.org/problem?id=2663</a></p>
+
+<h2>概要</h2>
+
+<p>3 * n の長方形を 2 * 1 のドミノで敷き詰める方法が何通りあるか答える．</p>
+
+<h2>制約</h2>
+
+<ul>
+<li>0 &lt;= n &lt;= 30</li>
+</ul>
+
+<h2>解法</h2>
+
+<p>3 * n の敷き詰め方が a[n] 通りだとする．</p>
+
+<p>n が奇数のときは明らかに 0 通り．</p>
+
+<p>n が偶数のときは，a[n-2] に対して</p>
+
+<p><img src="/contests/images/poj/2663-1-f5a1e692.svg" /></p>
+
+<p>の3通りの追加の仕方があり，また a<a href="i = 0, 2, ..., n-4">i</a> に対して</p>
+
+<p><img src="/contests/images/poj/2663-2-59340cca.svg" /></p>
+
+<p>のような形で2通りの追加の仕方がある (図は i = n-4 のとき)．</p>
+
+<p>よって，</p>
+
+<ul>
+<li>a[0] = 1</li>
+<li>a[n] = 0 if n is odd</li>
+<li>a[n] = 3*a[n-2] + sum[i = 0, 2, ..., n-4]{ 2*a[i] } if n is even</li>
+</ul>
+
+<p>という漸化式を満たすので，これに従って最初に表を作っておいて答える．</p>
+
+<p><pre><div class="highlight"><pre><span class="lineno"> 1</span> <span class="cp">#include &lt;iostream&gt;</span>
+<span class="lineno"> 2</span> <span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+<span class="lineno"> 3</span> 
+<span class="lineno"> 4</span> <span class="kt">int</span> <span class="nf">main</span><span class="p">()</span>
+<span class="lineno"> 5</span> <span class="p">{</span>
+<span class="lineno"> 6</span>   <span class="kt">int</span> <span class="n">a</span><span class="p">[</span><span class="mi">31</span><span class="p">];</span>
+<span class="lineno"> 7</span>   <span class="n">a</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+<span class="lineno"> 8</span>   <span class="n">a</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+<span class="lineno"> 9</span>   <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;=</span> <span class="mi">30</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+<span class="lineno">10</span>     <span class="k">if</span> <span class="p">(</span><span class="n">i</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+<span class="lineno">11</span>       <span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="mi">3</span><span class="o">*</span><span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">2</span><span class="p">];</span>
+<span class="lineno">12</span>       <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">j</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">j</span> <span class="o">&lt;=</span> <span class="n">i</span><span class="o">-</span><span class="mi">4</span><span class="p">;</span> <span class="n">j</span> <span class="o">+=</span> <span class="mi">2</span><span class="p">)</span> <span class="p">{</span>
+<span class="lineno">13</span>         <span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">2</span><span class="o">*</span><span class="n">a</span><span class="p">[</span><span class="n">j</span><span class="p">];</span>
+<span class="lineno">14</span>       <span class="p">}</span>
+<span class="lineno">15</span>     <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+<span class="lineno">16</span>       <span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+<span class="lineno">17</span>     <span class="p">}</span>
+<span class="lineno">18</span>   <span class="p">}</span>
+<span class="lineno">19</span> 
+<span class="lineno">20</span>   <span class="kt">int</span> <span class="n">n</span><span class="p">;</span>
+<span class="lineno">21</span>   <span class="k">while</span> <span class="p">(</span><span class="n">cin</span> <span class="o">&gt;&gt;</span> <span class="n">n</span> <span class="o">&amp;&amp;</span> <span class="n">n</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+<span class="lineno">22</span>     <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">a</span><span class="p">[</span><span class="n">n</span><span class="p">]</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+<span class="lineno">23</span>   <span class="p">}</span>
+<span class="lineno">24</span>   <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="lineno">25</span> <span class="p">}</span>
+</pre></div></pre><a href="/contests/code/poj/2663.cc">poj/2663.cc</a></p>
+<footer><p>Posted on 2011-10-19</p><a class="prev-page" href="/contests/blog/poj-2507/">POJ 2507 - Crossed ladders</a><a class="next-page" href="/contests/blog/aoj-2281/">AOJ 2281 - Swap Cipher</a></footer></article></div></body></html>

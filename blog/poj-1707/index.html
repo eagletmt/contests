@@ -1,0 +1,168 @@
+<!DOCTYPE html><html><head><meta charset="utf-8" /><meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible" /><title>POJ 1707 - Sum of powers - プログラミングコンテストの記録</title><link rel="alternate" type="application/atom+xml" title="Atom Feed" href="/contests/blog/feed.xml" /><link href="/contests/stylesheets/normalize-ef7858ef.css" rel="stylesheet" type="text/css" /><link href="/contests/stylesheets/pygments-61d6ee10.css" rel="stylesheet" type="text/css" /><link href="/contests/stylesheets/all-1916dece.css" rel="stylesheet" type="text/css" /><script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script></head><body class="blog blog_poj-1707 blog_poj-1707_index"><div id="header"><h1>プログラミングコンテストの記録</h1><p>POJ/AOJ を中心に解いた問題のコードと簡単な解説。<br />ライブラリは <a href="https://github.com/osak/ICPCLibrary">https://github.com/osak/ICPCLibrary</a></p></div><div id="main"><article class="post"><h1>POJ 1707 - Sum of powers</h1><p><a href="http://poj.org/problem?id=1707">http://poj.org/problem?id=1707</a></p>
+
+<h2>概要</h2>
+
+<p>\(S_k(n) = \Sigma_{i=1} ^ n i ^ k\)</p>
+
+<p>と \(S_k(n)\) を定義する。これを</p>
+
+<p>\(S_k(n) = \frac{1}{M}(a_{k+1}n ^ {k+1} + a_{k}n ^ k + \cdots + a_1 n + a_0\)</p>
+
+<p>と表したとき、\(M, a_{k+1}, a_k, \cdots, a_1, a_0\) を答える。
+ただし、\(a_{k+1}, a_k, \cdots, a_1, a_0\) は整数であり、\(M\) は最小のものをとる。</p>
+
+<h2>制約</h2>
+
+<ul>
+<li>\(1 \le k \le 20\)</li>
+</ul>
+
+<h2>解法</h2>
+
+<p>定義から \(S_k(n) - S_k(n-1) = n ^ k\) であり、
+\(S_k(n)\) を多項式で表したもので同様に \(S_k(n) - S_k(n-1)\) を求めて、
+この恒等式を係数に関する連立方程式で解いて \(a_{k+1}, a_k, \cdots, a_1\) を有理数で求める。
+\(a_0\) は常に 0。</p>
+
+<p><pre><div class="highlight"><pre><span class="lineno">  1</span> <span class="cp">#include &lt;iostream&gt;</span>
+<span class="lineno">  2</span> <span class="cp">#include &lt;vector&gt;</span>
+<span class="lineno">  3</span> <span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+<span class="lineno">  4</span> 
+<span class="lineno">  5</span> <span class="kt">long</span> <span class="kt">long</span> <span class="nf">gcd</span><span class="p">(</span><span class="kt">long</span> <span class="kt">long</span> <span class="n">a</span><span class="p">,</span> <span class="kt">long</span> <span class="kt">long</span> <span class="n">b</span><span class="p">)</span>
+<span class="lineno">  6</span> <span class="p">{</span>
+<span class="lineno">  7</span>   <span class="k">if</span> <span class="p">(</span><span class="n">a</span> <span class="o">&lt;</span> <span class="n">b</span><span class="p">)</span> <span class="p">{</span>
+<span class="lineno">  8</span>     <span class="n">swap</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">);</span>
+<span class="lineno">  9</span>   <span class="p">}</span>
+<span class="lineno"> 10</span>   <span class="kt">long</span> <span class="kt">long</span> <span class="n">r</span><span class="p">;</span>
+<span class="lineno"> 11</span>   <span class="k">while</span> <span class="p">((</span><span class="n">r</span> <span class="o">=</span> <span class="n">a</span> <span class="o">%</span> <span class="n">b</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0LL</span><span class="p">)</span> <span class="p">{</span>
+<span class="lineno"> 12</span>     <span class="n">a</span> <span class="o">=</span> <span class="n">b</span><span class="p">;</span>
+<span class="lineno"> 13</span>     <span class="n">b</span> <span class="o">=</span> <span class="n">r</span><span class="p">;</span>
+<span class="lineno"> 14</span>   <span class="p">}</span>
+<span class="lineno"> 15</span>   <span class="k">return</span> <span class="n">b</span><span class="p">;</span>
+<span class="lineno"> 16</span> <span class="p">}</span>
+<span class="lineno"> 17</span> 
+<span class="lineno"> 18</span> <span class="k">struct</span> <span class="n">ratio</span>
+<span class="lineno"> 19</span> <span class="p">{</span>
+<span class="lineno"> 20</span>   <span class="kt">long</span> <span class="kt">long</span> <span class="n">n</span><span class="p">,</span> <span class="n">d</span><span class="p">;</span>
+<span class="lineno"> 21</span>   <span class="n">ratio</span><span class="p">()</span> <span class="o">:</span> <span class="n">n</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="n">d</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="p">{}</span>
+<span class="lineno"> 22</span>   <span class="n">ratio</span><span class="p">(</span><span class="kt">long</span> <span class="kt">long</span> <span class="n">a</span><span class="p">)</span> <span class="o">:</span> <span class="n">n</span><span class="p">(</span><span class="n">a</span><span class="p">),</span> <span class="n">d</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="p">{}</span>
+<span class="lineno"> 23</span>   <span class="n">ratio</span><span class="p">(</span><span class="kt">long</span> <span class="kt">long</span> <span class="n">a</span><span class="p">,</span> <span class="kt">long</span> <span class="kt">long</span> <span class="n">b</span><span class="p">)</span> <span class="o">:</span> <span class="n">n</span><span class="p">(</span><span class="n">a</span><span class="p">),</span> <span class="n">d</span><span class="p">(</span><span class="n">b</span><span class="p">)</span> <span class="p">{</span> <span class="n">normalize</span><span class="p">();</span> <span class="p">}</span>
+<span class="lineno"> 24</span> 
+<span class="lineno"> 25</span>   <span class="kt">void</span> <span class="n">normalize</span><span class="p">()</span>
+<span class="lineno"> 26</span>   <span class="p">{</span>
+<span class="lineno"> 27</span>     <span class="k">if</span> <span class="p">(</span><span class="n">n</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+<span class="lineno"> 28</span>       <span class="n">d</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+<span class="lineno"> 29</span>     <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+<span class="lineno"> 30</span>       <span class="k">const</span> <span class="kt">long</span> <span class="kt">long</span> <span class="n">g</span> <span class="o">=</span> <span class="n">gcd</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">d</span><span class="p">);</span>
+<span class="lineno"> 31</span>       <span class="n">n</span> <span class="o">/=</span> <span class="n">g</span><span class="p">;</span>
+<span class="lineno"> 32</span>       <span class="n">d</span> <span class="o">/=</span> <span class="n">g</span><span class="p">;</span>
+<span class="lineno"> 33</span>       <span class="k">if</span> <span class="p">(</span><span class="n">d</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+<span class="lineno"> 34</span>         <span class="n">n</span> <span class="o">=</span> <span class="o">-</span><span class="n">n</span><span class="p">;</span>
+<span class="lineno"> 35</span>         <span class="n">d</span> <span class="o">=</span> <span class="o">-</span><span class="n">d</span><span class="p">;</span>
+<span class="lineno"> 36</span>       <span class="p">}</span>
+<span class="lineno"> 37</span>     <span class="p">}</span>
+<span class="lineno"> 38</span>   <span class="p">}</span>
+<span class="lineno"> 39</span> 
+<span class="lineno"> 40</span>   <span class="n">ratio</span> <span class="n">inverse</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">ratio</span><span class="p">(</span><span class="n">d</span><span class="p">,</span> <span class="n">n</span><span class="p">);</span> <span class="p">}</span>
+<span class="lineno"> 41</span> 
+<span class="lineno"> 42</span>   <span class="kt">bool</span> <span class="k">operator</span><span class="o">==</span><span class="p">(</span><span class="k">const</span> <span class="n">ratio</span><span class="o">&amp;</span> <span class="n">r</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">n</span> <span class="o">==</span> <span class="n">r</span><span class="p">.</span><span class="n">n</span> <span class="o">&amp;&amp;</span> <span class="n">d</span> <span class="o">==</span> <span class="n">r</span><span class="p">.</span><span class="n">d</span><span class="p">;</span> <span class="p">}</span>
+<span class="lineno"> 43</span>   <span class="kt">bool</span> <span class="k">operator</span><span class="o">==</span><span class="p">(</span><span class="kt">int</span> <span class="n">x</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">d</span> <span class="o">==</span> <span class="mi">1</span> <span class="o">&amp;&amp;</span> <span class="n">n</span> <span class="o">==</span> <span class="n">x</span><span class="p">;</span> <span class="p">}</span>
+<span class="lineno"> 44</span>   <span class="n">ratio</span> <span class="k">operator</span><span class="o">-</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">ratio</span><span class="p">(</span><span class="o">-</span><span class="n">n</span><span class="p">,</span> <span class="n">d</span><span class="p">);</span> <span class="p">}</span>
+<span class="lineno"> 45</span> 
+<span class="lineno"> 46</span>   <span class="n">ratio</span><span class="o">&amp;</span> <span class="k">operator</span><span class="o">-=</span><span class="p">(</span><span class="k">const</span> <span class="n">ratio</span><span class="o">&amp;</span> <span class="n">r</span><span class="p">)</span>
+<span class="lineno"> 47</span>   <span class="p">{</span>
+<span class="lineno"> 48</span>     <span class="k">const</span> <span class="kt">long</span> <span class="kt">long</span> <span class="n">dd</span> <span class="o">=</span> <span class="n">d</span> <span class="o">*</span> <span class="n">r</span><span class="p">.</span><span class="n">d</span><span class="p">;</span>
+<span class="lineno"> 49</span>     <span class="k">const</span> <span class="kt">long</span> <span class="kt">long</span> <span class="n">nn</span> <span class="o">=</span> <span class="n">n</span><span class="o">*</span><span class="n">r</span><span class="p">.</span><span class="n">d</span> <span class="o">-</span> <span class="n">r</span><span class="p">.</span><span class="n">n</span><span class="o">*</span><span class="n">d</span><span class="p">;</span>
+<span class="lineno"> 50</span>     <span class="n">d</span> <span class="o">=</span> <span class="n">dd</span><span class="p">;</span>
+<span class="lineno"> 51</span>     <span class="n">n</span> <span class="o">=</span> <span class="n">nn</span><span class="p">;</span>
+<span class="lineno"> 52</span>     <span class="n">normalize</span><span class="p">();</span>
+<span class="lineno"> 53</span>     <span class="k">return</span> <span class="o">*</span><span class="k">this</span><span class="p">;</span>
+<span class="lineno"> 54</span>   <span class="p">}</span>
+<span class="lineno"> 55</span>   <span class="n">ratio</span> <span class="k">operator</span><span class="o">*</span><span class="p">(</span><span class="k">const</span> <span class="n">ratio</span><span class="o">&amp;</span> <span class="n">r</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">ratio</span><span class="p">(</span><span class="n">n</span> <span class="o">*</span> <span class="n">r</span><span class="p">.</span><span class="n">n</span><span class="p">,</span> <span class="n">d</span> <span class="o">*</span> <span class="n">r</span><span class="p">.</span><span class="n">d</span><span class="p">);</span> <span class="p">}</span>
+<span class="lineno"> 56</span> <span class="p">};</span>
+<span class="lineno"> 57</span> <span class="n">ostream</span><span class="o">&amp;</span> <span class="k">operator</span><span class="o">&lt;&lt;</span><span class="p">(</span><span class="n">ostream</span><span class="o">&amp;</span> <span class="n">os</span><span class="p">,</span> <span class="k">const</span> <span class="n">ratio</span><span class="o">&amp;</span> <span class="n">r</span><span class="p">)</span>
+<span class="lineno"> 58</span> <span class="p">{</span>
+<span class="lineno"> 59</span>   <span class="k">if</span> <span class="p">(</span><span class="n">r</span><span class="p">.</span><span class="n">d</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+<span class="lineno"> 60</span>     <span class="k">return</span> <span class="n">os</span> <span class="o">&lt;&lt;</span> <span class="n">r</span><span class="p">.</span><span class="n">n</span><span class="p">;</span>
+<span class="lineno"> 61</span>   <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+<span class="lineno"> 62</span>     <span class="k">return</span> <span class="n">os</span> <span class="o">&lt;&lt;</span> <span class="n">r</span><span class="p">.</span><span class="n">n</span> <span class="o">&lt;&lt;</span> <span class="sc">&#39;/&#39;</span> <span class="o">&lt;&lt;</span> <span class="n">r</span><span class="p">.</span><span class="n">d</span><span class="p">;</span>
+<span class="lineno"> 63</span>   <span class="p">}</span>
+<span class="lineno"> 64</span> <span class="p">}</span>
+<span class="lineno"> 65</span> 
+<span class="lineno"> 66</span> <span class="kt">void</span> <span class="n">gaussian_elimination</span><span class="p">(</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">ratio</span><span class="o">&gt;</span> <span class="o">&gt;&amp;</span> <span class="n">a</span><span class="p">,</span> <span class="n">vector</span><span class="o">&lt;</span><span class="n">ratio</span><span class="o">&gt;&amp;</span> <span class="n">b</span><span class="p">)</span>
+<span class="lineno"> 67</span> <span class="p">{</span>
+<span class="lineno"> 68</span>   <span class="k">const</span> <span class="kt">int</span> <span class="n">N</span> <span class="o">=</span> <span class="n">a</span><span class="p">.</span><span class="n">size</span><span class="p">();</span>
+<span class="lineno"> 69</span>   <span class="k">const</span> <span class="kt">int</span> <span class="n">M</span> <span class="o">=</span> <span class="n">a</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="n">size</span><span class="p">();</span>
+<span class="lineno"> 70</span>   <span class="c1">// assert(N &lt;= M)</span>
+<span class="lineno"> 71</span> 
+<span class="lineno"> 72</span>   <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">p</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">M</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">,</span> <span class="n">p</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+<span class="lineno"> 73</span>     <span class="kt">int</span> <span class="n">q</span><span class="p">;</span>
+<span class="lineno"> 74</span>     <span class="k">for</span> <span class="p">(</span><span class="n">q</span> <span class="o">=</span> <span class="n">p</span><span class="p">;</span> <span class="n">q</span> <span class="o">&lt;</span> <span class="n">N</span> <span class="o">&amp;&amp;</span> <span class="n">a</span><span class="p">[</span><span class="n">q</span><span class="p">][</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">;</span> <span class="n">q</span><span class="o">++</span><span class="p">);</span>
+<span class="lineno"> 75</span>     <span class="k">if</span> <span class="p">(</span><span class="n">q</span> <span class="o">==</span> <span class="n">N</span><span class="p">)</span> <span class="p">{</span>
+<span class="lineno"> 76</span>       <span class="o">--</span><span class="n">p</span><span class="p">;</span>
+<span class="lineno"> 77</span>       <span class="k">continue</span><span class="p">;</span>
+<span class="lineno"> 78</span>     <span class="p">}</span>
+<span class="lineno"> 79</span>     <span class="n">swap</span><span class="p">(</span><span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">a</span><span class="p">[</span><span class="n">q</span><span class="p">]);</span>
+<span class="lineno"> 80</span>     <span class="n">swap</span><span class="p">(</span><span class="n">b</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">b</span><span class="p">[</span><span class="n">q</span><span class="p">]);</span>
+<span class="lineno"> 81</span> 
+<span class="lineno"> 82</span>     <span class="k">const</span> <span class="n">ratio</span> <span class="n">r</span> <span class="o">=</span> <span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">i</span><span class="p">].</span><span class="n">inverse</span><span class="p">();</span>
+<span class="lineno"> 83</span>     <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">k</span> <span class="o">=</span> <span class="n">i</span><span class="p">;</span> <span class="n">k</span> <span class="o">&lt;</span> <span class="n">M</span><span class="p">;</span> <span class="n">k</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+<span class="lineno"> 84</span>       <span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">k</span><span class="p">]</span> <span class="o">*</span> <span class="n">r</span><span class="p">;</span>
+<span class="lineno"> 85</span>     <span class="p">}</span>
+<span class="lineno"> 86</span>     <span class="n">b</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">b</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">*</span> <span class="n">r</span><span class="p">;</span>
+<span class="lineno"> 87</span> 
+<span class="lineno"> 88</span>     <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">j</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="n">N</span><span class="p">;</span> <span class="n">j</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+<span class="lineno"> 89</span>       <span class="k">if</span> <span class="p">(</span><span class="n">j</span> <span class="o">==</span> <span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+<span class="lineno"> 90</span>         <span class="k">continue</span><span class="p">;</span>
+<span class="lineno"> 91</span>       <span class="p">}</span>
+<span class="lineno"> 92</span>       <span class="k">const</span> <span class="n">ratio</span> <span class="n">t</span> <span class="o">=</span> <span class="n">a</span><span class="p">[</span><span class="n">j</span><span class="p">][</span><span class="n">i</span><span class="p">];</span>
+<span class="lineno"> 93</span>       <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">k</span> <span class="o">=</span> <span class="n">i</span><span class="p">;</span> <span class="n">k</span> <span class="o">&lt;</span> <span class="n">M</span><span class="p">;</span> <span class="n">k</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+<span class="lineno"> 94</span>         <span class="n">a</span><span class="p">[</span><span class="n">j</span><span class="p">][</span><span class="n">k</span><span class="p">]</span> <span class="o">-=</span> <span class="n">t</span> <span class="o">*</span> <span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">k</span><span class="p">];</span>
+<span class="lineno"> 95</span>       <span class="p">}</span>
+<span class="lineno"> 96</span>       <span class="n">b</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">-=</span> <span class="n">t</span> <span class="o">*</span> <span class="n">b</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+<span class="lineno"> 97</span>     <span class="p">}</span>
+<span class="lineno"> 98</span>   <span class="p">}</span>
+<span class="lineno"> 99</span> <span class="p">}</span>
+<span class="lineno">100</span> 
+<span class="lineno">101</span> <span class="kt">int</span> <span class="n">main</span><span class="p">()</span>
+<span class="lineno">102</span> <span class="p">{</span>
+<span class="lineno">103</span>   <span class="k">static</span> <span class="kt">long</span> <span class="kt">long</span> <span class="n">comb</span><span class="p">[</span><span class="mi">22</span><span class="p">][</span><span class="mi">22</span><span class="p">];</span>
+<span class="lineno">104</span>   <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;=</span> <span class="mi">21</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+<span class="lineno">105</span>     <span class="n">comb</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">comb</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+<span class="lineno">106</span>   <span class="p">}</span>
+<span class="lineno">107</span>   <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;=</span> <span class="mi">21</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+<span class="lineno">108</span>     <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">j</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="n">j</span> <span class="o">&lt;=</span> <span class="mi">21</span><span class="p">;</span> <span class="n">j</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+<span class="lineno">109</span>       <span class="n">comb</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">comb</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="n">j</span><span class="p">]</span> <span class="o">+</span> <span class="n">comb</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="n">j</span><span class="o">-</span><span class="mi">1</span><span class="p">];</span>
+<span class="lineno">110</span>     <span class="p">}</span>
+<span class="lineno">111</span>   <span class="p">}</span>
+<span class="lineno">112</span> 
+<span class="lineno">113</span>   <span class="kt">int</span> <span class="n">K</span><span class="p">;</span>
+<span class="lineno">114</span>   <span class="n">cin</span> <span class="o">&gt;&gt;</span> <span class="n">K</span><span class="p">;</span>
+<span class="lineno">115</span>   <span class="k">const</span> <span class="kt">int</span> <span class="n">N</span> <span class="o">=</span> <span class="n">K</span><span class="o">+</span><span class="mi">1</span><span class="p">;</span>
+<span class="lineno">116</span>   <span class="n">vector</span><span class="o">&lt;</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">ratio</span><span class="o">&gt;</span> <span class="o">&gt;</span> <span class="n">a</span><span class="p">(</span><span class="n">N</span><span class="p">,</span> <span class="n">vector</span><span class="o">&lt;</span><span class="n">ratio</span><span class="o">&gt;</span><span class="p">(</span><span class="n">N</span><span class="p">));</span>
+<span class="lineno">117</span>   <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">N</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+<span class="lineno">118</span>     <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">j</span> <span class="o">=</span> <span class="n">i</span><span class="p">;</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="n">N</span><span class="p">;</span> <span class="n">j</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+<span class="lineno">119</span>       <span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">comb</span><span class="p">[</span><span class="n">j</span><span class="o">+</span><span class="mi">1</span><span class="p">][</span><span class="n">i</span><span class="p">];</span>
+<span class="lineno">120</span>       <span class="k">if</span> <span class="p">((</span><span class="n">j</span><span class="o">-</span><span class="n">i</span><span class="p">)</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+<span class="lineno">121</span>         <span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">];</span>
+<span class="lineno">122</span>       <span class="p">}</span>
+<span class="lineno">123</span>     <span class="p">}</span>
+<span class="lineno">124</span>   <span class="p">}</span>
+<span class="lineno">125</span>   <span class="n">vector</span><span class="o">&lt;</span><span class="n">ratio</span><span class="o">&gt;</span> <span class="n">b</span><span class="p">(</span><span class="n">N</span><span class="p">);</span>
+<span class="lineno">126</span>   <span class="n">b</span><span class="p">[</span><span class="n">N</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+<span class="lineno">127</span>   <span class="n">gaussian_elimination</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">);</span>
+<span class="lineno">128</span>   <span class="n">vector</span><span class="o">&lt;</span><span class="kt">long</span> <span class="kt">long</span><span class="o">&gt;</span> <span class="n">ans</span><span class="p">;</span>
+<span class="lineno">129</span>   <span class="kt">long</span> <span class="kt">long</span> <span class="n">lcm</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+<span class="lineno">130</span>   <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">N</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+<span class="lineno">131</span>     <span class="k">const</span> <span class="kt">long</span> <span class="kt">long</span> <span class="n">g</span> <span class="o">=</span> <span class="n">gcd</span><span class="p">(</span><span class="n">lcm</span><span class="p">,</span> <span class="n">b</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">d</span><span class="p">);</span>
+<span class="lineno">132</span>     <span class="n">lcm</span> <span class="o">=</span> <span class="p">(</span><span class="n">lcm</span> <span class="o">*</span> <span class="n">b</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">d</span><span class="p">)</span><span class="o">/</span><span class="n">g</span><span class="p">;</span>
+<span class="lineno">133</span>   <span class="p">}</span>
+<span class="lineno">134</span>   <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">lcm</span><span class="p">;</span>
+<span class="lineno">135</span>   <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="n">N</span><span class="o">-</span><span class="mi">1</span><span class="p">;</span> <span class="n">i</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">--</span><span class="p">)</span> <span class="p">{</span>
+<span class="lineno">136</span>     <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot; &quot;</span> <span class="o">&lt;&lt;</span> <span class="p">(</span><span class="n">b</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">n</span> <span class="o">*</span> <span class="n">lcm</span> <span class="o">/</span> <span class="n">b</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">d</span><span class="p">);</span>
+<span class="lineno">137</span>   <span class="p">}</span>
+<span class="lineno">138</span>   <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot; 0&quot;</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+<span class="lineno">139</span>   <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="lineno">140</span> <span class="p">}</span>
+</pre></div></pre><a href="/contests/code/poj/1707.cc">poj/1707.cc</a></p>
+<footer><p>Posted on 2012-05-23</p><a class="prev-page" href="/contests/blog/poj-2221/">POJ 2221 - Frogger's For Dinner</a><a class="next-page" href="/contests/blog/poj-1304/">POJ 1304 - World's Worst Bus Schedule</a></footer></article></div></body></html>

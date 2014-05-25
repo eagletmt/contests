@@ -1,0 +1,72 @@
+<!DOCTYPE html><html><head><meta charset="utf-8" /><meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible" /><title>POJ 2571 - Global Roaming - プログラミングコンテストの記録</title><link rel="alternate" type="application/atom+xml" title="Atom Feed" href="/contests/blog/feed.xml" /><link href="/contests/stylesheets/normalize-ef7858ef.css" rel="stylesheet" type="text/css" /><link href="/contests/stylesheets/pygments-61d6ee10.css" rel="stylesheet" type="text/css" /><link href="/contests/stylesheets/all-1916dece.css" rel="stylesheet" type="text/css" /><script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script></head><body class="blog blog_poj-2571 blog_poj-2571_index"><div id="header"><h1>プログラミングコンテストの記録</h1><p>POJ/AOJ を中心に解いた問題のコードと簡単な解説。<br />ライブラリは <a href="https://github.com/osak/ICPCLibrary">https://github.com/osak/ICPCLibrary</a></p></div><div id="main"><article class="post"><h1>POJ 2571 - Global Roaming</h1><p><a href="http://poj.org/problem?id=2571">http://poj.org/problem?id=2571</a></p>
+
+<h2>概要</h2>
+
+<p>地球上のある地点の上空 \(h\) km の位置に人工衛星があり、そこから地平線まで電波を飛ばすことができる。
+与えられた \(n\) 個の地点の位置が与えられるので、それらのうち人工衛星からの電波を受け取ることができるものだけを答える。</p>
+
+<p>位置は緯度と経度によって与えられる。
+地球は半径6387kmの完全な球だとし、人工衛星は点とみなす。</p>
+
+<h2>制約</h2>
+
+<p>特になし</p>
+
+<h2>解法</h2>
+
+<p>各地点と人工衛星の位置とがなす各の大きさを求め、それが人工衛星から地平線までの角度より小さいものだけを出力する。
+前者は緯度と経度で与えられた位置を三次元座標に変換して内積を計算することで得られ、後者は水平線の位置・地球の中心・人工衛星の位置が直角三角形をなすことから得られる。</p>
+
+<p>どちらもまずコサインの値が得られるので、以下のコードではその値で大小比較している。</p>
+
+<p><pre><div class="highlight"><pre><span class="lineno"> 1</span> <span class="cp">#include &lt;cstdio&gt;</span>
+<span class="lineno"> 2</span> <span class="cp">#include &lt;cmath&gt;</span>
+<span class="lineno"> 3</span> <span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+<span class="lineno"> 4</span> <span class="k">static</span> <span class="k">const</span> <span class="kt">double</span> <span class="n">PI</span> <span class="o">=</span> <span class="n">acos</span><span class="p">(</span><span class="o">-</span><span class="mf">1.0</span><span class="p">);</span>
+<span class="lineno"> 5</span> <span class="k">static</span> <span class="k">const</span> <span class="kt">double</span> <span class="n">EPS</span> <span class="o">=</span> <span class="mf">1e-6</span><span class="p">;</span>
+<span class="lineno"> 6</span> 
+<span class="lineno"> 7</span> <span class="k">struct</span> <span class="n">P3</span>
+<span class="lineno"> 8</span> <span class="p">{</span>
+<span class="lineno"> 9</span>   <span class="kt">double</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">;</span>
+<span class="lineno">10</span>   <span class="n">P3</span><span class="p">()</span> <span class="p">{}</span>
+<span class="lineno">11</span>   <span class="n">P3</span><span class="p">(</span><span class="kt">double</span> <span class="n">a</span><span class="p">,</span> <span class="kt">double</span> <span class="n">b</span><span class="p">,</span> <span class="kt">double</span> <span class="n">c</span><span class="p">)</span> <span class="o">:</span> <span class="n">x</span><span class="p">(</span><span class="n">a</span><span class="p">),</span> <span class="n">y</span><span class="p">(</span><span class="n">b</span><span class="p">),</span> <span class="n">z</span><span class="p">(</span><span class="n">c</span><span class="p">)</span> <span class="p">{}</span>
+<span class="lineno">12</span> <span class="p">};</span>
+<span class="lineno">13</span> <span class="kr">inline</span> <span class="kt">double</span> <span class="nf">dot</span><span class="p">(</span><span class="k">const</span> <span class="n">P3</span><span class="o">&amp;</span> <span class="n">p</span><span class="p">,</span> <span class="k">const</span> <span class="n">P3</span><span class="o">&amp;</span> <span class="n">q</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="n">p</span><span class="p">.</span><span class="n">x</span><span class="o">*</span><span class="n">q</span><span class="p">.</span><span class="n">x</span> <span class="o">+</span> <span class="n">p</span><span class="p">.</span><span class="n">y</span><span class="o">*</span><span class="n">q</span><span class="p">.</span><span class="n">y</span> <span class="o">+</span> <span class="n">p</span><span class="p">.</span><span class="n">z</span><span class="o">*</span><span class="n">q</span><span class="p">.</span><span class="n">z</span><span class="p">;</span> <span class="p">}</span>
+<span class="lineno">14</span> <span class="kr">inline</span> <span class="kt">double</span> <span class="nf">abs</span><span class="p">(</span><span class="k">const</span> <span class="n">P3</span><span class="o">&amp;</span> <span class="n">p</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="n">sqrt</span><span class="p">(</span><span class="n">dot</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">p</span><span class="p">));</span> <span class="p">}</span>
+<span class="lineno">15</span> 
+<span class="lineno">16</span> <span class="k">static</span> <span class="k">const</span> <span class="kt">double</span> <span class="n">R</span> <span class="o">=</span> <span class="mi">6378</span><span class="p">;</span>
+<span class="lineno">17</span> 
+<span class="lineno">18</span> <span class="n">P3</span> <span class="nf">from_polar</span><span class="p">(</span><span class="kt">double</span> <span class="n">lat</span><span class="p">,</span> <span class="kt">double</span> <span class="n">lan</span><span class="p">,</span> <span class="kt">double</span> <span class="n">r</span><span class="p">)</span>
+<span class="lineno">19</span> <span class="p">{</span>
+<span class="lineno">20</span>   <span class="n">lat</span> <span class="o">=</span> <span class="n">lat</span><span class="o">/</span><span class="mf">180.0</span><span class="o">*</span><span class="n">PI</span><span class="p">;</span>
+<span class="lineno">21</span>   <span class="n">lan</span> <span class="o">=</span> <span class="n">lan</span><span class="o">/</span><span class="mf">180.0</span><span class="o">*</span><span class="n">PI</span><span class="p">;</span>
+<span class="lineno">22</span>   <span class="kt">double</span> <span class="n">x</span> <span class="o">=</span> <span class="n">r</span><span class="o">*</span><span class="n">cos</span><span class="p">(</span><span class="n">lat</span><span class="p">)</span><span class="o">*</span><span class="n">cos</span><span class="p">(</span><span class="n">lan</span><span class="p">);</span>
+<span class="lineno">23</span>   <span class="kt">double</span> <span class="n">y</span> <span class="o">=</span> <span class="n">r</span><span class="o">*</span><span class="n">cos</span><span class="p">(</span><span class="n">lat</span><span class="p">)</span><span class="o">*</span><span class="n">sin</span><span class="p">(</span><span class="n">lan</span><span class="p">);</span>
+<span class="lineno">24</span>   <span class="kt">double</span> <span class="n">z</span> <span class="o">=</span> <span class="n">r</span><span class="o">*</span><span class="n">sin</span><span class="p">(</span><span class="n">lat</span><span class="p">);</span>
+<span class="lineno">25</span>   <span class="k">return</span> <span class="n">P3</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">);</span>
+<span class="lineno">26</span> <span class="p">}</span>
+<span class="lineno">27</span> 
+<span class="lineno">28</span> <span class="kt">int</span> <span class="nf">main</span><span class="p">()</span>
+<span class="lineno">29</span> <span class="p">{</span>
+<span class="lineno">30</span>   <span class="kt">int</span> <span class="n">N</span><span class="p">;</span>
+<span class="lineno">31</span>   <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">Ti</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="n">scanf</span><span class="p">(</span><span class="s">&quot;%d&quot;</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">N</span><span class="p">)</span> <span class="o">!=</span> <span class="n">EOF</span> <span class="o">&amp;&amp;</span> <span class="n">N</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">Ti</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+<span class="lineno">32</span>     <span class="kt">double</span> <span class="n">lat</span><span class="p">,</span> <span class="n">lan</span><span class="p">,</span> <span class="n">height</span><span class="p">;</span>
+<span class="lineno">33</span>     <span class="n">scanf</span><span class="p">(</span><span class="s">&quot;%lf %lf %lf&quot;</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">lat</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">lan</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">height</span><span class="p">);</span>
+<span class="lineno">34</span>     <span class="k">const</span> <span class="n">P3</span> <span class="n">sat</span> <span class="o">=</span> <span class="n">from_polar</span><span class="p">(</span><span class="n">lat</span><span class="p">,</span> <span class="n">lan</span><span class="p">,</span> <span class="n">R</span> <span class="o">+</span> <span class="n">height</span><span class="p">);</span>
+<span class="lineno">35</span>     <span class="k">const</span> <span class="kt">double</span> <span class="n">u</span> <span class="o">=</span> <span class="n">R</span> <span class="o">/</span> <span class="p">(</span><span class="n">R</span> <span class="o">+</span> <span class="n">height</span><span class="p">);</span>
+<span class="lineno">36</span>     <span class="n">printf</span><span class="p">(</span><span class="s">&quot;Test case %d:</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">Ti</span><span class="p">);</span>
+<span class="lineno">37</span>     <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">N</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+<span class="lineno">38</span>       <span class="kt">char</span> <span class="n">name</span><span class="p">[</span><span class="mi">128</span><span class="p">];</span>
+<span class="lineno">39</span>       <span class="n">scanf</span><span class="p">(</span><span class="s">&quot;%s %lf %lf&quot;</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">lat</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">lan</span><span class="p">);</span>
+<span class="lineno">40</span>       <span class="k">const</span> <span class="n">P3</span> <span class="n">p</span> <span class="o">=</span> <span class="n">from_polar</span><span class="p">(</span><span class="n">lat</span><span class="p">,</span> <span class="n">lan</span><span class="p">,</span> <span class="n">R</span><span class="p">);</span>
+<span class="lineno">41</span>       <span class="k">const</span> <span class="kt">double</span> <span class="n">t</span> <span class="o">=</span> <span class="n">dot</span><span class="p">(</span><span class="n">sat</span><span class="p">,</span> <span class="n">p</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="n">abs</span><span class="p">(</span><span class="n">sat</span><span class="p">)</span> <span class="o">*</span> <span class="n">abs</span><span class="p">(</span><span class="n">p</span><span class="p">));</span>
+<span class="lineno">42</span>       <span class="k">if</span> <span class="p">(</span><span class="n">u</span> <span class="o">-</span> <span class="n">t</span> <span class="o">&lt;</span> <span class="n">EPS</span><span class="p">)</span> <span class="p">{</span>
+<span class="lineno">43</span>         <span class="n">puts</span><span class="p">(</span><span class="n">name</span><span class="p">);</span>
+<span class="lineno">44</span>       <span class="p">}</span>
+<span class="lineno">45</span>     <span class="p">}</span>
+<span class="lineno">46</span>     <span class="n">putchar</span><span class="p">(</span><span class="sc">&#39;\n&#39;</span><span class="p">);</span>
+<span class="lineno">47</span>   <span class="p">}</span>
+<span class="lineno">48</span>   <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="lineno">49</span> <span class="p">}</span>
+</pre></div></pre><a href="/contests/code/poj/2571.cc">poj/2571.cc</a></p>
+<footer><p>Posted on 2012-05-06</p><a class="prev-page" href="/contests/blog/poj-3631/">POJ 3631 - Cuckoo Hashing</a><a class="next-page" href="/contests/blog/poj-3638/">POJ 3638 - Moogle</a></footer></article></div></body></html>

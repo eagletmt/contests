@@ -1,0 +1,90 @@
+<!DOCTYPE html><html><head><meta charset="utf-8" /><meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible" /><title>POJ 1929 - Calories from Fat - プログラミングコンテストの記録</title><link rel="alternate" type="application/atom+xml" title="Atom Feed" href="/contests/blog/feed.xml" /><link href="/contests/stylesheets/normalize-ef7858ef.css" rel="stylesheet" type="text/css" /><link href="/contests/stylesheets/pygments-61d6ee10.css" rel="stylesheet" type="text/css" /><link href="/contests/stylesheets/all-1916dece.css" rel="stylesheet" type="text/css" /><script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script></head><body class="blog blog_poj-1929 blog_poj-1929_index"><div id="header"><h1>プログラミングコンテストの記録</h1><p>POJ/AOJ を中心に解いた問題のコードと簡単な解説。<br />ライブラリは <a href="https://github.com/osak/ICPCLibrary">https://github.com/osak/ICPCLibrary</a></p></div><div id="main"><article class="post"><h1>POJ 1929 - Calories from Fat</h1><p><a href="http://poj.org/problem?id=1929">http://poj.org/problem?id=1929</a></p>
+
+<h2>概要</h2>
+
+<ul>
+<li>fat は 9 C/g</li>
+<li>protein, sugar, starch は 4C/g</li>
+<li>alcohol は 7C/g</li>
+</ul>
+
+<p>とする．
+fat, protein, sugar, starch, alcohol の摂取量が g か C か % のいずれかの単位で表され，</p>
+
+<ul>
+<li><em>n</em>g := <em>n</em> グラム摂取した</li>
+<li><em>n</em>C := <em>n</em> カロリー摂取した</li>
+<li><em>n</em>% := 全体のカロリーに対して <em>n</em> % のカロリーをそれで摂取した</li>
+</ul>
+
+<p>という意味．</p>
+
+<p>全体のカロリーに対して fat で摂取したカロリーが何%であるか四捨五入して整数で答える．</p>
+
+<h2>制約</h2>
+
+<ul>
+<li>5つのうち，必ず一つは g か C の単位で表されている</li>
+</ul>
+
+<h2>解法</h2>
+
+<p>問題文の理解に一番時間がかかった．やるだけ．</p>
+
+<p><pre><div class="highlight"><pre><span class="lineno"> 1</span> <span class="cp">#include &lt;iostream&gt;</span>
+<span class="lineno"> 2</span> <span class="cp">#include &lt;sstream&gt;</span>
+<span class="lineno"> 3</span> <span class="cp">#include &lt;vector&gt;</span>
+<span class="lineno"> 4</span> <span class="cp">#include &lt;cmath&gt;</span>
+<span class="lineno"> 5</span> <span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+<span class="lineno"> 6</span> 
+<span class="lineno"> 7</span> <span class="kt">int</span> <span class="nf">main</span><span class="p">()</span>
+<span class="lineno"> 8</span> <span class="p">{</span>
+<span class="lineno"> 9</span>   <span class="n">string</span> <span class="n">line</span><span class="p">;</span>
+<span class="lineno">10</span>   <span class="k">while</span> <span class="p">(</span><span class="n">getline</span><span class="p">(</span><span class="n">cin</span><span class="p">,</span> <span class="n">line</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="n">line</span> <span class="o">!=</span> <span class="s">&quot;-&quot;</span><span class="p">)</span> <span class="p">{</span>
+<span class="lineno">11</span>     <span class="kt">double</span> <span class="n">fat</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">;</span>
+<span class="lineno">12</span>     <span class="kt">double</span> <span class="n">sum</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">;</span>
+<span class="lineno">13</span>     <span class="k">do</span> <span class="p">{</span>
+<span class="lineno">14</span>       <span class="n">istringstream</span> <span class="n">iss</span><span class="p">(</span><span class="n">line</span><span class="p">);</span>
+<span class="lineno">15</span>       <span class="kt">bool</span> <span class="n">is_percent</span><span class="p">;</span>
+<span class="lineno">16</span>       <span class="kt">int</span> <span class="n">val</span><span class="p">;</span>
+<span class="lineno">17</span>       <span class="kt">int</span> <span class="n">percent</span> <span class="o">=</span> <span class="mi">100</span><span class="p">;</span>
+<span class="lineno">18</span>       <span class="kt">int</span> <span class="n">t</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+<span class="lineno">19</span>       <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">5</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+<span class="lineno">20</span>         <span class="kt">int</span> <span class="n">n</span><span class="p">;</span>
+<span class="lineno">21</span>         <span class="kt">char</span> <span class="n">u</span><span class="p">;</span>
+<span class="lineno">22</span>         <span class="n">iss</span> <span class="o">&gt;&gt;</span> <span class="n">n</span> <span class="o">&gt;&gt;</span> <span class="n">u</span><span class="p">;</span>
+<span class="lineno">23</span>         <span class="k">if</span> <span class="p">(</span><span class="n">u</span> <span class="o">==</span> <span class="sc">&#39;g&#39;</span><span class="p">)</span> <span class="p">{</span>
+<span class="lineno">24</span>           <span class="k">static</span> <span class="k">const</span> <span class="kt">int</span> <span class="n">tbl</span><span class="p">[]</span> <span class="o">=</span> <span class="p">{</span><span class="mi">9</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">7</span><span class="p">};</span>
+<span class="lineno">25</span>           <span class="k">if</span> <span class="p">(</span><span class="n">i</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+<span class="lineno">26</span>             <span class="n">is_percent</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+<span class="lineno">27</span>             <span class="n">val</span> <span class="o">=</span> <span class="n">n</span> <span class="o">*</span> <span class="n">tbl</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+<span class="lineno">28</span>           <span class="p">}</span>
+<span class="lineno">29</span>           <span class="n">t</span> <span class="o">+=</span> <span class="n">n</span> <span class="o">*</span> <span class="n">tbl</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+<span class="lineno">30</span>         <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">u</span> <span class="o">==</span> <span class="sc">&#39;C&#39;</span><span class="p">)</span> <span class="p">{</span>
+<span class="lineno">31</span>           <span class="k">if</span> <span class="p">(</span><span class="n">i</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+<span class="lineno">32</span>             <span class="n">is_percent</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+<span class="lineno">33</span>             <span class="n">val</span> <span class="o">=</span> <span class="n">n</span><span class="p">;</span>
+<span class="lineno">34</span>           <span class="p">}</span>
+<span class="lineno">35</span>           <span class="n">t</span> <span class="o">+=</span> <span class="n">n</span><span class="p">;</span>
+<span class="lineno">36</span>         <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+<span class="lineno">37</span>           <span class="k">if</span> <span class="p">(</span><span class="n">i</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+<span class="lineno">38</span>             <span class="n">is_percent</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+<span class="lineno">39</span>             <span class="n">val</span> <span class="o">=</span> <span class="n">n</span><span class="p">;</span>
+<span class="lineno">40</span>           <span class="p">}</span>
+<span class="lineno">41</span>           <span class="n">percent</span> <span class="o">-=</span> <span class="n">n</span><span class="p">;</span>
+<span class="lineno">42</span>         <span class="p">}</span>
+<span class="lineno">43</span>       <span class="p">}</span>
+<span class="lineno">44</span>       <span class="k">const</span> <span class="kt">double</span> <span class="n">ttl</span> <span class="o">=</span> <span class="mf">100.0</span> <span class="o">*</span> <span class="n">t</span> <span class="o">/</span> <span class="n">percent</span><span class="p">;</span>
+<span class="lineno">45</span>       <span class="k">if</span> <span class="p">(</span><span class="n">is_percent</span><span class="p">)</span> <span class="p">{</span>
+<span class="lineno">46</span>         <span class="n">fat</span> <span class="o">+=</span> <span class="n">ttl</span> <span class="o">*</span> <span class="n">val</span> <span class="o">/</span> <span class="mf">100.0</span><span class="p">;</span>
+<span class="lineno">47</span>       <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+<span class="lineno">48</span>         <span class="n">fat</span> <span class="o">+=</span> <span class="n">val</span><span class="p">;</span>
+<span class="lineno">49</span>       <span class="p">}</span>
+<span class="lineno">50</span>       <span class="n">sum</span> <span class="o">+=</span> <span class="n">ttl</span><span class="p">;</span>
+<span class="lineno">51</span>     <span class="p">}</span> <span class="k">while</span> <span class="p">(</span><span class="n">getline</span><span class="p">(</span><span class="n">cin</span><span class="p">,</span> <span class="n">line</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="n">line</span> <span class="o">!=</span> <span class="s">&quot;-&quot;</span><span class="p">);</span>
+<span class="lineno">52</span>     <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">lround</span><span class="p">(</span><span class="n">fat</span> <span class="o">/</span> <span class="n">sum</span> <span class="o">*</span> <span class="mf">100.0</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="sc">&#39;%&#39;</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+<span class="lineno">53</span>   <span class="p">}</span>
+<span class="lineno">54</span>   <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="lineno">55</span> <span class="p">}</span>
+</pre></div></pre><a href="/contests/code/poj/1929.cc">poj/1929.cc</a></p>
+<footer><p>Posted on 2011-10-19</p><a class="prev-page" href="/contests/blog/poj-3334/">POJ 3334 - Connected Gheeves</a><a class="next-page" href="/contests/blog/poj-1105/">POJ 1105 - S-Trees</a></footer></article></div></body></html>

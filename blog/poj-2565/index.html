@@ -1,0 +1,58 @@
+<!DOCTYPE html><html><head><meta charset="utf-8" /><meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible" /><title>POJ 2565 - Average is not Fast Enough! - プログラミングコンテストの記録</title><link rel="alternate" type="application/atom+xml" title="Atom Feed" href="/contests/blog/feed.xml" /><link href="/contests/stylesheets/normalize-ef7858ef.css" rel="stylesheet" type="text/css" /><link href="/contests/stylesheets/pygments-61d6ee10.css" rel="stylesheet" type="text/css" /><link href="/contests/stylesheets/all-1916dece.css" rel="stylesheet" type="text/css" /><script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script></head><body class="blog blog_poj-2565 blog_poj-2565_index"><div id="header"><h1>プログラミングコンテストの記録</h1><p>POJ/AOJ を中心に解いた問題のコードと簡単な解説。<br />ライブラリは <a href="https://github.com/osak/ICPCLibrary">https://github.com/osak/ICPCLibrary</a></p></div><div id="main"><article class="post"><h1>POJ 2565 - Average is not Fast Enough!</h1><p><a href="http://poj.org/problem?id=2565">http://poj.org/problem?id=2565</a></p>
+
+<h2>概要</h2>
+
+<p>各チーム毎に，n 人のタイムが与えられる．
+全体の距離が d のときの，距離当たりの時間を答える．</p>
+
+<p>ただし，走者が disqualified のときはタイムが -:--:-- で与えられ，1人でも disqualified であればそのチームの答えは - とする．</p>
+
+<h2>制約</h2>
+
+<ul>
+<li>1 &lt;= n &lt;= 20</li>
+<li>0.0 &lt; d &lt; 200.0</li>
+</ul>
+
+<h2>解法</h2>
+
+<p>やるだけ．</p>
+
+<p><pre><div class="highlight"><pre><span class="lineno"> 1</span> <span class="cp">#include &lt;cstdio&gt;</span>
+<span class="lineno"> 2</span> <span class="cp">#include &lt;cmath&gt;</span>
+<span class="lineno"> 3</span> <span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+<span class="lineno"> 4</span> 
+<span class="lineno"> 5</span> <span class="kt">int</span> <span class="nf">main</span><span class="p">()</span>
+<span class="lineno"> 6</span> <span class="p">{</span>
+<span class="lineno"> 7</span>   <span class="kt">int</span> <span class="n">n</span><span class="p">;</span>
+<span class="lineno"> 8</span>   <span class="kt">double</span> <span class="n">d</span><span class="p">;</span>
+<span class="lineno"> 9</span>   <span class="n">scanf</span><span class="p">(</span><span class="s">&quot;%d %lf&quot;</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">n</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">d</span><span class="p">);</span>
+<span class="lineno">10</span> 
+<span class="lineno">11</span>   <span class="kt">int</span> <span class="n">t</span><span class="p">;</span>
+<span class="lineno">12</span>   <span class="k">while</span> <span class="p">(</span><span class="n">scanf</span><span class="p">(</span><span class="s">&quot;%d&quot;</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">t</span><span class="p">)</span> <span class="o">!=</span> <span class="n">EOF</span><span class="p">)</span> <span class="p">{</span>
+<span class="lineno">13</span>     <span class="kt">bool</span> <span class="n">disqual</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+<span class="lineno">14</span>     <span class="kt">int</span> <span class="n">ttl</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+<span class="lineno">15</span>     <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">n</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+<span class="lineno">16</span>       <span class="kt">char</span> <span class="n">hmmss</span><span class="p">[</span><span class="mi">20</span><span class="p">];</span>
+<span class="lineno">17</span>       <span class="n">scanf</span><span class="p">(</span><span class="s">&quot;%s&quot;</span><span class="p">,</span> <span class="n">hmmss</span><span class="p">);</span>
+<span class="lineno">18</span>       <span class="k">if</span> <span class="p">(</span><span class="n">hmmss</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="sc">&#39;-&#39;</span><span class="p">)</span> <span class="p">{</span>
+<span class="lineno">19</span>         <span class="n">disqual</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+<span class="lineno">20</span>       <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+<span class="lineno">21</span>         <span class="kt">int</span> <span class="n">h</span> <span class="o">=</span> <span class="n">hmmss</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">-</span><span class="sc">&#39;0&#39;</span><span class="p">;</span>
+<span class="lineno">22</span>         <span class="kt">int</span> <span class="n">m</span> <span class="o">=</span> <span class="mi">10</span><span class="o">*</span><span class="p">(</span><span class="n">hmmss</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">-</span><span class="sc">&#39;0&#39;</span><span class="p">)</span><span class="o">+</span><span class="p">(</span><span class="n">hmmss</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="o">-</span><span class="sc">&#39;0&#39;</span><span class="p">);</span>
+<span class="lineno">23</span>         <span class="kt">int</span> <span class="n">s</span> <span class="o">=</span> <span class="mi">10</span><span class="o">*</span><span class="p">(</span><span class="n">hmmss</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span><span class="o">-</span><span class="sc">&#39;0&#39;</span><span class="p">)</span><span class="o">+</span><span class="p">(</span><span class="n">hmmss</span><span class="p">[</span><span class="mi">6</span><span class="p">]</span><span class="o">-</span><span class="sc">&#39;0&#39;</span><span class="p">);</span>
+<span class="lineno">24</span>         <span class="n">ttl</span> <span class="o">+=</span> <span class="mi">3600</span><span class="o">*</span><span class="n">h</span> <span class="o">+</span> <span class="mi">60</span><span class="o">*</span><span class="n">m</span> <span class="o">+</span> <span class="n">s</span><span class="p">;</span>
+<span class="lineno">25</span>       <span class="p">}</span>
+<span class="lineno">26</span>     <span class="p">}</span>
+<span class="lineno">27</span>     <span class="n">printf</span><span class="p">(</span><span class="s">&quot;%3d: &quot;</span><span class="p">,</span> <span class="n">t</span><span class="p">);</span>
+<span class="lineno">28</span>     <span class="k">if</span> <span class="p">(</span><span class="n">disqual</span><span class="p">)</span> <span class="p">{</span>
+<span class="lineno">29</span>       <span class="n">puts</span><span class="p">(</span><span class="s">&quot;-&quot;</span><span class="p">);</span>
+<span class="lineno">30</span>     <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+<span class="lineno">31</span>       <span class="kt">int</span> <span class="n">s</span> <span class="o">=</span> <span class="n">lround</span><span class="p">(</span><span class="n">ttl</span> <span class="o">/</span> <span class="n">d</span><span class="p">);</span>
+<span class="lineno">32</span>       <span class="n">printf</span><span class="p">(</span><span class="s">&quot;%d:%02d min/km</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">s</span><span class="o">/</span><span class="mi">60</span><span class="p">,</span> <span class="n">s</span><span class="o">%</span><span class="mi">60</span><span class="p">);</span>
+<span class="lineno">33</span>     <span class="p">}</span>
+<span class="lineno">34</span>   <span class="p">}</span>
+<span class="lineno">35</span>   <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="lineno">36</span> <span class="p">}</span>
+</pre></div></pre><a href="/contests/code/poj/2565.cc">poj/2565.cc</a></p>
+<footer><p>Posted on 2011-10-19</p><a class="prev-page" href="/contests/blog/poj-3317/">POJ 3317 - Stake Your Claim</a><a class="next-page" href="/contests/blog/poj-1375/">POJ 1375 - Intervals</a></footer></article></div></body></html>

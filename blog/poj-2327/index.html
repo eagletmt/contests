@@ -1,0 +1,68 @@
+<!DOCTYPE html><html><head><meta charset="utf-8" /><meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible" /><title>POJ 2327 - Dumb Bones - プログラミングコンテストの記録</title><link rel="alternate" type="application/atom+xml" title="Atom Feed" href="/contests/blog/feed.xml" /><link href="/contests/stylesheets/normalize-ef7858ef.css" rel="stylesheet" type="text/css" /><link href="/contests/stylesheets/pygments-61d6ee10.css" rel="stylesheet" type="text/css" /><link href="/contests/stylesheets/all-1916dece.css" rel="stylesheet" type="text/css" /><script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script></head><body class="blog blog_poj-2327 blog_poj-2327_index"><div id="header"><h1>プログラミングコンテストの記録</h1><p>POJ/AOJ を中心に解いた問題のコードと簡単な解説。<br />ライブラリは <a href="https://github.com/osak/ICPCLibrary">https://github.com/osak/ICPCLibrary</a></p></div><div id="main"><article class="post"><h1>POJ 2327 - Dumb Bones</h1><p><a href="http://poj.org/problem?id=2327">http://poj.org/problem?id=2327</a></p>
+
+<h2>概要</h2>
+
+<p>\(n\) 個のドミノを一列に連続して並べたい。
+しかし、あるドミノを置いたとき、確率 \(P_l\) で左側に倒れてしまい、確率 \(P_r\) で右側に倒れてしまう。
+倒してしまうと、そこから連続したドミノはすべて倒れてしまう。</p>
+
+<p>1ステップで1つのドミノを置くとき、最適な方法で \(n\) 個並べきるのに必要なステップ数の期待値を答える。</p>
+
+<h2>制約</h2>
+
+<ul>
+<li>\(1 \le n \le 1000\)</li>
+<li>\(0 &lt; P_l + P_r \le 0.5\)</li>
+</ul>
+
+<h2>解法</h2>
+
+<p>DP。
+最適に \(k\) 個置いたときの期待値を <code>dp[k]</code> とする。
+今、左側に連続して \(l\) 個、右側に連続して \(r\) 個並んでおり、この間に新たに1つ置いて連続して \(l+1+r\) 個並べたいとする。
+すると、この1個置いたときに考えられる事象は</p>
+
+<ol>
+<li>倒れない (確率 \(1 - P_l - P_r\))</li>
+<li>左側に倒れる (確率 \(P_l\))</li>
+<li>右側に倒れる (確率 \(P_r\))</li>
+</ol>
+
+<p>のいずれかである。
+ここから1つ増やすのに必要なステップ数の期待値を \(x\) とすると、左側の \(l\) 個並べたときの期待値を \(E_l\)、右側の \(r\) 個並べたときの期待値を \(E_r\) として、</p>
+
+<ol>
+<li>の場合、新たに1個置くだけなので \(1\) ステップかかる</li>
+<li>の場合、新たに1個置いて左側を倒し、再び \(l\) 個並べるのに \(E_l\) ステップかかり、さらにもう1つ置くのに \(x\) ステップで、合計 \(1 + E_l + x\) ステップかかる</li>
+<li>の場合も同様に \(1 + E_r + x\) ステップかかる</li>
+</ol>
+
+<p>であるので、\(x = (1 - P_l - P_r) \cdot 1 + P_l \cdot (1 + E_l + x) + P_r \cdot (1 + E_r + x)\) が成り立ち、これを解いて \(x = \frac{1 + P_l E_l + P_r E_r}{1 - P_l - P_r}\) となる。
+よって、<code>dp[l+1+r]</code> を \(E_l + x + E_r\) で更新すればいい。</p>
+
+<p><pre><div class="highlight"><pre><span class="lineno"> 1</span> <span class="cp">#include &lt;cstdio&gt;</span>
+<span class="lineno"> 2</span> <span class="cp">#include &lt;vector&gt;</span>
+<span class="lineno"> 3</span> <span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+<span class="lineno"> 4</span> 
+<span class="lineno"> 5</span> <span class="kt">int</span> <span class="nf">main</span><span class="p">()</span>
+<span class="lineno"> 6</span> <span class="p">{</span>
+<span class="lineno"> 7</span>   <span class="kt">int</span> <span class="n">N</span><span class="p">;</span>
+<span class="lineno"> 8</span>   <span class="k">while</span> <span class="p">(</span><span class="n">scanf</span><span class="p">(</span><span class="s">&quot;%d&quot;</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">N</span><span class="p">)</span> <span class="o">!=</span> <span class="n">EOF</span> <span class="o">&amp;&amp;</span> <span class="n">N</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+<span class="lineno"> 9</span>     <span class="kt">double</span> <span class="n">Pl</span><span class="p">,</span> <span class="n">Pr</span><span class="p">;</span>
+<span class="lineno">10</span>     <span class="n">scanf</span><span class="p">(</span><span class="s">&quot;%lf %lf&quot;</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">Pl</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">Pr</span><span class="p">);</span>
+<span class="lineno">11</span> 
+<span class="lineno">12</span>     <span class="n">vector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="n">dp</span><span class="p">(</span><span class="n">N</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="mf">1e10</span><span class="p">);</span>
+<span class="lineno">13</span>     <span class="n">dp</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+<span class="lineno">14</span>     <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;=</span> <span class="n">N</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+<span class="lineno">15</span>       <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">j</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="n">i</span><span class="p">;</span> <span class="n">j</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+<span class="lineno">16</span>         <span class="k">const</span> <span class="kt">double</span> <span class="n">El</span> <span class="o">=</span> <span class="n">dp</span><span class="p">[</span><span class="n">j</span><span class="p">],</span> <span class="n">Er</span> <span class="o">=</span> <span class="n">dp</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="n">j</span><span class="o">-</span><span class="mi">1</span><span class="p">];</span>
+<span class="lineno">17</span>         <span class="k">const</span> <span class="kt">double</span> <span class="n">x</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">Pl</span><span class="o">*</span><span class="n">El</span> <span class="o">+</span> <span class="n">Pr</span><span class="o">*</span><span class="n">Er</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">Pl</span> <span class="o">-</span> <span class="n">Pr</span><span class="p">);</span>
+<span class="lineno">18</span>         <span class="n">dp</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">min</span><span class="p">(</span><span class="n">dp</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">El</span> <span class="o">+</span> <span class="n">Er</span> <span class="o">+</span> <span class="n">x</span><span class="p">);</span>
+<span class="lineno">19</span>       <span class="p">}</span>
+<span class="lineno">20</span>     <span class="p">}</span>
+<span class="lineno">21</span>     <span class="n">printf</span><span class="p">(</span><span class="s">&quot;%.2f</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">dp</span><span class="p">[</span><span class="n">N</span><span class="p">]);</span>
+<span class="lineno">22</span>   <span class="p">}</span>
+<span class="lineno">23</span>   <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="lineno">24</span> <span class="p">}</span>
+</pre></div></pre><a href="/contests/code/poj/2327.cc">poj/2327.cc</a></p>
+<footer><p>Posted on 2012-12-05</p><a class="prev-page" href="/contests/blog/poj-1826/">POJ 1826 - The Best Farm</a><a class="next-page" href="/contests/blog/poj-2296/">POJ 2296 - Map Labeler</a></footer></article></div></body></html>

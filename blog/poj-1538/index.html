@@ -1,0 +1,58 @@
+<!DOCTYPE html><html><head><meta charset="utf-8" /><meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible" /><title>POJ 1538 - Extrapolation Using a Difference Table - プログラミングコンテストの記録</title><link rel="alternate" type="application/atom+xml" title="Atom Feed" href="/contests/blog/feed.xml" /><link href="/contests/stylesheets/normalize-ef7858ef.css" rel="stylesheet" type="text/css" /><link href="/contests/stylesheets/pygments-61d6ee10.css" rel="stylesheet" type="text/css" /><link href="/contests/stylesheets/all-1916dece.css" rel="stylesheet" type="text/css" /><script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script></head><body class="blog blog_poj-1538 blog_poj-1538_index"><div id="header"><h1>プログラミングコンテストの記録</h1><p>POJ/AOJ を中心に解いた問題のコードと簡単な解説。<br />ライブラリは <a href="https://github.com/osak/ICPCLibrary">https://github.com/osak/ICPCLibrary</a></p></div><div id="main"><article class="post"><h1>POJ 1538 - Extrapolation Using a Difference Table</h1><p><a href="http://poj.org/problem?id=1538">http://poj.org/problem?id=1538</a></p>
+
+<h2>概要</h2>
+
+<p>数列 \(a_n\) が与えられる。</p>
+
+<p>長さ \(n\) の数列に対して、隣接する項の差によって新たに長さ \(n-1\) の数列を作ることができる。
+この操作を長さ1の数列になるまで繰り返すと、問題文の上の図のような差分表ができる。
+この \(n-1\) 番目の長さ1の数列の値を \(c\) とする。</p>
+
+<p>ここから数列 \(a_n\) に新たに \(a_{n+1}\) を追加することを考える。
+このとき、追加した後の差分表の \(n-1\) 番目の数列の要素が常に \(c\) になるように \(a_{n+1}\) の値を決めなければならない。</p>
+
+<p>このようにして \(k\) 個要素を追加した後の \(a_{n+k}\) の値を答える。</p>
+
+<h2>制約</h2>
+
+<ul>
+<li>\(1 \le n \le 10\)</li>
+<li>\(k\) についての制約はなく、\(k\) 個追加した後の完全な差分表を作ることはできないかもしれない</li>
+</ul>
+
+<h2>解法</h2>
+
+<p>差分表の各列の一番下の要素だけあれば「追加」の操作を行えるので、
+最初に完全な差分表を作った後は \(k\) 回追加すればいい。</p>
+
+<p><pre><div class="highlight"><pre><span class="lineno"> 1</span> <span class="cp">#include &lt;iostream&gt;</span>
+<span class="lineno"> 2</span> <span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+<span class="lineno"> 3</span> 
+<span class="lineno"> 4</span> <span class="kt">int</span> <span class="nf">main</span><span class="p">()</span>
+<span class="lineno"> 5</span> <span class="p">{</span>
+<span class="lineno"> 6</span>   <span class="kt">int</span> <span class="n">N</span><span class="p">;</span>
+<span class="lineno"> 7</span>   <span class="k">while</span> <span class="p">(</span><span class="n">cin</span> <span class="o">&gt;&gt;</span> <span class="n">N</span> <span class="o">&amp;&amp;</span> <span class="n">N</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+<span class="lineno"> 8</span>     <span class="kt">int</span> <span class="n">a</span><span class="p">[</span><span class="mi">10</span><span class="p">][</span><span class="mi">10</span><span class="p">];</span>
+<span class="lineno"> 9</span>     <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">N</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+<span class="lineno">10</span>       <span class="n">cin</span> <span class="o">&gt;&gt;</span> <span class="n">a</span><span class="p">[</span><span class="n">N</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="n">i</span><span class="p">];</span>
+<span class="lineno">11</span>     <span class="p">}</span>
+<span class="lineno">12</span>     <span class="kt">int</span> <span class="n">K</span><span class="p">;</span>
+<span class="lineno">13</span>     <span class="n">cin</span> <span class="o">&gt;&gt;</span> <span class="n">K</span><span class="p">;</span>
+<span class="lineno">14</span> 
+<span class="lineno">15</span>     <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="n">N</span><span class="o">-</span><span class="mi">2</span><span class="p">;</span> <span class="n">i</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">--</span><span class="p">)</span> <span class="p">{</span>
+<span class="lineno">16</span>       <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">j</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">j</span> <span class="o">&lt;=</span> <span class="n">i</span><span class="p">;</span> <span class="n">j</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+<span class="lineno">17</span>         <span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">][</span><span class="n">j</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">][</span><span class="n">j</span><span class="p">];</span>
+<span class="lineno">18</span>       <span class="p">}</span>
+<span class="lineno">19</span>     <span class="p">}</span>
+<span class="lineno">20</span> 
+<span class="lineno">21</span>     <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">K</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+<span class="lineno">22</span>       <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">j</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="n">N</span><span class="o">-</span><span class="mi">1</span><span class="p">;</span> <span class="n">j</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+<span class="lineno">23</span>         <span class="n">a</span><span class="p">[</span><span class="n">j</span><span class="o">+</span><span class="mi">1</span><span class="p">][</span><span class="n">j</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span> <span class="o">+=</span> <span class="n">a</span><span class="p">[</span><span class="n">j</span><span class="p">][</span><span class="n">j</span><span class="p">];</span>
+<span class="lineno">24</span>       <span class="p">}</span>
+<span class="lineno">25</span>     <span class="p">}</span>
+<span class="lineno">26</span>     <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;Term &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">N</span><span class="o">+</span><span class="n">K</span> <span class="o">&lt;&lt;</span> <span class="s">&quot; of the sequence is &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">a</span><span class="p">[</span><span class="n">N</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="n">N</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+<span class="lineno">27</span>   <span class="p">}</span>
+<span class="lineno">28</span>   <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="lineno">29</span> <span class="p">}</span>
+</pre></div></pre><a href="/contests/code/poj/1538.cc">poj/1538.cc</a></p>
+<footer><p>Posted on 2012-05-10</p><a class="prev-page" href="/contests/blog/poj-2166/">POJ 2166 - Heapsort</a><a class="next-page" href="/contests/blog/poj-2167/">POJ 2167 - Irrelevant Elements</a></footer></article></div></body></html>

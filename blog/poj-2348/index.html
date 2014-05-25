@@ -1,0 +1,70 @@
+<!DOCTYPE html><html><head><meta charset="utf-8" /><meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible" /><title>POJ 2348 - Euclid's Game - プログラミングコンテストの記録</title><link rel="alternate" type="application/atom+xml" title="Atom Feed" href="/contests/blog/feed.xml" /><link href="/contests/stylesheets/normalize-ef7858ef.css" rel="stylesheet" type="text/css" /><link href="/contests/stylesheets/pygments-61d6ee10.css" rel="stylesheet" type="text/css" /><link href="/contests/stylesheets/all-1916dece.css" rel="stylesheet" type="text/css" /><script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script></head><body class="blog blog_poj-2348 blog_poj-2348_index"><div id="header"><h1>プログラミングコンテストの記録</h1><p>POJ/AOJ を中心に解いた問題のコードと簡単な解説。<br />ライブラリは <a href="https://github.com/osak/ICPCLibrary">https://github.com/osak/ICPCLibrary</a></p></div><div id="main"><article class="post"><h1>POJ 2348 - Euclid's Game</h1><p><a href="http://poj.org/problem?id=2348">http://poj.org/problem?id=2348</a></p>
+
+<h2>概要</h2>
+
+<p>二人のプレイヤーが2つの整数に関するゲームを行う．</p>
+
+<p>各ターンに，プレイヤーは大きいほうの整数から小さいほうの好きな倍数を引くことができる．
+ただし，このときに引いた結果が負になってはならない．</p>
+
+<p>引けなくなった方，すなわち片方の整数が 0 になったプレイヤーの負けである．</p>
+
+<p>初期状態の整数の組 (x, y) が与えられるので，先手必勝か後手必勝かを答える．</p>
+
+<h2>制約</h2>
+
+<ul>
+<li>問題文には無いが，x, y は正の整数で符号付き 32-bit 整数値に収まる</li>
+</ul>
+
+<h2>解法</h2>
+
+<p>以下 x &lt;= y を仮定する．</p>
+
+<p>プレイヤーの勝ち負けを判定する関数を f(x, y) とすると，</p>
+
+<pre><code>f(0, y) = false
+f(x, y) = !f(y-x, y)  if y/x == 1
+f(x, y) = true        otherwise
+</code></pre>
+
+<p>となる．</p>
+
+<p>1つ目はゲームのルールから自明で，2つ目も y から x を引くしか選択肢が無いので明らか．</p>
+
+<p>3つ目の y/x = n (&gt;= 2) だった場合を考える．</p>
+
+<ul>
+<li>もし f(y - n*x, x) == false だった場合，プレイヤーは n*x を引くことで勝つことができる．</li>
+<li>もし f(y - n*x, x) == true だった場合，プレイヤーが (n-1)*x を引くと (x, y-(n-1)*x) という状態になり，ここで相手は x を引くしか手が無いので今度は自分の番が (y-n*x, x) で回ってきて，勝つことができる．</li>
+</ul>
+
+<p><pre><div class="highlight"><pre><span class="lineno"> 1</span> <span class="cp">#include &lt;cstdio&gt;</span>
+<span class="lineno"> 2</span> <span class="cp">#include &lt;algorithm&gt;</span>
+<span class="lineno"> 3</span> <span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+<span class="lineno"> 4</span> 
+<span class="lineno"> 5</span> <span class="kt">bool</span> <span class="nf">dfs</span><span class="p">(</span><span class="kt">int</span> <span class="n">x</span><span class="p">,</span> <span class="kt">int</span> <span class="n">y</span><span class="p">)</span>
+<span class="lineno"> 6</span> <span class="p">{</span>
+<span class="lineno"> 7</span>   <span class="c1">// x &lt;= y</span>
+<span class="lineno"> 8</span>   <span class="k">if</span> <span class="p">(</span><span class="n">x</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+<span class="lineno"> 9</span>     <span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
+<span class="lineno">10</span>   <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">y</span><span class="o">/</span><span class="n">x</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+<span class="lineno">11</span>     <span class="k">return</span> <span class="o">!</span><span class="n">dfs</span><span class="p">(</span><span class="n">y</span><span class="o">-</span><span class="n">x</span><span class="p">,</span> <span class="n">x</span><span class="p">);</span>
+<span class="lineno">12</span>   <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+<span class="lineno">13</span>     <span class="k">return</span> <span class="nb">true</span><span class="p">;</span>
+<span class="lineno">14</span>   <span class="p">}</span>
+<span class="lineno">15</span> <span class="p">}</span>
+<span class="lineno">16</span> 
+<span class="lineno">17</span> <span class="kt">int</span> <span class="nf">main</span><span class="p">()</span>
+<span class="lineno">18</span> <span class="p">{</span>
+<span class="lineno">19</span>   <span class="kt">int</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">;</span>
+<span class="lineno">20</span>   <span class="k">while</span> <span class="p">(</span><span class="n">scanf</span><span class="p">(</span><span class="s">&quot;%d %d&quot;</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">x</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">y</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="n">x</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+<span class="lineno">21</span>     <span class="k">if</span> <span class="p">(</span><span class="n">x</span> <span class="o">&gt;</span> <span class="n">y</span><span class="p">)</span> <span class="p">{</span>
+<span class="lineno">22</span>       <span class="n">swap</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">);</span>
+<span class="lineno">23</span>     <span class="p">}</span>
+<span class="lineno">24</span>     <span class="n">puts</span><span class="p">(</span><span class="n">dfs</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span> <span class="o">?</span> <span class="s">&quot;Stan wins&quot;</span> <span class="o">:</span> <span class="s">&quot;Ollie wins&quot;</span><span class="p">);</span>
+<span class="lineno">25</span>   <span class="p">}</span>
+<span class="lineno">26</span>   <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="lineno">27</span> <span class="p">}</span>
+</pre></div></pre><a href="/contests/code/poj/2348.cc">poj/2348.cc</a></p>
+<footer><p>Posted on 2011-12-29</p><a class="prev-page" href="/contests/blog/poj-1161/">POJ 1161 - Walls</a><a class="next-page" href="/contests/blog/poj-1906/">POJ 1906 - Three powers</a></footer></article></div></body></html>

@@ -1,0 +1,50 @@
+<!DOCTYPE html><html><head><meta charset="utf-8" /><meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible" /><title>POJ 3863 - Business Center - プログラミングコンテストの記録</title><link rel="alternate" type="application/atom+xml" title="Atom Feed" href="/contests/blog/feed.xml" /><link href="/contests/stylesheets/normalize-ef7858ef.css" rel="stylesheet" type="text/css" /><link href="/contests/stylesheets/pygments-61d6ee10.css" rel="stylesheet" type="text/css" /><link href="/contests/stylesheets/all-1916dece.css" rel="stylesheet" type="text/css" /><script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script></head><body class="blog blog_poj-3863 blog_poj-3863_index"><div id="header"><h1>プログラミングコンテストの記録</h1><p>POJ/AOJ を中心に解いた問題のコードと簡単な解説。<br />ライブラリは <a href="https://github.com/osak/ICPCLibrary">https://github.com/osak/ICPCLibrary</a></p></div><div id="main"><article class="post"><h1>POJ 3863 - Business Center</h1><p><a href="http://poj.org/problem?id=3863">http://poj.org/problem?id=3863</a></p>
+
+<h2>概要</h2>
+
+<p>m 個のエレベータがあり，i 番目のエレベータには u[i] 階分上るボタンと d[i] 階分下るボタンがついている．
+最初は 0 階にいて，n 回押した後にいる階を最小化してその値を答える．</p>
+
+<p>この建物は非常に高いのでどれだけ上っても構わないが，0階より下には行けない．
+一度あるエレベータに乗ったら，それ以降そのエレベータから降りてはならない．
+最終的な階は 0 階より上でなければならない．</p>
+
+<h2>制約</h2>
+
+<ul>
+<li>1 &lt;= n &lt;= 1000000</li>
+<li>1 &lt;= m &lt;= 2000</li>
+</ul>
+
+<h2>解法</h2>
+
+<p>立式して解いてみると，i 番目のエレベータに関して最小化するには，下のボタンを <code>(n*u[i] - 1) / (u[i] + d[i])</code> 回押せばいいことがわかる．
+あとはこれの最小値を答えればいい．</p>
+
+<p><pre><div class="highlight"><pre><span class="lineno"> 1</span> <span class="cp">#include &lt;cstdio&gt;</span>
+<span class="lineno"> 2</span> <span class="cp">#include &lt;limits&gt;</span>
+<span class="lineno"> 3</span> <span class="cp">#include &lt;algorithm&gt;</span>
+<span class="lineno"> 4</span> <span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+<span class="lineno"> 5</span> 
+<span class="lineno"> 6</span> <span class="kt">long</span> <span class="kt">long</span> <span class="nf">solve</span><span class="p">(</span><span class="kt">int</span> <span class="n">u</span><span class="p">,</span> <span class="kt">int</span> <span class="n">d</span><span class="p">,</span> <span class="kt">int</span> <span class="n">N</span><span class="p">)</span>
+<span class="lineno"> 7</span> <span class="p">{</span>
+<span class="lineno"> 8</span>   <span class="k">const</span> <span class="kt">long</span> <span class="kt">long</span> <span class="n">m</span> <span class="o">=</span> <span class="p">(</span><span class="k">static_cast</span><span class="o">&lt;</span><span class="kt">long</span> <span class="kt">long</span><span class="o">&gt;</span><span class="p">(</span><span class="n">N</span><span class="p">)</span><span class="o">*</span><span class="n">u</span><span class="o">-</span><span class="mi">1LL</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="n">u</span><span class="o">+</span><span class="n">d</span><span class="p">);</span>
+<span class="lineno"> 9</span>   <span class="k">const</span> <span class="kt">long</span> <span class="kt">long</span> <span class="n">n</span> <span class="o">=</span> <span class="n">N</span> <span class="o">-</span> <span class="n">m</span><span class="p">;</span>
+<span class="lineno">10</span>   <span class="k">return</span> <span class="n">u</span><span class="o">*</span><span class="n">n</span> <span class="o">-</span> <span class="n">m</span><span class="o">*</span><span class="n">d</span><span class="p">;</span>
+<span class="lineno">11</span> <span class="p">}</span>
+<span class="lineno">12</span> 
+<span class="lineno">13</span> <span class="kt">int</span> <span class="nf">main</span><span class="p">()</span>
+<span class="lineno">14</span> <span class="p">{</span>
+<span class="lineno">15</span>   <span class="kt">int</span> <span class="n">N</span><span class="p">,</span> <span class="n">M</span><span class="p">;</span>
+<span class="lineno">16</span>   <span class="n">scanf</span><span class="p">(</span><span class="s">&quot;%d %d&quot;</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">N</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">M</span><span class="p">);</span>
+<span class="lineno">17</span>   <span class="kt">long</span> <span class="kt">long</span> <span class="n">ans</span> <span class="o">=</span> <span class="n">numeric_limits</span><span class="o">&lt;</span><span class="kt">long</span> <span class="kt">long</span><span class="o">&gt;::</span><span class="n">max</span><span class="p">();</span>
+<span class="lineno">18</span>   <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">M</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+<span class="lineno">19</span>     <span class="kt">int</span> <span class="n">u</span><span class="p">,</span> <span class="n">d</span><span class="p">;</span>
+<span class="lineno">20</span>     <span class="n">scanf</span><span class="p">(</span><span class="s">&quot;%d %d&quot;</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">u</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">d</span><span class="p">);</span>
+<span class="lineno">21</span>     <span class="n">ans</span> <span class="o">=</span> <span class="n">min</span><span class="p">(</span><span class="n">ans</span><span class="p">,</span> <span class="n">solve</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">N</span><span class="p">));</span>
+<span class="lineno">22</span>   <span class="p">}</span>
+<span class="lineno">23</span>   <span class="n">printf</span><span class="p">(</span><span class="s">&quot;%lld</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">ans</span><span class="p">);</span>
+<span class="lineno">24</span>   <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="lineno">25</span> <span class="p">}</span>
+</pre></div></pre><a href="/contests/code/poj/3863.cc">poj/3863.cc</a></p>
+<footer><p>Posted on 2011-10-19</p><a class="prev-page" href="/contests/blog/poj-3129/">POJ 3129 - How I Wonder What You Are!</a><a class="next-page" href="/contests/blog/poj-3184/">POJ 3184 - Finicky Grazers</a></footer></article></div></body></html>

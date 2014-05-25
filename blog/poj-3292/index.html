@@ -1,0 +1,55 @@
+<!DOCTYPE html><html><head><meta charset="utf-8" /><meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible" /><title>POJ 3292 - Semi-prime H-numbers - プログラミングコンテストの記録</title><link rel="alternate" type="application/atom+xml" title="Atom Feed" href="/contests/blog/feed.xml" /><link href="/contests/stylesheets/normalize-ef7858ef.css" rel="stylesheet" type="text/css" /><link href="/contests/stylesheets/pygments-61d6ee10.css" rel="stylesheet" type="text/css" /><link href="/contests/stylesheets/all-1916dece.css" rel="stylesheet" type="text/css" /><script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script></head><body class="blog blog_poj-3292 blog_poj-3292_index"><div id="header"><h1>プログラミングコンテストの記録</h1><p>POJ/AOJ を中心に解いた問題のコードと簡単な解説。<br />ライブラリは <a href="https://github.com/osak/ICPCLibrary">https://github.com/osak/ICPCLibrary</a></p></div><div id="main"><article class="post"><h1>POJ 3292 - Semi-prime H-numbers</h1><p><a href="http://poj.org/problem?id=3292">http://poj.org/problem?id=3292</a></p>
+
+<h2>概要</h2>
+
+<p>4n+1 の形で表わされる正の整数を H-numbers と呼ぶ．H-numbers は乗算に関して閉じている．</p>
+
+<p>H-number h が単位元ではなく，そして2つの H-number の積で表わしたとき 1 * h の1通りしかないとき，h は H-prime であると呼ぶ．</p>
+
+<p>2つの H-prime の積で表わされる H-number を H-semi-prime とするとき，与えられた H-number h 以下の H-semi-prime がいくつあるか答える．</p>
+
+<h2>制約</h2>
+
+<ul>
+<li>h &lt;= 1000001</li>
+</ul>
+
+<h2>解法</h2>
+
+<p>あらかじめ，エラトステネスの篩の要領で H-prime をすべて生成し，H-semi-prime をすべて生成して数を数えておく．</p>
+
+<p><pre><div class="highlight"><pre><span class="lineno"> 1</span> <span class="cp">#include &lt;cstdio&gt;</span>
+<span class="lineno"> 2</span> <span class="cp">#include &lt;vector&gt;</span>
+<span class="lineno"> 3</span> <span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+<span class="lineno"> 4</span> 
+<span class="lineno"> 5</span> <span class="kt">int</span> <span class="nf">main</span><span class="p">()</span>
+<span class="lineno"> 6</span> <span class="p">{</span>
+<span class="lineno"> 7</span>   <span class="k">static</span> <span class="k">const</span> <span class="kt">int</span> <span class="n">M</span> <span class="o">=</span> <span class="mi">1000001</span><span class="p">;</span>
+<span class="lineno"> 8</span>   <span class="k">static</span> <span class="kt">bool</span> <span class="n">sieve</span><span class="p">[</span><span class="n">M</span><span class="o">+</span><span class="mi">1</span><span class="p">];</span>
+<span class="lineno"> 9</span>   <span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">primes</span><span class="p">;</span>
+<span class="lineno">10</span>   <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">5</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;=</span> <span class="n">M</span><span class="p">;</span> <span class="n">i</span> <span class="o">+=</span> <span class="mi">4</span><span class="p">)</span> <span class="p">{</span>
+<span class="lineno">11</span>     <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">sieve</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="p">{</span>
+<span class="lineno">12</span>       <span class="n">primes</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">i</span><span class="p">);</span>
+<span class="lineno">13</span>       <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">j</span> <span class="o">=</span> <span class="mi">5</span><span class="p">;</span> <span class="n">i</span><span class="o">*</span><span class="n">j</span> <span class="o">&lt;=</span> <span class="n">M</span><span class="p">;</span> <span class="n">j</span> <span class="o">+=</span> <span class="mi">4</span><span class="p">)</span> <span class="p">{</span>
+<span class="lineno">14</span>         <span class="n">sieve</span><span class="p">[</span><span class="n">i</span><span class="o">*</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+<span class="lineno">15</span>       <span class="p">}</span>
+<span class="lineno">16</span>     <span class="p">}</span>
+<span class="lineno">17</span>   <span class="p">}</span>
+<span class="lineno">18</span>   <span class="k">static</span> <span class="kt">int</span> <span class="n">cnt</span><span class="p">[</span><span class="n">M</span><span class="o">+</span><span class="mi">1</span><span class="p">];</span>
+<span class="lineno">19</span>   <span class="k">for</span> <span class="p">(</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;::</span><span class="n">const_iterator</span> <span class="n">it</span> <span class="o">=</span> <span class="n">primes</span><span class="p">.</span><span class="n">begin</span><span class="p">();</span> <span class="n">it</span> <span class="o">!=</span> <span class="n">primes</span><span class="p">.</span><span class="n">end</span><span class="p">();</span> <span class="o">++</span><span class="n">it</span><span class="p">)</span> <span class="p">{</span>
+<span class="lineno">20</span>     <span class="k">for</span> <span class="p">(</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;::</span><span class="n">const_iterator</span> <span class="n">jt</span> <span class="o">=</span> <span class="n">it</span><span class="p">;</span> <span class="n">jt</span> <span class="o">!=</span> <span class="n">primes</span><span class="p">.</span><span class="n">end</span><span class="p">()</span> <span class="o">&amp;&amp;</span> <span class="o">*</span><span class="n">jt</span> <span class="o">&lt;=</span> <span class="n">M</span> <span class="o">/</span> <span class="o">*</span><span class="n">it</span><span class="p">;</span> <span class="o">++</span><span class="n">jt</span><span class="p">)</span> <span class="p">{</span>
+<span class="lineno">21</span>       <span class="n">cnt</span><span class="p">[</span><span class="o">*</span><span class="n">it</span> <span class="o">*</span> <span class="o">*</span><span class="n">jt</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+<span class="lineno">22</span>     <span class="p">}</span>
+<span class="lineno">23</span>   <span class="p">}</span>
+<span class="lineno">24</span>   <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;=</span> <span class="n">M</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+<span class="lineno">25</span>     <span class="n">cnt</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+=</span> <span class="n">cnt</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">];</span>
+<span class="lineno">26</span>   <span class="p">}</span>
+<span class="lineno">27</span> 
+<span class="lineno">28</span>   <span class="kt">int</span> <span class="n">H</span><span class="p">;</span>
+<span class="lineno">29</span>   <span class="k">while</span> <span class="p">(</span><span class="n">scanf</span><span class="p">(</span><span class="s">&quot;%d&quot;</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">H</span><span class="p">)</span> <span class="o">!=</span> <span class="n">EOF</span> <span class="o">&amp;&amp;</span> <span class="n">H</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+<span class="lineno">30</span>     <span class="n">printf</span><span class="p">(</span><span class="s">&quot;%d %d</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">H</span><span class="p">,</span> <span class="n">cnt</span><span class="p">[</span><span class="n">H</span><span class="p">]);</span>
+<span class="lineno">31</span>   <span class="p">}</span>
+<span class="lineno">32</span>   <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="lineno">33</span> <span class="p">}</span>
+</pre></div></pre><a href="/contests/code/poj/3292.cc">poj/3292.cc</a></p>
+<footer><p>Posted on 2011-10-19</p><a class="prev-page" href="/contests/blog/poj-3185/">POJ 3185 - The Water Bowls</a><a class="next-page" href="/contests/blog/aoj-1074/">AOJ 1074 - Popularity Estimation</a></footer></article></div></body></html>

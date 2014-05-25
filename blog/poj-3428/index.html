@@ -1,0 +1,118 @@
+<!DOCTYPE html><html><head><meta charset="utf-8" /><meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible" /><title>POJ 3428 - Formatting function - プログラミングコンテストの記録</title><link rel="alternate" type="application/atom+xml" title="Atom Feed" href="/contests/blog/feed.xml" /><link href="/contests/stylesheets/normalize-ef7858ef.css" rel="stylesheet" type="text/css" /><link href="/contests/stylesheets/pygments-61d6ee10.css" rel="stylesheet" type="text/css" /><link href="/contests/stylesheets/all-1916dece.css" rel="stylesheet" type="text/css" /><script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script></head><body class="blog blog_poj-3428 blog_poj-3428_index"><div id="header"><h1>プログラミングコンテストの記録</h1><p>POJ/AOJ を中心に解いた問題のコードと簡単な解説。<br />ライブラリは <a href="https://github.com/osak/ICPCLibrary">https://github.com/osak/ICPCLibrary</a></p></div><div id="main"><article class="post"><h1>POJ 3428 - Formatting function</h1><p><a href="http://poj.org/problem?id=3428">http://poj.org/problem?id=3428</a></p>
+
+<h2>概要</h2>
+
+<p>printf ライクなフォーマット文字列とそれに対する引数が与えられるので，その結果を答える．</p>
+
+<p>フォーマット指示子の意味は以下の通り．</p>
+
+<ul>
+<li>%s は引数を文字列として出力する</li>
+<li>%d は leading-zeros 無しの整数値として出力する</li>
+<li>%% は % を出力する</li>
+</ul>
+
+<p>ただし，以下の場合はフォーマットエラーなので「ERROR」とのみ出力する．</p>
+
+<ul>
+<li>フォーマット文字列に含まれるフォーマット指示子の数と引数の数が異なる</li>
+<li>%d に対応する引数が数字以外の文字を含んでいる</li>
+<li>% の次の文字が s, d, % のいずれでも無い</li>
+</ul>
+
+<h2>制約</h2>
+
+<ul>
+<li>引数の数 &lt;= 1000</li>
+<li>各行の長さ &lt;= 50000</li>
+</ul>
+
+<h2>解法</h2>
+
+<p>やるだけ．
+引数として空文字列(空行)というのもアリで，%s のときは有効だが %d のときは不正なので ERROR と出力する点に注意．</p>
+
+<p><pre><div class="highlight"><pre><span class="lineno"> 1</span> <span class="cp">#include &lt;stdio.h&gt;</span>
+<span class="lineno"> 2</span> <span class="cp">#include &lt;ctype.h&gt;</span>
+<span class="lineno"> 3</span> 
+<span class="lineno"> 4</span> <span class="kt">int</span> <span class="nf">check</span><span class="p">(</span><span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="n">p</span><span class="p">,</span> <span class="kt">char</span> <span class="n">args</span><span class="p">[</span><span class="mi">1000</span><span class="p">][</span><span class="mi">50010</span><span class="p">])</span>
+<span class="lineno"> 5</span> <span class="p">{</span>
+<span class="lineno"> 6</span>   <span class="kt">int</span> <span class="n">c</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+<span class="lineno"> 7</span>   <span class="k">while</span> <span class="p">(</span><span class="o">*</span><span class="n">p</span> <span class="o">!=</span> <span class="sc">&#39;\0&#39;</span> <span class="o">&amp;&amp;</span> <span class="o">*</span><span class="n">p</span> <span class="o">!=</span> <span class="sc">&#39;\n&#39;</span><span class="p">)</span> <span class="p">{</span>
+<span class="lineno"> 8</span>     <span class="k">if</span> <span class="p">(</span><span class="o">*</span><span class="n">p</span> <span class="o">==</span> <span class="sc">&#39;%&#39;</span><span class="p">)</span> <span class="p">{</span>
+<span class="lineno"> 9</span>       <span class="o">++</span><span class="n">p</span><span class="p">;</span>
+<span class="lineno">10</span>       <span class="k">if</span> <span class="p">(</span><span class="o">*</span><span class="n">p</span> <span class="o">==</span> <span class="sc">&#39;d&#39;</span><span class="p">)</span> <span class="p">{</span>
+<span class="lineno">11</span>         <span class="k">if</span> <span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="n">c</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="sc">&#39;\0&#39;</span> <span class="o">||</span> <span class="n">args</span><span class="p">[</span><span class="n">c</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="sc">&#39;\n&#39;</span><span class="p">)</span> <span class="p">{</span>
+<span class="lineno">12</span>           <span class="k">return</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+<span class="lineno">13</span>         <span class="p">}</span>
+<span class="lineno">14</span>         <span class="kt">int</span> <span class="n">i</span><span class="p">;</span>
+<span class="lineno">15</span>         <span class="k">for</span> <span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">args</span><span class="p">[</span><span class="n">c</span><span class="p">][</span><span class="n">i</span><span class="p">]</span> <span class="o">!=</span> <span class="sc">&#39;\0&#39;</span> <span class="o">&amp;&amp;</span> <span class="n">args</span><span class="p">[</span><span class="n">c</span><span class="p">][</span><span class="n">i</span><span class="p">]</span> <span class="o">!=</span> <span class="sc">&#39;\n&#39;</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+<span class="lineno">16</span>           <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">isdigit</span><span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="n">c</span><span class="p">][</span><span class="n">i</span><span class="p">]))</span> <span class="p">{</span>
+<span class="lineno">17</span>             <span class="k">return</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+<span class="lineno">18</span>           <span class="p">}</span>
+<span class="lineno">19</span>         <span class="p">}</span>
+<span class="lineno">20</span>         <span class="o">++</span><span class="n">c</span><span class="p">;</span>
+<span class="lineno">21</span>       <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="o">*</span><span class="n">p</span> <span class="o">==</span> <span class="sc">&#39;s&#39;</span><span class="p">)</span> <span class="p">{</span>
+<span class="lineno">22</span>         <span class="o">++</span><span class="n">c</span><span class="p">;</span>
+<span class="lineno">23</span>       <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="o">*</span><span class="n">p</span> <span class="o">==</span> <span class="sc">&#39;%&#39;</span><span class="p">)</span> <span class="p">{</span>
+<span class="lineno">24</span>       <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+<span class="lineno">25</span>         <span class="k">return</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+<span class="lineno">26</span>       <span class="p">}</span>
+<span class="lineno">27</span>     <span class="p">}</span>
+<span class="lineno">28</span>     <span class="o">++</span><span class="n">p</span><span class="p">;</span>
+<span class="lineno">29</span>   <span class="p">}</span>
+<span class="lineno">30</span>   <span class="k">return</span> <span class="n">c</span><span class="p">;</span>
+<span class="lineno">31</span> <span class="p">}</span>
+<span class="lineno">32</span> 
+<span class="lineno">33</span> <span class="kt">void</span> <span class="nf">format</span><span class="p">(</span><span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="n">p</span><span class="p">,</span> <span class="kt">char</span> <span class="n">args</span><span class="p">[</span><span class="mi">1000</span><span class="p">][</span><span class="mi">50010</span><span class="p">])</span>
+<span class="lineno">34</span> <span class="p">{</span>
+<span class="lineno">35</span>   <span class="kt">int</span> <span class="n">c</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+<span class="lineno">36</span>   <span class="k">while</span> <span class="p">(</span><span class="o">*</span><span class="n">p</span> <span class="o">!=</span> <span class="sc">&#39;\0&#39;</span> <span class="o">&amp;&amp;</span> <span class="o">*</span><span class="n">p</span> <span class="o">!=</span> <span class="sc">&#39;\n&#39;</span><span class="p">)</span> <span class="p">{</span>
+<span class="lineno">37</span>     <span class="k">if</span> <span class="p">(</span><span class="o">*</span><span class="n">p</span> <span class="o">==</span> <span class="sc">&#39;%&#39;</span><span class="p">)</span> <span class="p">{</span>
+<span class="lineno">38</span>       <span class="o">++</span><span class="n">p</span><span class="p">;</span>
+<span class="lineno">39</span>       <span class="k">if</span> <span class="p">(</span><span class="o">*</span><span class="n">p</span> <span class="o">==</span> <span class="sc">&#39;d&#39;</span><span class="p">)</span> <span class="p">{</span>
+<span class="lineno">40</span>         <span class="kt">int</span> <span class="n">i</span><span class="p">;</span>
+<span class="lineno">41</span>         <span class="k">for</span> <span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">args</span><span class="p">[</span><span class="n">c</span><span class="p">][</span><span class="n">i</span><span class="p">]</span> <span class="o">!=</span> <span class="sc">&#39;\0&#39;</span> <span class="o">&amp;&amp;</span> <span class="n">args</span><span class="p">[</span><span class="n">c</span><span class="p">][</span><span class="n">i</span><span class="p">]</span> <span class="o">!=</span> <span class="sc">&#39;\n&#39;</span> <span class="o">&amp;&amp;</span> <span class="n">args</span><span class="p">[</span><span class="n">c</span><span class="p">][</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="sc">&#39;0&#39;</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">);</span>
+<span class="lineno">42</span>         <span class="k">if</span> <span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="n">c</span><span class="p">][</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="sc">&#39;\0&#39;</span> <span class="o">||</span> <span class="n">args</span><span class="p">[</span><span class="n">c</span><span class="p">][</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="sc">&#39;\n&#39;</span><span class="p">)</span> <span class="p">{</span>
+<span class="lineno">43</span>           <span class="n">putchar</span><span class="p">(</span><span class="sc">&#39;0&#39;</span><span class="p">);</span>
+<span class="lineno">44</span>         <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+<span class="lineno">45</span>           <span class="k">for</span> <span class="p">(;</span> <span class="n">args</span><span class="p">[</span><span class="n">c</span><span class="p">][</span><span class="n">i</span><span class="p">]</span> <span class="o">!=</span> <span class="sc">&#39;\0&#39;</span> <span class="o">&amp;&amp;</span> <span class="n">args</span><span class="p">[</span><span class="n">c</span><span class="p">][</span><span class="n">i</span><span class="p">]</span> <span class="o">!=</span> <span class="sc">&#39;\n&#39;</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+<span class="lineno">46</span>             <span class="n">putchar</span><span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="n">c</span><span class="p">][</span><span class="n">i</span><span class="p">]);</span>
+<span class="lineno">47</span>           <span class="p">}</span>
+<span class="lineno">48</span>         <span class="p">}</span>
+<span class="lineno">49</span>         <span class="o">++</span><span class="n">c</span><span class="p">;</span>
+<span class="lineno">50</span>       <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="o">*</span><span class="n">p</span> <span class="o">==</span> <span class="sc">&#39;s&#39;</span><span class="p">)</span> <span class="p">{</span>
+<span class="lineno">51</span>         <span class="kt">int</span> <span class="n">i</span><span class="p">;</span>
+<span class="lineno">52</span>         <span class="k">for</span> <span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">args</span><span class="p">[</span><span class="n">c</span><span class="p">][</span><span class="n">i</span><span class="p">]</span> <span class="o">!=</span> <span class="sc">&#39;\0&#39;</span> <span class="o">&amp;&amp;</span> <span class="n">args</span><span class="p">[</span><span class="n">c</span><span class="p">][</span><span class="n">i</span><span class="p">]</span> <span class="o">!=</span> <span class="sc">&#39;\n&#39;</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+<span class="lineno">53</span>           <span class="n">putchar</span><span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="n">c</span><span class="p">][</span><span class="n">i</span><span class="p">]);</span>
+<span class="lineno">54</span>         <span class="p">}</span>
+<span class="lineno">55</span>         <span class="o">++</span><span class="n">c</span><span class="p">;</span>
+<span class="lineno">56</span>       <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+<span class="lineno">57</span>         <span class="n">putchar</span><span class="p">(</span><span class="sc">&#39;%&#39;</span><span class="p">);</span>
+<span class="lineno">58</span>       <span class="p">}</span>
+<span class="lineno">59</span>     <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+<span class="lineno">60</span>       <span class="n">putchar</span><span class="p">(</span><span class="o">*</span><span class="n">p</span><span class="p">);</span>
+<span class="lineno">61</span>     <span class="p">}</span>
+<span class="lineno">62</span>     <span class="o">++</span><span class="n">p</span><span class="p">;</span>
+<span class="lineno">63</span>   <span class="p">}</span>
+<span class="lineno">64</span>   <span class="n">putchar</span><span class="p">(</span><span class="sc">&#39;\n&#39;</span><span class="p">);</span>
+<span class="lineno">65</span> <span class="p">}</span>
+<span class="lineno">66</span> 
+<span class="lineno">67</span> <span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span>
+<span class="lineno">68</span> <span class="p">{</span>
+<span class="lineno">69</span>   <span class="k">static</span> <span class="kt">char</span> <span class="n">fmt</span><span class="p">[</span><span class="mi">50010</span><span class="p">];</span>
+<span class="lineno">70</span>   <span class="n">fgets</span><span class="p">(</span><span class="n">fmt</span><span class="p">,</span> <span class="k">sizeof</span> <span class="n">fmt</span><span class="p">,</span> <span class="n">stdin</span><span class="p">);</span>
+<span class="lineno">71</span>   <span class="k">static</span> <span class="kt">char</span> <span class="n">args</span><span class="p">[</span><span class="mi">1000</span><span class="p">][</span><span class="mi">50010</span><span class="p">];</span>
+<span class="lineno">72</span>   <span class="kt">int</span> <span class="n">N</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+<span class="lineno">73</span>   <span class="k">while</span> <span class="p">(</span><span class="n">fgets</span><span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="n">N</span><span class="p">],</span> <span class="k">sizeof</span> <span class="n">args</span><span class="p">[</span><span class="n">N</span><span class="p">],</span> <span class="n">stdin</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">NULL</span><span class="p">)</span> <span class="p">{</span>
+<span class="lineno">74</span>     <span class="n">N</span><span class="o">++</span><span class="p">;</span>
+<span class="lineno">75</span>   <span class="p">}</span>
+<span class="lineno">76</span>   <span class="k">if</span> <span class="p">(</span><span class="n">check</span><span class="p">(</span><span class="n">fmt</span><span class="p">,</span> <span class="n">args</span><span class="p">)</span> <span class="o">!=</span> <span class="n">N</span><span class="p">)</span> <span class="p">{</span>
+<span class="lineno">77</span>     <span class="n">puts</span><span class="p">(</span><span class="s">&quot;ERROR&quot;</span><span class="p">);</span>
+<span class="lineno">78</span>   <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+<span class="lineno">79</span>     <span class="n">format</span><span class="p">(</span><span class="n">fmt</span><span class="p">,</span> <span class="n">args</span><span class="p">);</span>
+<span class="lineno">80</span>   <span class="p">}</span>
+<span class="lineno">81</span>   <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="lineno">82</span> <span class="p">}</span>
+</pre></div></pre><a href="/contests/code/poj/3428.c">poj/3428.c</a></p>
+<footer><p>Posted on 2011-11-19</p><a class="prev-page" href="/contests/blog/poj-3061/">POJ 3061 - Subsequence</a><a class="next-page" href="/contests/blog/aoj-1320/">AOJ 1320 - City Merger</a></footer></article></div></body></html>

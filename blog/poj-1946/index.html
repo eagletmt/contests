@@ -1,0 +1,81 @@
+<!DOCTYPE html><html><head><meta charset="utf-8" /><meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible" /><title>POJ 1946 - Cow Cycling - プログラミングコンテストの記録</title><link rel="alternate" type="application/atom+xml" title="Atom Feed" href="/contests/blog/feed.xml" /><link href="/contests/stylesheets/normalize-ef7858ef.css" rel="stylesheet" type="text/css" /><link href="/contests/stylesheets/pygments-61d6ee10.css" rel="stylesheet" type="text/css" /><link href="/contests/stylesheets/all-1916dece.css" rel="stylesheet" type="text/css" /><script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script></head><body class="blog blog_poj-1946 blog_poj-1946_index"><div id="header"><h1>プログラミングコンテストの記録</h1><p>POJ/AOJ を中心に解いた問題のコードと簡単な解説。<br />ライブラリは <a href="https://github.com/osak/ICPCLibrary">https://github.com/osak/ICPCLibrary</a></p></div><div id="main"><article class="post"><h1>POJ 1946 - Cow Cycling</h1><p><a href="http://poj.org/problem?id=1946">http://poj.org/problem?id=1946</a></p>
+
+<h2>概要</h2>
+
+<p>N 頭の牛が一列に並んで D 周のレースをする．</p>
+
+<p>すべての牛は最初 E のエネルギーを持っている．
+単位時間に x 周の速度で走ると，単位時間に先頭の牛は x*x のエネルギーを消費し，そうでない牛は x のエネルギーを消費する．
+エネルギーの無くなった牛は走ることができない．</p>
+
+<p>牛はどのタイミングでもドロップアウトすることができるし，どのタイミングでも先頭の牛を交代できる．
+このときにかかる時間は無視してよい．</p>
+
+<p>ゴール時間が最速になるように走ったとき，そのゴール時間を出力する．</p>
+
+<h2>制約</h2>
+
+<ul>
+<li>1 &lt;= N &lt;= 20</li>
+<li>100 &lt;= D &lt;= 100</li>
+<li>100 &lt;= E &lt;= 100</li>
+</ul>
+
+<h2>解法</h2>
+
+<pre><code>dp[n][e][d] := d 週目を n 頭目の牛を先頭として走っており，先頭の牛のこれまでに消費したエネルギーが e のときの最短時間
+</code></pre>
+
+<p>として DP．</p>
+
+<p>単位時間毎に見ると</p>
+
+<ul>
+<li>先頭の牛をそのままにして x の速度で走る</li>
+<li>先頭の牛をドロップアウトさせて次の牛が x の速度で走る</li>
+</ul>
+
+<p>の2パターンしか無いので，この2つで DP 表を更新していく．</p>
+
+<p><pre><div class="highlight"><pre><span class="lineno"> 1</span> <span class="cp">#include &lt;iostream&gt;</span>
+<span class="lineno"> 2</span> <span class="cp">#include &lt;algorithm&gt;</span>
+<span class="lineno"> 3</span> <span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+<span class="lineno"> 4</span> 
+<span class="lineno"> 5</span> <span class="kt">int</span> <span class="nf">main</span><span class="p">()</span>
+<span class="lineno"> 6</span> <span class="p">{</span>
+<span class="lineno"> 7</span>   <span class="kt">int</span> <span class="n">N</span><span class="p">,</span> <span class="n">E</span><span class="p">,</span> <span class="n">D</span><span class="p">;</span>
+<span class="lineno"> 8</span>   <span class="n">cin</span> <span class="o">&gt;&gt;</span> <span class="n">N</span> <span class="o">&gt;&gt;</span> <span class="n">E</span> <span class="o">&gt;&gt;</span> <span class="n">D</span><span class="p">;</span>
+<span class="lineno"> 9</span>   <span class="k">static</span> <span class="k">const</span> <span class="kt">int</span> <span class="n">INF</span> <span class="o">=</span> <span class="mi">10000</span><span class="p">;</span>
+<span class="lineno">10</span>   <span class="k">static</span> <span class="kt">int</span> <span class="n">dp</span><span class="p">[</span><span class="mi">20</span><span class="p">][</span><span class="mi">101</span><span class="p">][</span><span class="mi">101</span><span class="p">];</span>
+<span class="lineno">11</span>   <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">N</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+<span class="lineno">12</span>     <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">j</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">j</span> <span class="o">&lt;=</span> <span class="n">E</span><span class="p">;</span> <span class="n">j</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+<span class="lineno">13</span>       <span class="n">fill_n</span><span class="p">(</span><span class="n">dp</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">],</span> <span class="n">D</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="n">INF</span><span class="p">);</span>
+<span class="lineno">14</span>     <span class="p">}</span>
+<span class="lineno">15</span>   <span class="p">}</span>
+<span class="lineno">16</span>   <span class="n">dp</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+<span class="lineno">17</span>   <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">n</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">n</span> <span class="o">&lt;</span> <span class="n">N</span><span class="p">;</span> <span class="n">n</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+<span class="lineno">18</span>     <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">e</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">e</span> <span class="o">&lt;=</span> <span class="n">E</span><span class="p">;</span> <span class="n">e</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+<span class="lineno">19</span>       <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">d</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">d</span> <span class="o">&lt;=</span> <span class="n">D</span><span class="p">;</span> <span class="n">d</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+<span class="lineno">20</span>         <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">x</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="n">x</span> <span class="o">&lt;=</span> <span class="mi">10</span><span class="p">;</span> <span class="n">x</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+<span class="lineno">21</span>           <span class="k">const</span> <span class="kt">int</span> <span class="n">dd</span> <span class="o">=</span> <span class="n">min</span><span class="p">(</span><span class="n">d</span><span class="o">+</span><span class="n">x</span><span class="p">,</span> <span class="n">D</span><span class="p">);</span>
+<span class="lineno">22</span>           <span class="k">if</span> <span class="p">(</span><span class="n">e</span><span class="o">+</span><span class="n">x</span><span class="o">*</span><span class="n">x</span> <span class="o">&lt;=</span> <span class="n">E</span><span class="p">)</span> <span class="p">{</span>
+<span class="lineno">23</span>             <span class="n">dp</span><span class="p">[</span><span class="n">n</span><span class="p">][</span><span class="n">e</span><span class="o">+</span><span class="n">x</span><span class="o">*</span><span class="n">x</span><span class="p">][</span><span class="n">dd</span><span class="p">]</span> <span class="o">=</span> <span class="n">min</span><span class="p">(</span><span class="n">dp</span><span class="p">[</span><span class="n">n</span><span class="p">][</span><span class="n">e</span><span class="o">+</span><span class="n">x</span><span class="o">*</span><span class="n">x</span><span class="p">][</span><span class="n">dd</span><span class="p">],</span> <span class="n">dp</span><span class="p">[</span><span class="n">n</span><span class="p">][</span><span class="n">e</span><span class="p">][</span><span class="n">d</span><span class="p">]</span><span class="o">+</span><span class="mi">1</span><span class="p">);</span>
+<span class="lineno">24</span>           <span class="p">}</span>
+<span class="lineno">25</span>           <span class="k">if</span> <span class="p">(</span><span class="n">n</span> <span class="o">&lt;</span> <span class="n">N</span><span class="o">-</span><span class="mi">1</span> <span class="o">&amp;&amp;</span> <span class="n">d</span><span class="o">+</span><span class="n">x</span><span class="o">*</span><span class="n">x</span> <span class="o">&lt;=</span> <span class="n">E</span><span class="p">)</span> <span class="p">{</span>
+<span class="lineno">26</span>             <span class="n">dp</span><span class="p">[</span><span class="n">n</span><span class="o">+</span><span class="mi">1</span><span class="p">][</span><span class="n">d</span><span class="o">+</span><span class="n">x</span><span class="o">*</span><span class="n">x</span><span class="p">][</span><span class="n">dd</span><span class="p">]</span> <span class="o">=</span> <span class="n">min</span><span class="p">(</span><span class="n">dp</span><span class="p">[</span><span class="n">n</span><span class="o">+</span><span class="mi">1</span><span class="p">][</span><span class="n">d</span><span class="o">+</span><span class="n">x</span><span class="o">*</span><span class="n">x</span><span class="p">][</span><span class="n">dd</span><span class="p">],</span> <span class="n">dp</span><span class="p">[</span><span class="n">n</span><span class="p">][</span><span class="n">e</span><span class="p">][</span><span class="n">d</span><span class="p">]</span><span class="o">+</span><span class="mi">1</span><span class="p">);</span>
+<span class="lineno">27</span>           <span class="p">}</span>
+<span class="lineno">28</span>         <span class="p">}</span>
+<span class="lineno">29</span>       <span class="p">}</span>
+<span class="lineno">30</span>     <span class="p">}</span>
+<span class="lineno">31</span>   <span class="p">}</span>
+<span class="lineno">32</span>   <span class="kt">int</span> <span class="n">ans</span> <span class="o">=</span> <span class="n">INF</span><span class="p">;</span>
+<span class="lineno">33</span>   <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">N</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+<span class="lineno">34</span>     <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">j</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">j</span> <span class="o">&lt;=</span> <span class="n">E</span><span class="p">;</span> <span class="n">j</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+<span class="lineno">35</span>       <span class="n">ans</span> <span class="o">=</span> <span class="n">min</span><span class="p">(</span><span class="n">ans</span><span class="p">,</span> <span class="n">dp</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">][</span><span class="n">D</span><span class="p">]);</span>
+<span class="lineno">36</span>     <span class="p">}</span>
+<span class="lineno">37</span>   <span class="p">}</span>
+<span class="lineno">38</span>   <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">ans</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+<span class="lineno">39</span>   <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="lineno">40</span> <span class="p">}</span>
+</pre></div></pre><a href="/contests/code/poj/1946.cc">poj/1946.cc</a></p>
+<footer><p>Posted on 2011-10-19</p><a class="prev-page" href="/contests/blog/poj-1496/">POJ 1496 - Word Index</a><a class="next-page" href="/contests/blog/poj-3055/">POJ 3055 - Digital Friends</a></footer></article></div></body></html>

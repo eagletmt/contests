@@ -1,0 +1,67 @@
+<!DOCTYPE html><html><head><meta charset="utf-8" /><meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible" /><title>POJ 3622 - Gourmet Grazers - プログラミングコンテストの記録</title><link rel="alternate" type="application/atom+xml" title="Atom Feed" href="/contests/blog/feed.xml" /><link href="/contests/stylesheets/normalize-ef7858ef.css" rel="stylesheet" type="text/css" /><link href="/contests/stylesheets/pygments-61d6ee10.css" rel="stylesheet" type="text/css" /><link href="/contests/stylesheets/all-1916dece.css" rel="stylesheet" type="text/css" /><script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script></head><body class="blog blog_poj-3622 blog_poj-3622_index"><div id="header"><h1>プログラミングコンテストの記録</h1><p>POJ/AOJ を中心に解いた問題のコードと簡単な解説。<br />ライブラリは <a href="https://github.com/osak/ICPCLibrary">https://github.com/osak/ICPCLibrary</a></p></div><div id="main"><article class="post"><h1>POJ 3622 - Gourmet Grazers</h1><p><a href="http://poj.org/problem?id=3622">http://poj.org/problem?id=3622</a></p>
+
+<h2>概要</h2>
+
+<p>N 頭の牛が「値段が A[i] 以上で greeness が B[i] 以上の草が欲しい」と言っている．
+M 個店があり，値段が C[i] で greenness が D[i] な草を売っている．
+複数の牛が同じ店で草を買うことはできない．</p>
+
+<p>すべての牛の要求を満たすのに必要な最低のコストを答える．
+ただし，要求を満たせない場合は -1 を答える．</p>
+
+<h2>制約</h2>
+
+<ul>
+<li>1 &lt;= N, M &lt;= 10^5</li>
+<li>1 &lt;= A[i], B[i], C[i], D[i] &lt;= 10^9</li>
+</ul>
+
+<h2>解法</h2>
+
+<p>要求と店をそれぞれ B, D でソートして大きいほうから見ていき，
+B[i] &lt;= D[j] な店の中から，A[i] 以上で最も安い店を順に選んでいけばよい．</p>
+
+<p>「B[i] &lt;= D[j] な店の値段」は multiset で管理し，「A[i] 以上で最も安い店」を対数オーダーで探せるようにした．</p>
+
+<p><pre><div class="highlight"><pre><span class="lineno"> 1</span> <span class="cp">#include &lt;cstdio&gt;</span>
+<span class="lineno"> 2</span> <span class="cp">#include &lt;set&gt;</span>
+<span class="lineno"> 3</span> <span class="cp">#include &lt;algorithm&gt;</span>
+<span class="lineno"> 4</span> <span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+<span class="lineno"> 5</span> 
+<span class="lineno"> 6</span> <span class="kt">int</span> <span class="nf">main</span><span class="p">()</span>
+<span class="lineno"> 7</span> <span class="p">{</span>
+<span class="lineno"> 8</span>   <span class="kt">int</span> <span class="n">N</span><span class="p">,</span> <span class="n">M</span><span class="p">;</span>
+<span class="lineno"> 9</span>   <span class="n">scanf</span><span class="p">(</span><span class="s">&quot;%d %d&quot;</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">N</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">M</span><span class="p">);</span>
+<span class="lineno">10</span>   <span class="k">typedef</span> <span class="n">pair</span><span class="o">&lt;</span><span class="kt">long</span> <span class="kt">long</span><span class="p">,</span> <span class="kt">long</span> <span class="kt">long</span><span class="o">&gt;</span> <span class="n">pll</span><span class="p">;</span>
+<span class="lineno">11</span>   <span class="k">static</span> <span class="n">pll</span> <span class="n">ba</span><span class="p">[</span><span class="mi">100000</span><span class="p">];</span>
+<span class="lineno">12</span>   <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">N</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+<span class="lineno">13</span>     <span class="n">scanf</span><span class="p">(</span><span class="s">&quot;%lld %lld&quot;</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">ba</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">second</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">ba</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">first</span><span class="p">);</span>
+<span class="lineno">14</span>   <span class="p">}</span>
+<span class="lineno">15</span>   <span class="k">static</span> <span class="n">pll</span> <span class="n">dc</span><span class="p">[</span><span class="mi">100000</span><span class="p">];</span>
+<span class="lineno">16</span>   <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">M</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+<span class="lineno">17</span>     <span class="n">scanf</span><span class="p">(</span><span class="s">&quot;%lld %lld&quot;</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">dc</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">second</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">dc</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">first</span><span class="p">);</span>
+<span class="lineno">18</span>   <span class="p">}</span>
+<span class="lineno">19</span> 
+<span class="lineno">20</span>   <span class="n">sort</span><span class="p">(</span><span class="n">ba</span><span class="p">,</span> <span class="n">ba</span><span class="o">+</span><span class="n">N</span><span class="p">,</span> <span class="n">greater</span><span class="o">&lt;</span><span class="n">pll</span><span class="o">&gt;</span><span class="p">());</span>
+<span class="lineno">21</span>   <span class="n">sort</span><span class="p">(</span><span class="n">dc</span><span class="p">,</span> <span class="n">dc</span><span class="o">+</span><span class="n">M</span><span class="p">,</span> <span class="n">greater</span><span class="o">&lt;</span><span class="n">pll</span><span class="o">&gt;</span><span class="p">());</span>
+<span class="lineno">22</span>   <span class="kt">int</span> <span class="n">j</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+<span class="lineno">23</span>   <span class="n">multiset</span><span class="o">&lt;</span><span class="kt">long</span> <span class="kt">long</span><span class="o">&gt;</span> <span class="n">s</span><span class="p">;</span>
+<span class="lineno">24</span>   <span class="kt">long</span> <span class="kt">long</span> <span class="n">ans</span> <span class="o">=</span> <span class="mi">0LL</span><span class="p">;</span>
+<span class="lineno">25</span>   <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">N</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+<span class="lineno">26</span>     <span class="k">for</span> <span class="p">(;</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="n">M</span> <span class="o">&amp;&amp;</span> <span class="n">dc</span><span class="p">[</span><span class="n">j</span><span class="p">].</span><span class="n">first</span> <span class="o">&gt;=</span> <span class="n">ba</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">first</span><span class="p">;</span> <span class="n">j</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+<span class="lineno">27</span>       <span class="n">s</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="n">dc</span><span class="p">[</span><span class="n">j</span><span class="p">].</span><span class="n">second</span><span class="p">);</span>
+<span class="lineno">28</span>     <span class="p">}</span>
+<span class="lineno">29</span>     <span class="n">multiset</span><span class="o">&lt;</span><span class="kt">long</span> <span class="kt">long</span><span class="o">&gt;::</span><span class="n">const_iterator</span> <span class="n">it</span> <span class="o">=</span> <span class="n">s</span><span class="p">.</span><span class="n">lower_bound</span><span class="p">(</span><span class="n">ba</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">second</span><span class="p">);</span>
+<span class="lineno">30</span>     <span class="k">if</span> <span class="p">(</span><span class="n">it</span> <span class="o">==</span> <span class="n">s</span><span class="p">.</span><span class="n">end</span><span class="p">())</span> <span class="p">{</span>
+<span class="lineno">31</span>       <span class="n">ans</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1LL</span><span class="p">;</span>
+<span class="lineno">32</span>       <span class="k">break</span><span class="p">;</span>
+<span class="lineno">33</span>     <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+<span class="lineno">34</span>       <span class="n">ans</span> <span class="o">+=</span> <span class="o">*</span><span class="n">it</span><span class="p">;</span>
+<span class="lineno">35</span>       <span class="n">s</span><span class="p">.</span><span class="n">erase</span><span class="p">(</span><span class="n">it</span><span class="p">);</span>
+<span class="lineno">36</span>     <span class="p">}</span>
+<span class="lineno">37</span>   <span class="p">}</span>
+<span class="lineno">38</span>   <span class="n">printf</span><span class="p">(</span><span class="s">&quot;%lld</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">ans</span><span class="p">);</span>
+<span class="lineno">39</span>   <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="lineno">40</span> <span class="p">}</span>
+</pre></div></pre><a href="/contests/code/poj/3622.cc">poj/3622.cc</a></p>
+<footer><p>Posted on 2011-11-16</p><a class="prev-page" href="/contests/blog/poj-3169/">POJ 3169 - Layout</a><a class="next-page" href="/contests/blog/poj-1378/">POJ 1378 - Power Cable Problem</a></footer></article></div></body></html>

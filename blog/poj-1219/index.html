@@ -1,0 +1,142 @@
+<!DOCTYPE html><html><head><meta charset="utf-8" /><meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible" /><title>POJ 1219 - L-I-N-G-O: LINGO - プログラミングコンテストの記録</title><link rel="alternate" type="application/atom+xml" title="Atom Feed" href="/contests/blog/feed.xml" /><link href="/contests/stylesheets/normalize-ef7858ef.css" rel="stylesheet" type="text/css" /><link href="/contests/stylesheets/pygments-61d6ee10.css" rel="stylesheet" type="text/css" /><link href="/contests/stylesheets/all-1916dece.css" rel="stylesheet" type="text/css" /><script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script></head><body class="blog blog_poj-1219 blog_poj-1219_index"><div id="header"><h1>プログラミングコンテストの記録</h1><p>POJ/AOJ を中心に解いた問題のコードと簡単な解説。<br />ライブラリは <a href="https://github.com/osak/ICPCLibrary">https://github.com/osak/ICPCLibrary</a></p></div><div id="main"><article class="post"><h1>POJ 1219 - L-I-N-G-O: LINGO</h1><p><a href="http://poj.org/problem?id=1219">http://poj.org/problem?id=1219</a></p>
+
+<h2>概要</h2>
+
+<p>読解ゲー，あるいはエスパーゲー．</p>
+
+<p>まず答えとなる5文字の大文字のアルファベットが与えられるので，それに対して最初の文字と4つの . からなる文字列を答える．</p>
+
+<p>次にいくつかの文字列が与えられるので，それぞれに対して「どれくらい答えの文字列にマッチしているか」を答える．
+ただし，この入力は不正である可能性がある．つまり，5文字でなかったり大文字のアルファベット以外が含まれているかもしれない．そのときは直前に出力した答えを再び出力する．</p>
+
+<p>「どれくらいマッチしたか」は次のようなフォーマットで答える．</p>
+
+<ul>
+<li>ある文字が答えと一致しているとき，その文字をそのまま出力する</li>
+<li>ある文字が答えには含まれているが場所が異なるとき，その文字の小文字を出力する</li>
+<li>それ以外の場合は . を出力する</li>
+</ul>
+
+<p>以下はサンプルに含まれている応答例</p>
+
+<ul>
+<li>答えが HELLO のとき，HOLES -&gt; HoLe.</li>
+<li>答えが PARTY のとき，PATTY -&gt; PA.TY</li>
+</ul>
+
+<p>以下はサンプルには含まれていないが重要と思われる応答例</p>
+
+<ul>
+<li>答えが XABCD のとき，OXXXX -&gt; .x...</li>
+</ul>
+
+<p>答えと一致する入力があったときは，答えをそのまま出力して次のケースへ行く．
+このとき，今処理しているケースの余計な入力は単に無視する．</p>
+
+<p>また，1つのケースに対して6回までしか答えてはならない．
+最初に必ず1回答えているので，つまりマッチの状況を答えるのは5回までとなる．
+答えと一致する入力がこなかった場合，答えを小文字にしたものを出力して次のケースへ行く．
+このときも余計な入力があった場合には単に無視する．</p>
+
+<h2>制約</h2>
+
+<p>とくになし</p>
+
+<h2>解法</h2>
+
+<p>やるだけだが，Sample Input / Sample Output に罠がある．</p>
+
+<p>実は入力の最初の行は必ず空行がくる．
+「A blank line marks the beginning of the next dataset (game). The line after the blank line contains the secret word.」とあり，ここから最初の行も空行であることが読み取れる，かもしれない．</p>
+
+<p>同様に出力も最初の行に空行が入る．
+問題文には「Each game&#39;s output should be preceded by a single blank line」とある．</p>
+
+<p><pre><div class="highlight"><pre><span class="lineno"> 1</span> <span class="cp">#include &lt;iostream&gt;</span>
+<span class="lineno"> 2</span> <span class="cp">#include &lt;vector&gt;</span>
+<span class="lineno"> 3</span> <span class="cp">#include &lt;cctype&gt;</span>
+<span class="lineno"> 4</span> <span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+<span class="lineno"> 5</span> 
+<span class="lineno"> 6</span> <span class="kt">bool</span> <span class="nf">valid</span><span class="p">(</span><span class="k">const</span> <span class="n">string</span><span class="o">&amp;</span> <span class="n">s</span><span class="p">)</span>
+<span class="lineno"> 7</span> <span class="p">{</span>
+<span class="lineno"> 8</span>   <span class="k">if</span> <span class="p">(</span><span class="n">s</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="o">!=</span> <span class="mi">5</span><span class="p">)</span> <span class="p">{</span>
+<span class="lineno"> 9</span>     <span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
+<span class="lineno">10</span>   <span class="p">}</span>
+<span class="lineno">11</span>   <span class="k">for</span> <span class="p">(</span><span class="n">string</span><span class="o">::</span><span class="n">const_iterator</span> <span class="n">it</span> <span class="o">=</span> <span class="n">s</span><span class="p">.</span><span class="n">begin</span><span class="p">();</span> <span class="n">it</span> <span class="o">!=</span> <span class="n">s</span><span class="p">.</span><span class="n">end</span><span class="p">();</span> <span class="o">++</span><span class="n">it</span><span class="p">)</span> <span class="p">{</span>
+<span class="lineno">12</span>     <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">isupper</span><span class="p">(</span><span class="o">*</span><span class="n">it</span><span class="p">))</span> <span class="p">{</span>
+<span class="lineno">13</span>       <span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
+<span class="lineno">14</span>     <span class="p">}</span>
+<span class="lineno">15</span>   <span class="p">}</span>
+<span class="lineno">16</span>   <span class="k">return</span> <span class="nb">true</span><span class="p">;</span>
+<span class="lineno">17</span> <span class="p">}</span>
+<span class="lineno">18</span> 
+<span class="lineno">19</span> <span class="kt">void</span> <span class="nf">solve</span><span class="p">(</span><span class="k">const</span> <span class="n">vector</span><span class="o">&lt;</span><span class="n">string</span><span class="o">&gt;&amp;</span> <span class="n">lines</span><span class="p">)</span>
+<span class="lineno">20</span> <span class="p">{</span>
+<span class="lineno">21</span>   <span class="k">const</span> <span class="n">string</span><span class="o">&amp;</span> <span class="n">ans</span> <span class="o">=</span> <span class="n">lines</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span>
+<span class="lineno">22</span>   <span class="n">string</span> <span class="n">prev</span> <span class="o">=</span> <span class="s">&quot;.....&quot;</span><span class="p">;</span>
+<span class="lineno">23</span>   <span class="n">prev</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">ans</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span>
+<span class="lineno">24</span>   <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">prev</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+<span class="lineno">25</span>   <span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">cnt</span><span class="p">(</span><span class="mi">128</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
+<span class="lineno">26</span>   <span class="k">for</span> <span class="p">(</span><span class="n">string</span><span class="o">::</span><span class="n">const_iterator</span> <span class="n">it</span> <span class="o">=</span> <span class="n">ans</span><span class="p">.</span><span class="n">begin</span><span class="p">();</span> <span class="n">it</span> <span class="o">!=</span> <span class="n">ans</span><span class="p">.</span><span class="n">end</span><span class="p">();</span> <span class="o">++</span><span class="n">it</span><span class="p">)</span> <span class="p">{</span>
+<span class="lineno">27</span>     <span class="o">++</span><span class="n">cnt</span><span class="p">[</span><span class="o">*</span><span class="n">it</span><span class="p">];</span>
+<span class="lineno">28</span>   <span class="p">}</span>
+<span class="lineno">29</span> 
+<span class="lineno">30</span>   <span class="k">const</span> <span class="kt">int</span> <span class="n">N</span> <span class="o">=</span> <span class="n">min</span><span class="p">(</span><span class="n">lines</span><span class="p">.</span><span class="n">size</span><span class="p">(),</span> <span class="mi">6U</span><span class="p">);</span>
+<span class="lineno">31</span>   <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">N</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+<span class="lineno">32</span>     <span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">c</span><span class="p">(</span><span class="n">cnt</span><span class="p">);</span>
+<span class="lineno">33</span>     <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">valid</span><span class="p">(</span><span class="n">lines</span><span class="p">[</span><span class="n">i</span><span class="p">]))</span> <span class="p">{</span>
+<span class="lineno">34</span>       <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">prev</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+<span class="lineno">35</span>     <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+<span class="lineno">36</span>       <span class="n">prev</span> <span class="o">=</span> <span class="s">&quot;@@@@@&quot;</span><span class="p">;</span>
+<span class="lineno">37</span>       <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">j</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="mi">5</span><span class="p">;</span> <span class="n">j</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+<span class="lineno">38</span>         <span class="k">const</span> <span class="kt">char</span> <span class="n">x</span> <span class="o">=</span> <span class="n">lines</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">];</span>
+<span class="lineno">39</span>         <span class="k">if</span> <span class="p">(</span><span class="n">c</span><span class="p">[</span><span class="n">x</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+<span class="lineno">40</span>           <span class="n">prev</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="sc">&#39;.&#39;</span><span class="p">;</span>
+<span class="lineno">41</span>         <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">ans</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">==</span> <span class="n">x</span><span class="p">)</span> <span class="p">{</span>
+<span class="lineno">42</span>           <span class="o">--</span><span class="n">c</span><span class="p">[</span><span class="n">x</span><span class="p">];</span>
+<span class="lineno">43</span>           <span class="n">prev</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">x</span><span class="p">;</span>
+<span class="lineno">44</span>         <span class="p">}</span>
+<span class="lineno">45</span>       <span class="p">}</span>
+<span class="lineno">46</span>       <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">j</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="mi">5</span><span class="p">;</span> <span class="n">j</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+<span class="lineno">47</span>         <span class="k">const</span> <span class="kt">char</span> <span class="n">x</span> <span class="o">=</span> <span class="n">lines</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">];</span>
+<span class="lineno">48</span>         <span class="k">if</span> <span class="p">(</span><span class="n">prev</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">==</span> <span class="sc">&#39;@&#39;</span><span class="p">)</span> <span class="p">{</span>
+<span class="lineno">49</span>           <span class="k">if</span> <span class="p">(</span><span class="n">c</span><span class="p">[</span><span class="n">x</span><span class="p">]</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+<span class="lineno">50</span>             <span class="n">prev</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">tolower</span><span class="p">(</span><span class="n">x</span><span class="p">);</span>
+<span class="lineno">51</span>             <span class="o">--</span><span class="n">c</span><span class="p">[</span><span class="n">x</span><span class="p">];</span>
+<span class="lineno">52</span>           <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+<span class="lineno">53</span>             <span class="n">prev</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="sc">&#39;.&#39;</span><span class="p">;</span>
+<span class="lineno">54</span>           <span class="p">}</span>
+<span class="lineno">55</span>         <span class="p">}</span>
+<span class="lineno">56</span>       <span class="p">}</span>
+<span class="lineno">57</span>       <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">prev</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+<span class="lineno">58</span>       <span class="k">if</span> <span class="p">(</span><span class="n">lines</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="n">prev</span><span class="p">)</span> <span class="p">{</span>
+<span class="lineno">59</span>         <span class="k">return</span><span class="p">;</span>
+<span class="lineno">60</span>       <span class="p">}</span>
+<span class="lineno">61</span>     <span class="p">}</span>
+<span class="lineno">62</span>   <span class="p">}</span>
+<span class="lineno">63</span> 
+<span class="lineno">64</span>   <span class="k">for</span> <span class="p">(</span><span class="n">string</span><span class="o">::</span><span class="n">const_iterator</span> <span class="n">it</span> <span class="o">=</span> <span class="n">ans</span><span class="p">.</span><span class="n">begin</span><span class="p">();</span> <span class="n">it</span> <span class="o">!=</span> <span class="n">ans</span><span class="p">.</span><span class="n">end</span><span class="p">();</span> <span class="o">++</span><span class="n">it</span><span class="p">)</span> <span class="p">{</span>
+<span class="lineno">65</span>     <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="kt">char</span><span class="p">(</span><span class="n">tolower</span><span class="p">(</span><span class="o">*</span><span class="n">it</span><span class="p">));</span>
+<span class="lineno">66</span>   <span class="p">}</span>
+<span class="lineno">67</span>   <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+<span class="lineno">68</span> <span class="p">}</span>
+<span class="lineno">69</span> 
+<span class="lineno">70</span> <span class="kt">int</span> <span class="nf">main</span><span class="p">()</span>
+<span class="lineno">71</span> <span class="p">{</span>
+<span class="lineno">72</span>   <span class="n">string</span> <span class="n">s</span><span class="p">;</span>
+<span class="lineno">73</span>   <span class="n">vector</span><span class="o">&lt;</span><span class="n">string</span><span class="o">&gt;</span> <span class="n">lines</span><span class="p">;</span>
+<span class="lineno">74</span>   <span class="k">while</span> <span class="p">(</span><span class="n">getline</span><span class="p">(</span><span class="n">cin</span><span class="p">,</span> <span class="n">s</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="n">s</span> <span class="o">!=</span> <span class="s">&quot;LINGO&quot;</span><span class="p">)</span> <span class="p">{</span>
+<span class="lineno">75</span>     <span class="k">if</span> <span class="p">(</span><span class="n">s</span><span class="p">.</span><span class="n">empty</span><span class="p">())</span> <span class="p">{</span>
+<span class="lineno">76</span>       <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">lines</span><span class="p">.</span><span class="n">empty</span><span class="p">())</span> <span class="p">{</span>
+<span class="lineno">77</span>         <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+<span class="lineno">78</span>         <span class="n">solve</span><span class="p">(</span><span class="n">lines</span><span class="p">);</span>
+<span class="lineno">79</span>         <span class="n">lines</span><span class="p">.</span><span class="n">clear</span><span class="p">();</span>
+<span class="lineno">80</span>       <span class="p">}</span>
+<span class="lineno">81</span>     <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+<span class="lineno">82</span>       <span class="n">lines</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">s</span><span class="p">);</span>
+<span class="lineno">83</span>     <span class="p">}</span>
+<span class="lineno">84</span>   <span class="p">}</span>
+<span class="lineno">85</span>   <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="lineno">86</span> <span class="p">}</span>
+</pre></div></pre><a href="/contests/code/poj/1219.cc">poj/1219.cc</a></p>
+<footer><p>Posted on 2011-12-21</p><a class="prev-page" href="/contests/blog/poj-2766/">POJ 2766 - Laserbox</a><a class="next-page" href="/contests/blog/poj-1868/">POJ 1868 - Antiarithmetic?</a></footer></article></div></body></html>

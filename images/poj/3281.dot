@@ -1,0 +1,31 @@
+digraph g {
+  graph [rankdir = LR];
+  source -> F1;
+  source -> F2;
+  source -> F3;
+  F1 -> C1;
+  F2 -> C1;
+  F2 -> C2;
+  F3 -> C2;
+  F1 -> C3;
+  F3 -> C3;
+  F1 -> C4;
+  F3 -> C4;
+
+  C1 -> "C1'";
+  C2 -> "C2'";
+  C3 -> "C3'";
+  C4 -> "C4'";
+
+  "C1'" -> D3;
+  "C1'" -> D1;
+  "C2'" -> D1;
+  "C2'" -> D2;
+  "C3'" -> D1;
+  "C3'" -> D2;
+  "C4'" -> D3;
+
+  D1 -> sink;
+  D2 -> sink;
+  D3 -> sink;
+}

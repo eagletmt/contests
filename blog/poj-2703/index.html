@@ -1,0 +1,77 @@
+<!DOCTYPE html><html><head><meta charset="utf-8" /><meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible" /><title>POJ 2703 - Maximum Area Covered by Rectangles - プログラミングコンテストの記録</title><link rel="alternate" type="application/atom+xml" title="Atom Feed" href="/contests/blog/feed.xml" /><link href="/contests/stylesheets/normalize-ef7858ef.css" rel="stylesheet" type="text/css" /><link href="/contests/stylesheets/pygments-61d6ee10.css" rel="stylesheet" type="text/css" /><link href="/contests/stylesheets/all-1916dece.css" rel="stylesheet" type="text/css" /><script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script></head><body class="blog blog_poj-2703 blog_poj-2703_index"><div id="header"><h1>プログラミングコンテストの記録</h1><p>POJ/AOJ を中心に解いた問題のコードと簡単な解説。<br />ライブラリは <a href="https://github.com/osak/ICPCLibrary">https://github.com/osak/ICPCLibrary</a></p></div><div id="main"><article class="post"><h1>POJ 2703 - Maximum Area Covered by Rectangles</h1><p><a href="http://poj.org/problem?id=2703">http://poj.org/problem?id=2703</a></p>
+
+<h2>概要</h2>
+
+<p>この問題では長方形の「幅」を「長さが短い方の辺」と定義し、「高さ」を「長さが長い方の辺」と定義する。
+\(N\) 個の長方形が与えられるので、これを左下の頂点が原点になるようにして縦方向か横方向に置いていったとき、
+全体でカバーしている面積の最大値を答える。</p>
+
+<h2>制約</h2>
+
+<ul>
+<li>\(2 \le N \le 1000\)</li>
+<li>「幅」が等しい長方形は15個以下</li>
+<li>「幅」が異なる長方形ならば、片方の長方形がもう片方を含むことはない。つまり例えば \(4 \times 6\) の長方形と \(5 \times 7\) の長方形の両方が存在するようなことはない。</li>
+</ul>
+
+<h2>解法</h2>
+
+<p>縦方向か横方向の2種類の置き方しかないので、「幅」が同じ場合は「高さ」が高いほうから2つまでしか使うことはない。</p>
+
+<p>最後の制約が重要。
+この制約により、ある長方形を新たに置いたときに必ず全体の面積は増える。
+よって、「幅」の小さいほうから順に並べていき、縦方向がいくつまでいったか・横方向がいくつまでいったかをキーとして DP すればいい。</p>
+
+<p><pre><div class="highlight"><pre><span class="lineno"> 1</span> <span class="cp">#include &lt;cstdio&gt;</span>
+<span class="lineno"> 2</span> <span class="cp">#include &lt;algorithm&gt;</span>
+<span class="lineno"> 3</span> <span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+<span class="lineno"> 4</span> 
+<span class="lineno"> 5</span> <span class="k">struct</span> <span class="n">rect</span>
+<span class="lineno"> 6</span> <span class="p">{</span>
+<span class="lineno"> 7</span>   <span class="kt">int</span> <span class="n">w</span><span class="p">,</span> <span class="n">h</span><span class="p">;</span>
+<span class="lineno"> 8</span>   <span class="kt">bool</span> <span class="k">operator</span><span class="o">&lt;</span><span class="p">(</span><span class="k">const</span> <span class="n">rect</span><span class="o">&amp;</span> <span class="n">r</span><span class="p">)</span> <span class="k">const</span>
+<span class="lineno"> 9</span>   <span class="p">{</span>
+<span class="lineno">10</span>     <span class="k">if</span> <span class="p">(</span><span class="n">w</span> <span class="o">==</span> <span class="n">r</span><span class="p">.</span><span class="n">w</span><span class="p">)</span> <span class="p">{</span>
+<span class="lineno">11</span>       <span class="k">return</span> <span class="n">h</span> <span class="o">&gt;</span> <span class="n">r</span><span class="p">.</span><span class="n">h</span><span class="p">;</span>
+<span class="lineno">12</span>     <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+<span class="lineno">13</span>       <span class="k">return</span> <span class="n">w</span> <span class="o">&lt;</span> <span class="n">r</span><span class="p">.</span><span class="n">w</span><span class="p">;</span>
+<span class="lineno">14</span>     <span class="p">}</span>
+<span class="lineno">15</span>   <span class="p">}</span>
+<span class="lineno">16</span> <span class="p">};</span>
+<span class="lineno">17</span> 
+<span class="lineno">18</span> <span class="kt">int</span> <span class="nf">main</span><span class="p">()</span>
+<span class="lineno">19</span> <span class="p">{</span>
+<span class="lineno">20</span>   <span class="kt">int</span> <span class="n">N</span><span class="p">;</span>
+<span class="lineno">21</span>   <span class="k">while</span> <span class="p">(</span><span class="n">scanf</span><span class="p">(</span><span class="s">&quot;%d&quot;</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">N</span><span class="p">)</span> <span class="o">!=</span> <span class="n">EOF</span> <span class="o">&amp;&amp;</span> <span class="n">N</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+<span class="lineno">22</span>     <span class="k">static</span> <span class="n">rect</span> <span class="n">v</span><span class="p">[</span><span class="mi">1001</span><span class="p">];</span>
+<span class="lineno">23</span>     <span class="n">v</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="n">w</span> <span class="o">=</span> <span class="n">v</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="n">h</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+<span class="lineno">24</span>     <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;=</span> <span class="n">N</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+<span class="lineno">25</span>       <span class="n">scanf</span><span class="p">(</span><span class="s">&quot;%d %d&quot;</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">v</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">w</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">v</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">h</span><span class="p">);</span>
+<span class="lineno">26</span>     <span class="p">}</span>
+<span class="lineno">27</span>     <span class="n">sort</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">v</span><span class="o">+</span><span class="n">N</span><span class="o">+</span><span class="mi">1</span><span class="p">);</span>
+<span class="lineno">28</span> 
+<span class="lineno">29</span>     <span class="k">static</span> <span class="kt">int</span> <span class="n">dp</span><span class="p">[</span><span class="mi">1001</span><span class="p">][</span><span class="mi">1001</span><span class="p">];</span>
+<span class="lineno">30</span>     <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;=</span> <span class="n">N</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+<span class="lineno">31</span>       <span class="n">fill_n</span><span class="p">(</span><span class="n">dp</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">N</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
+<span class="lineno">32</span>     <span class="p">}</span>
+<span class="lineno">33</span> 
+<span class="lineno">34</span>     <span class="kt">int</span> <span class="n">ans</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+<span class="lineno">35</span>     <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">N</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+<span class="lineno">36</span>       <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">j</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="n">N</span><span class="p">;</span> <span class="n">j</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+<span class="lineno">37</span>         <span class="k">const</span> <span class="kt">int</span> <span class="n">k</span> <span class="o">=</span> <span class="n">max</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">;</span>
+<span class="lineno">38</span>         <span class="c1">// put vertical</span>
+<span class="lineno">39</span>         <span class="n">dp</span><span class="p">[</span><span class="n">k</span><span class="p">][</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">max</span><span class="p">(</span><span class="n">dp</span><span class="p">[</span><span class="n">k</span><span class="p">][</span><span class="n">j</span><span class="p">],</span> <span class="n">dp</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span> <span class="o">+</span> <span class="p">(</span><span class="n">v</span><span class="p">[</span><span class="n">k</span><span class="p">].</span><span class="n">w</span><span class="o">-</span><span class="n">v</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">w</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">v</span><span class="p">[</span><span class="n">k</span><span class="p">].</span><span class="n">h</span><span class="o">-</span><span class="n">v</span><span class="p">[</span><span class="n">j</span><span class="p">].</span><span class="n">w</span><span class="p">));</span>
+<span class="lineno">40</span>         <span class="c1">// put horizontal</span>
+<span class="lineno">41</span>         <span class="n">dp</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">max</span><span class="p">(</span><span class="n">dp</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">k</span><span class="p">],</span> <span class="n">dp</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span> <span class="o">+</span> <span class="p">(</span><span class="n">v</span><span class="p">[</span><span class="n">k</span><span class="p">].</span><span class="n">h</span><span class="o">-</span><span class="n">v</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">w</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">v</span><span class="p">[</span><span class="n">k</span><span class="p">].</span><span class="n">w</span><span class="o">-</span><span class="n">v</span><span class="p">[</span><span class="n">j</span><span class="p">].</span><span class="n">w</span><span class="p">));</span>
+<span class="lineno">42</span>         <span class="k">if</span> <span class="p">(</span><span class="n">k</span> <span class="o">==</span> <span class="n">N</span><span class="p">)</span> <span class="p">{</span>
+<span class="lineno">43</span>           <span class="n">ans</span> <span class="o">=</span> <span class="n">max</span><span class="p">(</span><span class="n">ans</span><span class="p">,</span> <span class="n">dp</span><span class="p">[</span><span class="n">k</span><span class="p">][</span><span class="n">j</span><span class="p">]);</span>
+<span class="lineno">44</span>           <span class="n">ans</span> <span class="o">=</span> <span class="n">max</span><span class="p">(</span><span class="n">ans</span><span class="p">,</span> <span class="n">dp</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">k</span><span class="p">]);</span>
+<span class="lineno">45</span>         <span class="p">}</span>
+<span class="lineno">46</span>       <span class="p">}</span>
+<span class="lineno">47</span>     <span class="p">}</span>
+<span class="lineno">48</span>     <span class="n">printf</span><span class="p">(</span><span class="s">&quot;%d</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">ans</span><span class="p">);</span>
+<span class="lineno">49</span>   <span class="p">}</span>
+<span class="lineno">50</span>   <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="lineno">51</span> <span class="p">}</span>
+</pre></div></pre><a href="/contests/code/poj/2703.cc">poj/2703.cc</a></p>
+<footer><p>Posted on 2012-11-05</p><a class="prev-page" href="/contests/blog/poj-2702/">POJ 2702 - Can a Complicated Program Go Wrong?</a><a class="next-page" href="/contests/blog/poj-2697/">POJ 2697 - A Board Game</a></footer></article></div></body></html>

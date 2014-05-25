@@ -1,0 +1,43 @@
+<!DOCTYPE html><html><head><meta charset="utf-8" /><meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible" /><title>POJ 2623 - Sequence Median - プログラミングコンテストの記録</title><link rel="alternate" type="application/atom+xml" title="Atom Feed" href="/contests/blog/feed.xml" /><link href="/contests/stylesheets/normalize-ef7858ef.css" rel="stylesheet" type="text/css" /><link href="/contests/stylesheets/pygments-61d6ee10.css" rel="stylesheet" type="text/css" /><link href="/contests/stylesheets/all-1916dece.css" rel="stylesheet" type="text/css" /><script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script></head><body class="blog blog_poj-2623 blog_poj-2623_index"><div id="header"><h1>プログラミングコンテストの記録</h1><p>POJ/AOJ を中心に解いた問題のコードと簡単な解説。<br />ライブラリは <a href="https://github.com/osak/ICPCLibrary">https://github.com/osak/ICPCLibrary</a></p></div><div id="main"><article class="post"><h1>POJ 2623 - Sequence Median</h1><p><a href="http://poj.org/problem?id=2623">http://poj.org/problem?id=2623</a></p>
+
+<h2>概要</h2>
+
+<p>N 個の非負整数が与えられるので，それの中央値を答える．</p>
+
+<p>N が奇数のときは，ソート後の数列の (N+1)/2 番目の値が中央値であり，N が偶数のときはソート後の数列の N/2 番目の値と N/2+1 番目の値の平均が中央値である．</p>
+
+<h2>制約</h2>
+
+<ul>
+<li>1 &lt;= N &lt;= 250000</li>
+<li>0 &lt; 数列の要素の値 &lt;= 2^32 - 1</li>
+<li>出力は 10^-1 の精度</li>
+</ul>
+
+<h2>解法</h2>
+
+<p>やるだけ．N が奇数のときも小数点以下を出力する必要があることに注意…</p>
+
+<p><pre><div class="highlight"><pre><span class="lineno"> 1</span> <span class="cp">#include &lt;cstdio&gt;</span>
+<span class="lineno"> 2</span> <span class="cp">#include &lt;vector&gt;</span>
+<span class="lineno"> 3</span> <span class="cp">#include &lt;algorithm&gt;</span>
+<span class="lineno"> 4</span> <span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+<span class="lineno"> 5</span> 
+<span class="lineno"> 6</span> <span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span>
+<span class="lineno"> 7</span> <span class="p">{</span>
+<span class="lineno"> 8</span>   <span class="kt">int</span> <span class="n">n</span><span class="p">;</span>
+<span class="lineno"> 9</span>   <span class="n">scanf</span><span class="p">(</span><span class="s">&quot;%d&quot;</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">n</span><span class="p">);</span>
+<span class="lineno">10</span>   <span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">seq</span><span class="p">(</span><span class="n">n</span><span class="p">);</span>
+<span class="lineno">11</span>   <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">n</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+<span class="lineno">12</span>     <span class="n">scanf</span><span class="p">(</span><span class="s">&quot;%d&quot;</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">seq</span><span class="p">[</span><span class="n">i</span><span class="p">]);</span>
+<span class="lineno">13</span>   <span class="p">}</span>
+<span class="lineno">14</span>   <span class="n">sort</span><span class="p">(</span><span class="n">seq</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">seq</span><span class="p">.</span><span class="n">end</span><span class="p">());</span>
+<span class="lineno">15</span>   <span class="k">if</span> <span class="p">(</span><span class="n">n</span> <span class="o">%</span> <span class="mi">2</span>  <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+<span class="lineno">16</span>     <span class="n">printf</span><span class="p">(</span><span class="s">&quot;%.1f</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="p">(</span><span class="kt">double</span><span class="p">(</span><span class="n">seq</span><span class="p">[(</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">/</span><span class="mi">2</span><span class="p">])</span> <span class="o">+</span> <span class="n">seq</span><span class="p">[(</span><span class="n">n</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="o">/</span><span class="mi">2</span><span class="p">])</span> <span class="o">/</span> <span class="mf">2.0</span><span class="p">);</span>
+<span class="lineno">17</span>   <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+<span class="lineno">18</span>     <span class="n">printf</span><span class="p">(</span><span class="s">&quot;%.1f</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="kt">double</span><span class="p">(</span><span class="n">seq</span><span class="p">[</span><span class="n">n</span><span class="o">/</span><span class="mi">2</span><span class="p">]));</span>
+<span class="lineno">19</span>   <span class="p">}</span>
+<span class="lineno">20</span>   <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="lineno">21</span> <span class="p">}</span>
+</pre></div></pre><a href="/contests/code/poj/2623.cc">poj/2623.cc</a></p>
+<footer><p>Posted on 2011-10-19</p><a class="prev-page" href="/contests/blog/poj-1406/">POJ 1406 - Starship Hakodate-maru</a><a class="next-page" href="/contests/blog/poj-2261/">POJ 2261 - France '98</a></footer></article></div></body></html>

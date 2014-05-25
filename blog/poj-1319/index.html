@@ -1,0 +1,59 @@
+<!DOCTYPE html><html><head><meta charset="utf-8" /><meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible" /><title>POJ 1319 - Pipe Fitters - プログラミングコンテストの記録</title><link rel="alternate" type="application/atom+xml" title="Atom Feed" href="/contests/blog/feed.xml" /><link href="/contests/stylesheets/normalize-ef7858ef.css" rel="stylesheet" type="text/css" /><link href="/contests/stylesheets/pygments-61d6ee10.css" rel="stylesheet" type="text/css" /><link href="/contests/stylesheets/all-1916dece.css" rel="stylesheet" type="text/css" /><script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script></head><body class="blog blog_poj-1319 blog_poj-1319_index"><div id="header"><h1>プログラミングコンテストの記録</h1><p>POJ/AOJ を中心に解いた問題のコードと簡単な解説。<br />ライブラリは <a href="https://github.com/osak/ICPCLibrary">https://github.com/osak/ICPCLibrary</a></p></div><div id="main"><article class="post"><h1>POJ 1319 - Pipe Fitters</h1><p><a href="http://poj.org/problem?id=1319">http://poj.org/problem?id=1319</a></p>
+
+<h2>概要</h2>
+
+<p>a * b の長方形の箱に直径 1 の円を最大でいくつ入れることができるかを答える．
+a * b の長方形は b * a の長方形とも見なせることに注意．</p>
+
+<p>円の敷き詰め方は grid pattern と skew pattern の2通りに限られる (問題文の図を参照)．
+最大となる敷き詰め方が grid か skew のどちらであるかも答える．</p>
+
+<h2>制約</h2>
+
+<ul>
+<li>0 &lt; a, b &lt; 128</li>
+</ul>
+
+<h2>解法</h2>
+
+<p>grid pattern の場合は <code>floor(a) * floor(b)</code> 個入れることができる．</p>
+
+<p>skew pattern の場合を考える．幅として使うほうを w，高さとして使うほうを h とする．</p>
+
+<p>まず1行にいくつ入るかを考えると，下から奇数行目は <code>floor(w)</code> 個で，偶数行目は <code>floor(w-0.5)</code> 個．
+次に何列入るかを考えると，下から1行目は高さ1で，それ以降1行積む毎に <code>sqrt(3)/2</code> ずつ高さが増えていくので，<code>floor(2*(h-1)/sqrt(3) + 1</code> 個．これで計算することができる．</p>
+
+<p><pre><div class="highlight"><pre><span class="lineno"> 1</span> <span class="cp">#include &lt;iostream&gt;</span>
+<span class="lineno"> 2</span> <span class="cp">#include &lt;cmath&gt;</span>
+<span class="lineno"> 3</span> <span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+<span class="lineno"> 4</span> 
+<span class="lineno"> 5</span> <span class="kt">int</span> <span class="nf">grid</span><span class="p">(</span><span class="kt">double</span> <span class="n">H</span><span class="p">,</span> <span class="kt">double</span> <span class="n">W</span><span class="p">)</span>
+<span class="lineno"> 6</span> <span class="p">{</span>
+<span class="lineno"> 7</span>   <span class="k">return</span> <span class="k">static_cast</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="p">(</span><span class="n">H</span><span class="p">)</span> <span class="o">*</span> <span class="k">static_cast</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="p">(</span><span class="n">W</span><span class="p">);</span>
+<span class="lineno"> 8</span> <span class="p">}</span>
+<span class="lineno"> 9</span> 
+<span class="lineno">10</span> <span class="kt">int</span> <span class="nf">skew</span><span class="p">(</span><span class="kt">double</span> <span class="n">H</span><span class="p">,</span> <span class="kt">double</span> <span class="n">W</span><span class="p">)</span>
+<span class="lineno">11</span> <span class="p">{</span>
+<span class="lineno">12</span>   <span class="k">static</span> <span class="k">const</span> <span class="kt">double</span> <span class="n">SQRT3</span> <span class="o">=</span> <span class="n">sqrt</span><span class="p">(</span><span class="mf">3.0</span><span class="p">);</span>
+<span class="lineno">13</span>   <span class="k">const</span> <span class="kt">int</span> <span class="n">h</span> <span class="o">=</span> <span class="mi">2</span><span class="o">*</span><span class="p">(</span><span class="n">H</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">/</span><span class="n">SQRT3</span> <span class="o">+</span> <span class="mi">1</span><span class="p">;</span>
+<span class="lineno">14</span>   <span class="k">const</span> <span class="kt">int</span> <span class="n">w1</span> <span class="o">=</span> <span class="n">W</span><span class="p">;</span>
+<span class="lineno">15</span>   <span class="k">const</span> <span class="kt">int</span> <span class="n">w2</span> <span class="o">=</span> <span class="n">W</span><span class="o">-</span><span class="mf">0.5</span><span class="p">;</span>
+<span class="lineno">16</span>   <span class="k">return</span> <span class="p">((</span><span class="n">h</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span><span class="o">*</span><span class="n">w1</span> <span class="o">+</span> <span class="p">(</span><span class="n">h</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span><span class="o">*</span><span class="n">w2</span><span class="p">;</span>
+<span class="lineno">17</span> <span class="p">}</span>
+<span class="lineno">18</span> 
+<span class="lineno">19</span> <span class="kt">int</span> <span class="nf">main</span><span class="p">()</span>
+<span class="lineno">20</span> <span class="p">{</span>
+<span class="lineno">21</span>   <span class="kt">double</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">;</span>
+<span class="lineno">22</span>   <span class="k">while</span> <span class="p">(</span><span class="n">cin</span> <span class="o">&gt;&gt;</span> <span class="n">x</span> <span class="o">&gt;&gt;</span> <span class="n">y</span><span class="p">)</span> <span class="p">{</span>
+<span class="lineno">23</span>     <span class="k">const</span> <span class="kt">int</span> <span class="n">g</span> <span class="o">=</span> <span class="n">grid</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">);</span>
+<span class="lineno">24</span>     <span class="k">const</span> <span class="kt">int</span> <span class="n">s</span> <span class="o">=</span> <span class="n">max</span><span class="p">(</span><span class="n">skew</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">),</span> <span class="n">skew</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">));</span>
+<span class="lineno">25</span>     <span class="k">if</span> <span class="p">(</span><span class="n">g</span> <span class="o">&gt;=</span> <span class="n">s</span><span class="p">)</span> <span class="p">{</span>
+<span class="lineno">26</span>       <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">g</span> <span class="o">&lt;&lt;</span> <span class="s">&quot; grid&quot;</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+<span class="lineno">27</span>     <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+<span class="lineno">28</span>       <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">s</span> <span class="o">&lt;&lt;</span> <span class="s">&quot; skew&quot;</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+<span class="lineno">29</span>     <span class="p">}</span>
+<span class="lineno">30</span>   <span class="p">}</span>
+<span class="lineno">31</span>   <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="lineno">32</span> <span class="p">}</span>
+</pre></div></pre><a href="/contests/code/poj/1319.cc">poj/1319.cc</a></p>
+<footer><p>Posted on 2011-10-19</p><a class="prev-page" href="/contests/blog/poj-2606/">POJ 2606 - Rabbit hunt</a><a class="next-page" href="/contests/blog/poj-1328/">POJ 1328 - Radar Installation</a></footer></article></div></body></html>

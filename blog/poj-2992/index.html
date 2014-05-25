@@ -1,0 +1,73 @@
+<!DOCTYPE html><html><head><meta charset="utf-8" /><meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible" /><title>POJ 2992 - Divisors - プログラミングコンテストの記録</title><link rel="alternate" type="application/atom+xml" title="Atom Feed" href="/contests/blog/feed.xml" /><link href="/contests/stylesheets/normalize-ef7858ef.css" rel="stylesheet" type="text/css" /><link href="/contests/stylesheets/pygments-61d6ee10.css" rel="stylesheet" type="text/css" /><link href="/contests/stylesheets/all-1916dece.css" rel="stylesheet" type="text/css" /><script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script></head><body class="blog blog_poj-2992 blog_poj-2992_index"><div id="header"><h1>プログラミングコンテストの記録</h1><p>POJ/AOJ を中心に解いた問題のコードと簡単な解説。<br />ライブラリは <a href="https://github.com/osak/ICPCLibrary">https://github.com/osak/ICPCLibrary</a></p></div><div id="main"><article class="post"><h1>POJ 2992 - Divisors</h1><p><a href="http://poj.org/problem?id=2992">http://poj.org/problem?id=2992</a></p>
+
+<h2>概要</h2>
+
+<p><code>C(n,k)</code> の約数の数を答える．</p>
+
+<h2>制約</h2>
+
+<ul>
+<li>0 &lt;= k &lt;= n &lt;= 431</li>
+<li>答えは 2^63 - 1 を越えない</li>
+</ul>
+
+<h2>解法</h2>
+
+<p>しばらく TLE から抜け出せず，<a href="http://contest.felk.cvut.cz/05prg/solved/">Problems Statement: CTU Open 2005 Contest</a> からインプットをとってきてみると，93528行もあった…</p>
+
+<p><code>n!</code> が素因数として <code>p</code> を <code>f(n,p)</code> 個持っているとすると，<code>C(n,k)</code> は <code>p</code> を素因数として <code>f(n,p) - f(k,p) - f(n-k,p)</code> 個持っている．
+これをすべての素数 p に関して計算して，1を足したものの積をとれば <code>C(n,k)</code> の約数が求まる．</p>
+
+<p><code>f(n,p)</code> は，<code>n</code> を <code>p^i</code> (i = 1, 2, ...) で割ったときの商の和をとることで計算できる．</p>
+
+<p>この <code>f(n,p)</code> を毎回計算しても TLE するので，n, p でメモ化するか，下のように予め計算してテーブルを作っておくとやっと通るようになった (610MS)．</p>
+
+<p>しかし，なぜかこのゴルフしたコードのほうがかなり速かった (235MS)．</p>
+
+<p><code>
+p[431],s[999],t[432][432],*q=p,j,N,K;long long a;main(i){for(i=2;i&lt;432;i++)if(!s[i])for(*q++=j=i;j&lt;432;s[j+=i]=1);for(i=0;i&lt;432;i++)for(q=p;*q;q++)for(j=*q;j&lt;=i;j*=*q)t[i][*q]+=i/j;for(;~scanf(&quot;%d%d&quot;,&amp;N,&amp;K);printf(&quot;%lld\n&quot;,a))for(a=1,q=p;i=*q;q++)a*=1+t[N][i]-t[K][i]-t[N-K][i];}
+</code></p>
+
+<p><pre><div class="highlight"><pre><span class="lineno"> 1</span> <span class="cp">#include &lt;stdio.h&gt;</span>
+<span class="lineno"> 2</span> 
+<span class="lineno"> 3</span> <span class="cp">#define M 431</span>
+<span class="lineno"> 4</span> 
+<span class="lineno"> 5</span> <span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span>
+<span class="lineno"> 6</span> <span class="p">{</span>
+<span class="lineno"> 7</span>   <span class="k">static</span> <span class="kt">int</span> <span class="n">primes</span><span class="p">[</span><span class="n">M</span><span class="p">];</span>
+<span class="lineno"> 8</span>   <span class="k">static</span> <span class="kt">int</span> <span class="n">sieve</span><span class="p">[</span><span class="n">M</span><span class="o">+</span><span class="mi">1</span><span class="p">];</span>
+<span class="lineno"> 9</span>   <span class="k">static</span> <span class="kt">int</span> <span class="n">tbl</span><span class="p">[</span><span class="n">M</span><span class="o">+</span><span class="mi">1</span><span class="p">][</span><span class="n">M</span><span class="o">+</span><span class="mi">1</span><span class="p">];</span>
+<span class="lineno">10</span>   <span class="kt">int</span> <span class="o">*</span><span class="n">p</span> <span class="o">=</span> <span class="n">primes</span><span class="p">;</span>
+<span class="lineno">11</span>   <span class="kt">int</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">;</span>
+<span class="lineno">12</span>   <span class="kt">int</span> <span class="n">N</span><span class="p">,</span> <span class="n">K</span><span class="p">;</span>
+<span class="lineno">13</span> 
+<span class="lineno">14</span>   <span class="k">for</span> <span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;=</span> <span class="n">M</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+<span class="lineno">15</span>     <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">sieve</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="p">{</span>
+<span class="lineno">16</span>       <span class="o">*</span><span class="n">p</span><span class="o">++</span> <span class="o">=</span> <span class="n">i</span><span class="p">;</span>
+<span class="lineno">17</span>       <span class="k">for</span> <span class="p">(</span><span class="n">j</span> <span class="o">=</span> <span class="n">i</span><span class="o">+</span><span class="n">i</span><span class="p">;</span> <span class="n">j</span> <span class="o">&lt;=</span> <span class="n">M</span><span class="p">;</span> <span class="n">j</span> <span class="o">+=</span> <span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+<span class="lineno">18</span>         <span class="n">sieve</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+<span class="lineno">19</span>       <span class="p">}</span>
+<span class="lineno">20</span>     <span class="p">}</span>
+<span class="lineno">21</span>   <span class="p">}</span>
+<span class="lineno">22</span> 
+<span class="lineno">23</span>   <span class="k">for</span> <span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;=</span> <span class="n">M</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+<span class="lineno">24</span>     <span class="k">for</span> <span class="p">(</span><span class="n">j</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">primes</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">j</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+<span class="lineno">25</span>       <span class="kt">int</span> <span class="n">s</span><span class="p">,</span> <span class="n">t</span> <span class="o">=</span> <span class="n">primes</span><span class="p">[</span><span class="n">j</span><span class="p">];</span>
+<span class="lineno">26</span>       <span class="k">for</span> <span class="p">(</span><span class="n">s</span> <span class="o">=</span> <span class="n">t</span><span class="p">;</span> <span class="n">s</span> <span class="o">&lt;=</span> <span class="n">i</span><span class="p">;</span> <span class="n">s</span> <span class="o">*=</span> <span class="n">t</span><span class="p">)</span> <span class="p">{</span>
+<span class="lineno">27</span>         <span class="n">tbl</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">t</span><span class="p">]</span> <span class="o">+=</span> <span class="n">i</span> <span class="o">/</span> <span class="n">s</span><span class="p">;</span>
+<span class="lineno">28</span>       <span class="p">}</span>
+<span class="lineno">29</span>     <span class="p">}</span>
+<span class="lineno">30</span>   <span class="p">}</span>
+<span class="lineno">31</span> 
+<span class="lineno">32</span>   <span class="k">while</span> <span class="p">(</span><span class="n">scanf</span><span class="p">(</span><span class="s">&quot;%d %d&quot;</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">N</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">K</span><span class="p">)</span> <span class="o">!=</span> <span class="n">EOF</span><span class="p">)</span> <span class="p">{</span>
+<span class="lineno">33</span>     <span class="kt">long</span> <span class="kt">long</span> <span class="n">ans</span> <span class="o">=</span> <span class="mi">1LL</span><span class="p">;</span>
+<span class="lineno">34</span>     <span class="k">for</span> <span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">primes</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+<span class="lineno">35</span>       <span class="k">const</span> <span class="kt">int</span> <span class="n">t</span> <span class="o">=</span> <span class="n">primes</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+<span class="lineno">36</span>       <span class="n">ans</span> <span class="o">*=</span> <span class="mi">1LL</span> <span class="o">+</span> <span class="n">tbl</span><span class="p">[</span><span class="n">N</span><span class="p">][</span><span class="n">t</span><span class="p">]</span> <span class="o">-</span> <span class="n">tbl</span><span class="p">[</span><span class="n">K</span><span class="p">][</span><span class="n">t</span><span class="p">]</span> <span class="o">-</span> <span class="n">tbl</span><span class="p">[</span><span class="n">N</span><span class="o">-</span><span class="n">K</span><span class="p">][</span><span class="n">t</span><span class="p">];</span>
+<span class="lineno">37</span>     <span class="p">}</span>
+<span class="lineno">38</span>     <span class="n">printf</span><span class="p">(</span><span class="s">&quot;%lld</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">ans</span><span class="p">);</span>
+<span class="lineno">39</span>   <span class="p">}</span>
+<span class="lineno">40</span>   <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="lineno">41</span> <span class="p">}</span>
+</pre></div></pre><a href="/contests/code/poj/2992.c">poj/2992.c</a></p>
+<footer><p>Posted on 2011-10-19</p><a class="prev-page" href="/contests/blog/poj-2799/">POJ 2799 - IP Networks</a><a class="next-page" href="/contests/blog/poj-1154/">POJ 1154 - LETTERS</a></footer></article></div></body></html>

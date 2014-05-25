@@ -1,0 +1,42 @@
+<!DOCTYPE html><html><head><meta charset="utf-8" /><meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible" /><title>POJ 2876 - Cantoring Along - プログラミングコンテストの記録</title><link rel="alternate" type="application/atom+xml" title="Atom Feed" href="/contests/blog/feed.xml" /><link href="/contests/stylesheets/normalize-ef7858ef.css" rel="stylesheet" type="text/css" /><link href="/contests/stylesheets/pygments-61d6ee10.css" rel="stylesheet" type="text/css" /><link href="/contests/stylesheets/all-1916dece.css" rel="stylesheet" type="text/css" /><script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script></head><body class="blog blog_poj-2876 blog_poj-2876_index"><div id="header"><h1>プログラミングコンテストの記録</h1><p>POJ/AOJ を中心に解いた問題のコードと簡単な解説。<br />ライブラリは <a href="https://github.com/osak/ICPCLibrary">https://github.com/osak/ICPCLibrary</a></p></div><div id="main"><article class="post"><h1>POJ 2876 - Cantoring Along</h1><p><a href="http://poj.org/problem?id=2876">http://poj.org/problem?id=2876</a></p>
+
+<h2>概要</h2>
+
+<p>オーダーが \(N\) のカントール集合を答える．</p>
+
+<p>オーダーが \(N\) のカントール集合は以下の手順によって作られる．</p>
+
+<ol>
+<li>\(3 ^ N\) 個の <code>-</code> を並べて1つの線を作る</li>
+<li>各線について，3等分した中央の線を空白に置き換えて線を2つに分ける</li>
+<li>各線が1つの <code>-</code> になるまで 2 を繰り返す</li>
+</ol>
+
+<h2>制約</h2>
+
+<ul>
+<li>\(0 \le N \le 12\)</li>
+</ul>
+
+<h2>解法</h2>
+
+<p>オーダー \(N\) のカントール集合はオーダー \(N+1\) のカントール集合の部分構造になっていることを利用して，予めオーダー12までの全集合を生成しておいて答える．</p>
+
+<p><pre><div class="highlight"><pre><span class="lineno"> 1</span> <span class="cp">#include &lt;iostream&gt;</span>
+<span class="lineno"> 2</span> <span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+<span class="lineno"> 3</span> 
+<span class="lineno"> 4</span> <span class="kt">int</span> <span class="nf">main</span><span class="p">()</span>
+<span class="lineno"> 5</span> <span class="p">{</span>
+<span class="lineno"> 6</span>   <span class="n">string</span> <span class="n">dp</span><span class="p">[</span><span class="mi">13</span><span class="p">];</span>
+<span class="lineno"> 7</span>   <span class="n">dp</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="s">&quot;-&quot;</span><span class="p">;</span>
+<span class="lineno"> 8</span>   <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;=</span> <span class="mi">12</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+<span class="lineno"> 9</span>     <span class="n">dp</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">dp</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">string</span><span class="p">(</span><span class="n">dp</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">].</span><span class="n">size</span><span class="p">(),</span> <span class="sc">&#39; &#39;</span><span class="p">)</span> <span class="o">+</span> <span class="n">dp</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">];</span>
+<span class="lineno">10</span>   <span class="p">}</span>
+<span class="lineno">11</span>   <span class="kt">int</span> <span class="n">N</span><span class="p">;</span>
+<span class="lineno">12</span>   <span class="k">while</span> <span class="p">(</span><span class="n">cin</span> <span class="o">&gt;&gt;</span> <span class="n">N</span><span class="p">)</span> <span class="p">{</span>
+<span class="lineno">13</span>     <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">dp</span><span class="p">[</span><span class="n">N</span><span class="p">]</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+<span class="lineno">14</span>   <span class="p">}</span>
+<span class="lineno">15</span>   <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="lineno">16</span> <span class="p">}</span>
+</pre></div></pre><a href="/contests/code/poj/2876.cc">poj/2876.cc</a></p>
+<footer><p>Posted on 2012-01-30</p><a class="prev-page" href="/contests/blog/poj-1178/">POJ 1178 - Camelot</a><a class="next-page" href="/contests/blog/poj-1060/">POJ 1060 - Modular multiplication of polynomials</a></footer></article></div></body></html>

@@ -1,0 +1,61 @@
+<!DOCTYPE html><html><head><meta charset="utf-8" /><meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible" /><title>POJ 2590 - Steps - プログラミングコンテストの記録</title><link rel="alternate" type="application/atom+xml" title="Atom Feed" href="/contests/blog/feed.xml" /><link href="/contests/stylesheets/normalize-ef7858ef.css" rel="stylesheet" type="text/css" /><link href="/contests/stylesheets/pygments-61d6ee10.css" rel="stylesheet" type="text/css" /><link href="/contests/stylesheets/all-1916dece.css" rel="stylesheet" type="text/css" /><script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script></head><body class="blog blog_poj-2590 blog_poj-2590_index"><div id="header"><h1>プログラミングコンテストの記録</h1><p>POJ/AOJ を中心に解いた問題のコードと簡単な解説。<br />ライブラリは <a href="https://github.com/osak/ICPCLibrary">https://github.com/osak/ICPCLibrary</a></p></div><div id="main"><article class="post"><h1>POJ 2590 - Steps</h1><p><a href="http://poj.org/problem?id=2590">http://poj.org/problem?id=2590</a></p>
+
+<h2>概要</h2>
+
+<p>整数 x から y まで移動するのに必要な最小のステップ数を答える．</p>
+
+<p>各ステップにおいて，1つ前のステップで長さ l だけ飛んだとすると，</p>
+
+<ul>
+<li>長さ l+1 だけ飛ぶ</li>
+<li>長さ l だけ飛ぶ</li>
+<li>長さ l-1 だけ飛ぶ</li>
+</ul>
+
+<p>のいずれかの行動をとれる．ただし l は非負．
+また，最初と最後のステップでは長さ 1 だけ飛ぶ．</p>
+
+<h2>制約</h2>
+
+<ul>
+<li>0 &lt;= x &lt;= y &lt;= 2^31</li>
+</ul>
+
+<h2>解法</h2>
+
+<p>答えは x と y の差 d := y - x で決まる．</p>
+
+<p>最初と最後のステップでは 1 しか飛べないため，飛ぶ長さは 1, 2, ..., l-1, l, l, ..., l, l-1, ..., 2, 1 と対称的にするのが最適．</p>
+
+<p><pre><div class="highlight"><pre><span class="lineno"> 1</span> <span class="cp">#include &lt;iostream&gt;</span>
+<span class="lineno"> 2</span> <span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+<span class="lineno"> 3</span> 
+<span class="lineno"> 4</span> <span class="kt">int</span> <span class="nf">main</span><span class="p">()</span>
+<span class="lineno"> 5</span> <span class="p">{</span>
+<span class="lineno"> 6</span>   <span class="kt">int</span> <span class="n">N</span><span class="p">;</span>
+<span class="lineno"> 7</span>   <span class="n">cin</span> <span class="o">&gt;&gt;</span> <span class="n">N</span><span class="p">;</span>
+<span class="lineno"> 8</span>   <span class="k">while</span> <span class="p">(</span><span class="n">N</span><span class="o">--</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+<span class="lineno"> 9</span>     <span class="kt">int</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">;</span>
+<span class="lineno">10</span>     <span class="n">cin</span> <span class="o">&gt;&gt;</span> <span class="n">x</span> <span class="o">&gt;&gt;</span> <span class="n">y</span><span class="p">;</span>
+<span class="lineno">11</span> 
+<span class="lineno">12</span>     <span class="k">const</span> <span class="kt">int</span> <span class="n">d</span> <span class="o">=</span> <span class="n">y</span><span class="o">-</span><span class="n">x</span><span class="p">;</span>
+<span class="lineno">13</span>     <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+<span class="lineno">14</span>     <span class="k">for</span> <span class="p">(;</span> <span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+<span class="lineno">15</span>       <span class="k">if</span> <span class="p">(</span><span class="n">i</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+<span class="lineno">16</span>         <span class="k">const</span> <span class="kt">long</span> <span class="kt">long</span> <span class="n">k</span> <span class="o">=</span> <span class="n">i</span><span class="o">/</span><span class="mi">2</span><span class="p">;</span>
+<span class="lineno">17</span>         <span class="k">if</span> <span class="p">(</span><span class="n">d</span> <span class="o">&lt;=</span> <span class="n">k</span><span class="o">*</span><span class="n">k</span> <span class="o">+</span> <span class="n">k</span><span class="p">)</span> <span class="p">{</span>
+<span class="lineno">18</span>           <span class="k">break</span><span class="p">;</span>
+<span class="lineno">19</span>         <span class="p">}</span>
+<span class="lineno">20</span>       <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+<span class="lineno">21</span>         <span class="k">const</span> <span class="kt">long</span> <span class="kt">long</span> <span class="n">k</span> <span class="o">=</span> <span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="o">/</span><span class="mi">2</span><span class="p">;</span>
+<span class="lineno">22</span>         <span class="k">if</span> <span class="p">(</span><span class="n">d</span> <span class="o">&lt;=</span> <span class="n">k</span><span class="o">*</span><span class="n">k</span><span class="p">)</span> <span class="p">{</span>
+<span class="lineno">23</span>           <span class="k">break</span><span class="p">;</span>
+<span class="lineno">24</span>         <span class="p">}</span>
+<span class="lineno">25</span>       <span class="p">}</span>
+<span class="lineno">26</span>     <span class="p">}</span>
+<span class="lineno">27</span>     <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">i</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+<span class="lineno">28</span>   <span class="p">}</span>
+<span class="lineno">29</span>   <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="lineno">30</span> <span class="p">}</span>
+</pre></div></pre><a href="/contests/code/poj/2590.cc">poj/2590.cc</a></p>
+<footer><p>Posted on 2011-10-19</p><a class="prev-page" href="/contests/blog/poj-2781/">POJ 2781 - The mysterious X network</a><a class="next-page" href="/contests/blog/poj-2186/">POJ 2186 - Popular Cows</a></footer></article></div></body></html>

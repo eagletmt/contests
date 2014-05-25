@@ -1,0 +1,152 @@
+<!DOCTYPE html><html><head><meta charset="utf-8" /><meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible" /><title>POJ 2267 - From Dusk till Dawn or: Vladimir the Vampire - プログラミングコンテストの記録</title><link rel="alternate" type="application/atom+xml" title="Atom Feed" href="/contests/blog/feed.xml" /><link href="/contests/stylesheets/normalize-ef7858ef.css" rel="stylesheet" type="text/css" /><link href="/contests/stylesheets/pygments-61d6ee10.css" rel="stylesheet" type="text/css" /><link href="/contests/stylesheets/all-1916dece.css" rel="stylesheet" type="text/css" /><script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script></head><body class="blog blog_poj-2267 blog_poj-2267_index"><div id="header"><h1>プログラミングコンテストの記録</h1><p>POJ/AOJ を中心に解いた問題のコードと簡単な解説。<br />ライブラリは <a href="https://github.com/osak/ICPCLibrary">https://github.com/osak/ICPCLibrary</a></p></div><div id="main"><article class="post"><h1>POJ 2267 - From Dusk till Dawn or: Vladimir the Vampire</h1><p><a href="http://poj.org/problem?id=2267">http://poj.org/problem?id=2267</a></p>
+
+<h2>概要</h2>
+
+<p>N 個の駅があり，吸血鬼がある駅から別の駅まで電車を乗り継いで移動する．</p>
+
+<p>全体で M 本の電車があり，それぞれ</p>
+
+<ul>
+<li>出発する駅</li>
+<li>到着する駅</li>
+<li>出発する時刻</li>
+<li>出発してから到着するまでにかかる時間</li>
+</ul>
+
+<p>が設定されている．</p>
+
+<p>吸血鬼は18時から次の日の6時までの間しか移動できない．
+すなわち，18時よりも前に出発する電車や，6時よりも後に到着する電車には乗ることができない．</p>
+
+<p>吸血鬼は移動できない間は駅にずっといることになり，正午になると血液を1リットル飲む．</p>
+
+<p>飲む血液の量が最小になるように目的地まで進んだとき，飲んだ血液の量を答える．</p>
+
+<p>ただし，目的地に辿り着けない場合は「There is no route Vladimir can take.」と答える．</p>
+
+<h2>制約</h2>
+
+<ul>
+<li>N &lt;= 100</li>
+<li>M &lt;= 1000</li>
+<li>駅の名前は32文字以下</li>
+</ul>
+
+<h2>解法</h2>
+
+<p>ダイクストラするだけ．</p>
+
+<p>「18時から6時」はやりにくいので，18時が0時に，6時が12時になるように正規化した．</p>
+
+<p><pre><div class="highlight"><pre><span class="lineno">  1</span> <span class="cp">#include &lt;iostream&gt;</span>
+<span class="lineno">  2</span> <span class="cp">#include &lt;vector&gt;</span>
+<span class="lineno">  3</span> <span class="cp">#include &lt;map&gt;</span>
+<span class="lineno">  4</span> <span class="cp">#include &lt;queue&gt;</span>
+<span class="lineno">  5</span> <span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+<span class="lineno">  6</span> 
+<span class="lineno">  7</span> <span class="k">struct</span> <span class="n">edge</span> <span class="p">{</span> <span class="kt">int</span> <span class="n">to</span><span class="p">,</span> <span class="n">dep</span><span class="p">,</span> <span class="n">time</span><span class="p">;</span> <span class="p">};</span>
+<span class="lineno">  8</span> 
+<span class="lineno">  9</span> <span class="k">struct</span> <span class="n">state</span>
+<span class="lineno"> 10</span> <span class="p">{</span>
+<span class="lineno"> 11</span>   <span class="kt">int</span> <span class="n">idx</span><span class="p">,</span> <span class="n">cost</span><span class="p">,</span> <span class="n">hour</span><span class="p">;</span>
+<span class="lineno"> 12</span>   <span class="n">state</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span><span class="p">,</span> <span class="kt">int</span> <span class="n">c</span><span class="p">,</span> <span class="kt">int</span> <span class="n">h</span><span class="p">)</span> <span class="o">:</span> <span class="n">idx</span><span class="p">(</span><span class="n">i</span><span class="p">),</span> <span class="n">cost</span><span class="p">(</span><span class="n">c</span><span class="p">),</span> <span class="n">hour</span><span class="p">(</span><span class="n">h</span><span class="p">)</span> <span class="p">{}</span>
+<span class="lineno"> 13</span>   <span class="kt">bool</span> <span class="k">operator</span><span class="o">&lt;</span><span class="p">(</span><span class="k">const</span> <span class="n">state</span><span class="o">&amp;</span> <span class="n">that</span><span class="p">)</span> <span class="k">const</span>
+<span class="lineno"> 14</span>   <span class="p">{</span>
+<span class="lineno"> 15</span>     <span class="k">if</span> <span class="p">(</span><span class="n">cost</span> <span class="o">!=</span> <span class="n">that</span><span class="p">.</span><span class="n">cost</span><span class="p">)</span> <span class="p">{</span>
+<span class="lineno"> 16</span>       <span class="k">return</span> <span class="n">cost</span> <span class="o">&gt;</span> <span class="n">that</span><span class="p">.</span><span class="n">cost</span><span class="p">;</span>
+<span class="lineno"> 17</span>     <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+<span class="lineno"> 18</span>       <span class="k">return</span> <span class="n">hour</span> <span class="o">&gt;</span> <span class="n">that</span><span class="p">.</span><span class="n">hour</span><span class="p">;</span>
+<span class="lineno"> 19</span>     <span class="p">}</span>
+<span class="lineno"> 20</span>   <span class="p">}</span>
+<span class="lineno"> 21</span> <span class="p">};</span>
+<span class="lineno"> 22</span> 
+<span class="lineno"> 23</span> <span class="kt">int</span> <span class="nf">main</span><span class="p">()</span>
+<span class="lineno"> 24</span> <span class="p">{</span>
+<span class="lineno"> 25</span>   <span class="kt">int</span> <span class="n">T</span><span class="p">;</span>
+<span class="lineno"> 26</span>   <span class="n">cin</span> <span class="o">&gt;&gt;</span> <span class="n">T</span><span class="p">;</span>
+<span class="lineno"> 27</span>   <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">Ti</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="n">Ti</span> <span class="o">&lt;=</span> <span class="n">T</span><span class="p">;</span> <span class="n">Ti</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+<span class="lineno"> 28</span>     <span class="kt">int</span> <span class="n">M</span><span class="p">;</span>
+<span class="lineno"> 29</span>     <span class="n">cin</span> <span class="o">&gt;&gt;</span> <span class="n">M</span><span class="p">;</span>
+<span class="lineno"> 30</span>     <span class="n">map</span><span class="o">&lt;</span><span class="n">string</span><span class="p">,</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">dict</span><span class="p">;</span>
+<span class="lineno"> 31</span>     <span class="n">vector</span><span class="o">&lt;</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">edge</span><span class="o">&gt;</span> <span class="o">&gt;</span> <span class="n">g</span><span class="p">;</span>
+<span class="lineno"> 32</span>     <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">M</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+<span class="lineno"> 33</span>       <span class="n">string</span> <span class="n">from</span><span class="p">,</span> <span class="n">to</span><span class="p">;</span>
+<span class="lineno"> 34</span>       <span class="n">edge</span> <span class="n">e</span><span class="p">;</span>
+<span class="lineno"> 35</span>       <span class="n">cin</span> <span class="o">&gt;&gt;</span> <span class="n">from</span> <span class="o">&gt;&gt;</span> <span class="n">to</span> <span class="o">&gt;&gt;</span> <span class="n">e</span><span class="p">.</span><span class="n">dep</span> <span class="o">&gt;&gt;</span> <span class="n">e</span><span class="p">.</span><span class="n">time</span><span class="p">;</span>
+<span class="lineno"> 36</span>       <span class="n">e</span><span class="p">.</span><span class="n">dep</span> <span class="o">%=</span> <span class="mi">24</span><span class="p">;</span>
+<span class="lineno"> 37</span>       <span class="k">if</span> <span class="p">(</span><span class="n">e</span><span class="p">.</span><span class="n">dep</span> <span class="o">&gt;=</span> <span class="mi">18</span><span class="p">)</span> <span class="p">{</span>
+<span class="lineno"> 38</span>         <span class="n">e</span><span class="p">.</span><span class="n">dep</span> <span class="o">-=</span> <span class="mi">18</span><span class="p">;</span>
+<span class="lineno"> 39</span>       <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+<span class="lineno"> 40</span>         <span class="n">e</span><span class="p">.</span><span class="n">dep</span> <span class="o">=</span> <span class="p">(</span><span class="n">e</span><span class="p">.</span><span class="n">dep</span> <span class="o">+</span> <span class="mi">6</span><span class="p">);</span>
+<span class="lineno"> 41</span>       <span class="p">}</span>
+<span class="lineno"> 42</span> 
+<span class="lineno"> 43</span>       <span class="k">if</span> <span class="p">(</span><span class="n">e</span><span class="p">.</span><span class="n">dep</span> <span class="o">+</span> <span class="n">e</span><span class="p">.</span><span class="n">time</span> <span class="o">&gt;</span> <span class="mi">12</span><span class="p">)</span> <span class="p">{</span>
+<span class="lineno"> 44</span>         <span class="k">continue</span><span class="p">;</span>
+<span class="lineno"> 45</span>       <span class="p">}</span>
+<span class="lineno"> 46</span>       <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">dict</span><span class="p">.</span><span class="n">count</span><span class="p">(</span><span class="n">from</span><span class="p">))</span> <span class="p">{</span>
+<span class="lineno"> 47</span>         <span class="n">dict</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="n">make_pair</span><span class="p">(</span><span class="n">from</span><span class="p">,</span> <span class="n">dict</span><span class="p">.</span><span class="n">size</span><span class="p">()));</span>
+<span class="lineno"> 48</span>         <span class="n">g</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">edge</span><span class="o">&gt;</span><span class="p">());</span>
+<span class="lineno"> 49</span>       <span class="p">}</span>
+<span class="lineno"> 50</span>       <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">dict</span><span class="p">.</span><span class="n">count</span><span class="p">(</span><span class="n">to</span><span class="p">))</span> <span class="p">{</span>
+<span class="lineno"> 51</span>         <span class="n">dict</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="n">make_pair</span><span class="p">(</span><span class="n">to</span><span class="p">,</span> <span class="n">dict</span><span class="p">.</span><span class="n">size</span><span class="p">()));</span>
+<span class="lineno"> 52</span>         <span class="n">g</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">edge</span><span class="o">&gt;</span><span class="p">());</span>
+<span class="lineno"> 53</span>       <span class="p">}</span>
+<span class="lineno"> 54</span>       <span class="n">e</span><span class="p">.</span><span class="n">to</span> <span class="o">=</span> <span class="n">dict</span><span class="p">[</span><span class="n">to</span><span class="p">];</span>
+<span class="lineno"> 55</span>       <span class="n">g</span><span class="p">[</span><span class="n">dict</span><span class="p">[</span><span class="n">from</span><span class="p">]].</span><span class="n">push_back</span><span class="p">(</span><span class="n">e</span><span class="p">);</span>
+<span class="lineno"> 56</span>     <span class="p">}</span>
+<span class="lineno"> 57</span>     <span class="k">const</span> <span class="kt">int</span> <span class="n">N</span> <span class="o">=</span> <span class="n">g</span><span class="p">.</span><span class="n">size</span><span class="p">();</span>
+<span class="lineno"> 58</span> 
+<span class="lineno"> 59</span>     <span class="n">string</span> <span class="n">from</span><span class="p">,</span> <span class="n">to</span><span class="p">;</span>
+<span class="lineno"> 60</span>     <span class="n">cin</span> <span class="o">&gt;&gt;</span> <span class="n">from</span> <span class="o">&gt;&gt;</span> <span class="n">to</span><span class="p">;</span>
+<span class="lineno"> 61</span>     <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;Test Case &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">Ti</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;.&quot;</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+<span class="lineno"> 62</span>     <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">dict</span><span class="p">.</span><span class="n">count</span><span class="p">(</span><span class="n">from</span><span class="p">)</span> <span class="o">||</span> <span class="o">!</span><span class="n">dict</span><span class="p">.</span><span class="n">count</span><span class="p">(</span><span class="n">to</span><span class="p">))</span> <span class="p">{</span>
+<span class="lineno"> 63</span>       <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;There is no route Vladimir can take.&quot;</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+<span class="lineno"> 64</span>       <span class="k">continue</span><span class="p">;</span>
+<span class="lineno"> 65</span>     <span class="p">}</span>
+<span class="lineno"> 66</span>     <span class="k">const</span> <span class="kt">int</span> <span class="n">start</span> <span class="o">=</span> <span class="n">dict</span><span class="p">[</span><span class="n">from</span><span class="p">],</span> <span class="n">goal</span> <span class="o">=</span> <span class="n">dict</span><span class="p">[</span><span class="n">to</span><span class="p">];</span>
+<span class="lineno"> 67</span>     <span class="k">static</span> <span class="k">const</span> <span class="kt">int</span> <span class="n">INF</span> <span class="o">=</span> <span class="mi">10000000</span><span class="p">;</span>
+<span class="lineno"> 68</span>     <span class="n">vector</span><span class="o">&lt;</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="o">&gt;</span> <span class="n">dist</span><span class="p">(</span><span class="n">N</span><span class="p">,</span> <span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="p">(</span><span class="mi">24</span><span class="p">,</span> <span class="n">INF</span><span class="p">));</span>
+<span class="lineno"> 69</span>     <span class="n">priority_queue</span><span class="o">&lt;</span><span class="n">state</span><span class="o">&gt;</span> <span class="n">q</span><span class="p">;</span>
+<span class="lineno"> 70</span>     <span class="n">q</span><span class="p">.</span><span class="n">push</span><span class="p">(</span><span class="n">state</span><span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">));</span>
+<span class="lineno"> 71</span>     <span class="n">dist</span><span class="p">[</span><span class="n">start</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+<span class="lineno"> 72</span>     <span class="kt">int</span> <span class="n">ans</span> <span class="o">=</span> <span class="n">INF</span><span class="p">;</span>
+<span class="lineno"> 73</span>     <span class="k">while</span> <span class="p">(</span><span class="o">!</span><span class="n">q</span><span class="p">.</span><span class="n">empty</span><span class="p">())</span> <span class="p">{</span>
+<span class="lineno"> 74</span>       <span class="k">const</span> <span class="kt">int</span> <span class="n">cost</span> <span class="o">=</span> <span class="n">q</span><span class="p">.</span><span class="n">top</span><span class="p">().</span><span class="n">cost</span><span class="p">;</span>
+<span class="lineno"> 75</span>       <span class="k">const</span> <span class="kt">int</span> <span class="n">n</span> <span class="o">=</span> <span class="n">q</span><span class="p">.</span><span class="n">top</span><span class="p">().</span><span class="n">idx</span><span class="p">;</span>
+<span class="lineno"> 76</span>       <span class="k">const</span> <span class="kt">int</span> <span class="n">h</span> <span class="o">=</span> <span class="n">q</span><span class="p">.</span><span class="n">top</span><span class="p">().</span><span class="n">hour</span><span class="p">;</span>
+<span class="lineno"> 77</span>       <span class="n">q</span><span class="p">.</span><span class="n">pop</span><span class="p">();</span>
+<span class="lineno"> 78</span>       <span class="k">if</span> <span class="p">(</span><span class="n">n</span> <span class="o">==</span> <span class="n">goal</span><span class="p">)</span> <span class="p">{</span>
+<span class="lineno"> 79</span>         <span class="n">ans</span> <span class="o">=</span> <span class="n">min</span><span class="p">(</span><span class="n">ans</span><span class="p">,</span> <span class="n">cost</span><span class="p">);</span>
+<span class="lineno"> 80</span>         <span class="k">continue</span><span class="p">;</span>
+<span class="lineno"> 81</span>       <span class="p">}</span>
+<span class="lineno"> 82</span>       <span class="k">if</span> <span class="p">(</span><span class="n">cost</span> <span class="o">&lt;</span> <span class="n">dist</span><span class="p">[</span><span class="n">n</span><span class="p">][</span><span class="n">h</span><span class="p">])</span> <span class="p">{</span>
+<span class="lineno"> 83</span>         <span class="k">continue</span><span class="p">;</span>
+<span class="lineno"> 84</span>       <span class="p">}</span>
+<span class="lineno"> 85</span> 
+<span class="lineno"> 86</span>       <span class="k">for</span> <span class="p">(</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">edge</span><span class="o">&gt;::</span><span class="n">const_iterator</span> <span class="n">it</span> <span class="o">=</span> <span class="n">g</span><span class="p">[</span><span class="n">n</span><span class="p">].</span><span class="n">begin</span><span class="p">();</span> <span class="n">it</span> <span class="o">!=</span> <span class="n">g</span><span class="p">[</span><span class="n">n</span><span class="p">].</span><span class="n">end</span><span class="p">();</span> <span class="o">++</span><span class="n">it</span><span class="p">)</span> <span class="p">{</span>
+<span class="lineno"> 87</span>         <span class="k">if</span> <span class="p">(</span><span class="n">h</span> <span class="o">&lt;=</span> <span class="n">it</span><span class="o">-&gt;</span><span class="n">dep</span><span class="p">)</span> <span class="p">{</span>
+<span class="lineno"> 88</span>           <span class="k">const</span> <span class="kt">int</span> <span class="n">nn</span> <span class="o">=</span> <span class="n">it</span><span class="o">-&gt;</span><span class="n">to</span><span class="p">;</span>
+<span class="lineno"> 89</span>           <span class="k">const</span> <span class="kt">int</span> <span class="n">hh</span> <span class="o">=</span> <span class="n">it</span><span class="o">-&gt;</span><span class="n">dep</span> <span class="o">+</span> <span class="n">it</span><span class="o">-&gt;</span><span class="n">time</span><span class="p">;</span>
+<span class="lineno"> 90</span>           <span class="k">if</span> <span class="p">(</span><span class="n">cost</span> <span class="o">&lt;</span> <span class="n">dist</span><span class="p">[</span><span class="n">nn</span><span class="p">][</span><span class="n">hh</span><span class="p">])</span> <span class="p">{</span>
+<span class="lineno"> 91</span>             <span class="n">dist</span><span class="p">[</span><span class="n">nn</span><span class="p">][</span><span class="n">hh</span><span class="p">]</span> <span class="o">=</span> <span class="n">cost</span><span class="p">;</span>
+<span class="lineno"> 92</span>             <span class="n">q</span><span class="p">.</span><span class="n">push</span><span class="p">(</span><span class="n">state</span><span class="p">(</span><span class="n">nn</span><span class="p">,</span> <span class="n">cost</span><span class="p">,</span> <span class="n">hh</span><span class="p">));</span>
+<span class="lineno"> 93</span>           <span class="p">}</span>
+<span class="lineno"> 94</span>         <span class="p">}</span>
+<span class="lineno"> 95</span>       <span class="p">}</span>
+<span class="lineno"> 96</span>       <span class="k">if</span> <span class="p">(</span><span class="n">cost</span><span class="o">+</span><span class="mi">1</span> <span class="o">&lt;</span> <span class="n">dist</span><span class="p">[</span><span class="n">n</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span> <span class="p">{</span>
+<span class="lineno"> 97</span>         <span class="n">dist</span><span class="p">[</span><span class="n">n</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">cost</span><span class="o">+</span><span class="mi">1</span><span class="p">;</span>
+<span class="lineno"> 98</span>         <span class="n">q</span><span class="p">.</span><span class="n">push</span><span class="p">(</span><span class="n">state</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">cost</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">));</span>
+<span class="lineno"> 99</span>       <span class="p">}</span>
+<span class="lineno">100</span>     <span class="p">}</span>
+<span class="lineno">101</span>     <span class="k">if</span> <span class="p">(</span><span class="n">ans</span> <span class="o">==</span> <span class="n">INF</span><span class="p">)</span> <span class="p">{</span>
+<span class="lineno">102</span>       <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;There is no route Vladimir can take.&quot;</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+<span class="lineno">103</span>     <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+<span class="lineno">104</span>       <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;Vladimir needs &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">ans</span> <span class="o">&lt;&lt;</span> <span class="s">&quot; litre(s) of blood.&quot;</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+<span class="lineno">105</span>     <span class="p">}</span>
+<span class="lineno">106</span> <span class="nl">NEXT</span><span class="p">:</span>
+<span class="lineno">107</span>     <span class="p">;</span>
+<span class="lineno">108</span>   <span class="p">}</span>
+<span class="lineno">109</span>   <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="lineno">110</span> <span class="p">}</span>
+</pre></div></pre><a href="/contests/code/poj/2267.cc">poj/2267.cc</a></p>
+<footer><p>Posted on 2011-10-19</p><a class="prev-page" href="/contests/blog/poj-1408/">POJ 1408 - Fishnet</a><a class="next-page" href="/contests/blog/poj-2975/">POJ 2975 - Nim</a></footer></article></div></body></html>

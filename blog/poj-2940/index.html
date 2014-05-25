@@ -1,0 +1,48 @@
+<!DOCTYPE html><html><head><meta charset="utf-8" /><meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible" /><title>POJ 2940 - Wine Trading in Gergovia - プログラミングコンテストの記録</title><link rel="alternate" type="application/atom+xml" title="Atom Feed" href="/contests/blog/feed.xml" /><link href="/contests/stylesheets/normalize-ef7858ef.css" rel="stylesheet" type="text/css" /><link href="/contests/stylesheets/pygments-61d6ee10.css" rel="stylesheet" type="text/css" /><link href="/contests/stylesheets/all-1916dece.css" rel="stylesheet" type="text/css" /><script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script></head><body class="blog blog_poj-2940 blog_poj-2940_index"><div id="header"><h1>プログラミングコンテストの記録</h1><p>POJ/AOJ を中心に解いた問題のコードと簡単な解説。<br />ライブラリは <a href="https://github.com/osak/ICPCLibrary">https://github.com/osak/ICPCLibrary</a></p></div><div id="main"><article class="post"><h1>POJ 2940 - Wine Trading in Gergovia</h1><p><a href="http://poj.org/problem?id=2940">http://poj.org/problem?id=2940</a></p>
+
+<h2>概要</h2>
+
+<p>1本の道に等間隔に家が n 個並んでいて，i 番目の家は</p>
+
+<ul>
+<li>a[i] &gt;= 0 なら，a[i] 本のワインを買おうとしている．</li>
+<li>a[i] &lt; 0 なら，a[i] 本のワインを売ろうとしている．</li>
+</ul>
+
+<p>需要の合計と供給の合計は一致しているとする．</p>
+
+<p>i 番目の家から j 番目の家にワインを売りに行くには |i - j| のコストがかかるとして，このコストの最小値を答える．</p>
+
+<h2>制約</h2>
+
+<ul>
+<li>2 &lt;= n &lt;= 100000</li>
+<li>-1000 &lt;= a[i] &lt;= 1000</li>
+<li>a[i] の合計値は 0</li>
+</ul>
+
+<h2>解法</h2>
+
+<p>貪欲っぽく i 番目の要求を満たすように i+1 番目のワインを移動させる，というのを i = 0 .. n-2 について行って，移動させたワインの本数分を足し合わせていったものが答え．</p>
+
+<p><pre><div class="highlight"><pre><span class="lineno"> 1</span> <span class="cp">#include &lt;cstdio&gt;</span>
+<span class="lineno"> 2</span> <span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+<span class="lineno"> 3</span> 
+<span class="lineno"> 4</span> <span class="kt">int</span> <span class="nf">main</span><span class="p">()</span>
+<span class="lineno"> 5</span> <span class="p">{</span>
+<span class="lineno"> 6</span>   <span class="kt">int</span> <span class="n">N</span><span class="p">;</span>
+<span class="lineno"> 7</span>   <span class="k">while</span> <span class="p">(</span><span class="n">scanf</span><span class="p">(</span><span class="s">&quot;%d&quot;</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">N</span><span class="p">)</span> <span class="o">!=</span> <span class="n">EOF</span> <span class="o">&amp;&amp;</span> <span class="n">N</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+<span class="lineno"> 8</span>     <span class="kt">long</span> <span class="kt">long</span> <span class="n">ans</span> <span class="o">=</span> <span class="mi">0LL</span><span class="p">,</span> <span class="n">acc</span> <span class="o">=</span> <span class="mi">0LL</span><span class="p">;</span>
+<span class="lineno"> 9</span>     <span class="n">scanf</span><span class="p">(</span><span class="s">&quot;%lld&quot;</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">acc</span><span class="p">);</span>
+<span class="lineno">10</span>     <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">N</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+<span class="lineno">11</span>       <span class="kt">int</span> <span class="n">a</span><span class="p">;</span>
+<span class="lineno">12</span>       <span class="n">scanf</span><span class="p">(</span><span class="s">&quot;%d&quot;</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">a</span><span class="p">);</span>
+<span class="lineno">13</span>       <span class="n">ans</span> <span class="o">+=</span> <span class="n">acc</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="o">?</span> <span class="o">-</span><span class="nl">acc</span> <span class="p">:</span> <span class="n">acc</span><span class="p">;</span>
+<span class="lineno">14</span>       <span class="n">acc</span> <span class="o">+=</span> <span class="n">a</span><span class="p">;</span>
+<span class="lineno">15</span>     <span class="p">}</span>
+<span class="lineno">16</span>     <span class="n">printf</span><span class="p">(</span><span class="s">&quot;%lld</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">ans</span><span class="p">);</span>
+<span class="lineno">17</span>   <span class="p">}</span>
+<span class="lineno">18</span>   <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="lineno">19</span> <span class="p">}</span>
+</pre></div></pre><a href="/contests/code/poj/2940.cc">poj/2940.cc</a></p>
+<footer><p>Posted on 2011-10-19</p><a class="prev-page" href="/contests/blog/poj-1266/">POJ 1266 - Cover an Arc.</a><a class="next-page" href="/contests/blog/aoj-2255/">AOJ 2255 - 6/2(1+2)</a></footer></article></div></body></html>

@@ -1,0 +1,65 @@
+<!DOCTYPE html><html><head><meta charset="utf-8" /><meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible" /><title>POJ 2657 - Comfort - プログラミングコンテストの記録</title><link rel="alternate" type="application/atom+xml" title="Atom Feed" href="/contests/blog/feed.xml" /><link href="/contests/stylesheets/normalize-ef7858ef.css" rel="stylesheet" type="text/css" /><link href="/contests/stylesheets/pygments-61d6ee10.css" rel="stylesheet" type="text/css" /><link href="/contests/stylesheets/all-1916dece.css" rel="stylesheet" type="text/css" /><script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script></head><body class="blog blog_poj-2657 blog_poj-2657_index"><div id="header"><h1>プログラミングコンテストの記録</h1><p>POJ/AOJ を中心に解いた問題のコードと簡単な解説。<br />ライブラリは <a href="https://github.com/osak/ICPCLibrary">https://github.com/osak/ICPCLibrary</a></p></div><div id="main"><article class="post"><h1>POJ 2657 - Comfort</h1><p><a href="http://poj.org/problem?id=2657">http://poj.org/problem?id=2657</a></p>
+
+<h2>概要</h2>
+
+<p>N 個のフィールドが円形に並べられており，時計回りに 1 ... N と番号が振られている．
+そのうち M 個のフィールドには障害物が置かれている．</p>
+
+<p>プレイヤーは 1 番目からスタートし，ゴールの Z 番目を目指す．このときプレイヤーは時計回りにちょうど K だけフィールドを飛び越えることでしか移動できない．
+また，障害物が置かれているフィールドには移動できない．</p>
+
+<p>例えば N = 13, K = 3, Z = 9 で障害物が一つも無いとき，1, 4, 7, 10, 13, 3, 6, 9 と移動してゴールに辿り着く．</p>
+
+<p>N, Z, M と M 個の障害物の位置が与えられたとき，ゴールに辿り着ける最小の K を答える．</p>
+
+<h2>制約</h2>
+
+<ul>
+<li>2 &lt;= N &lt;= 1000</li>
+<li>2 &lt;= Z &lt;= N</li>
+<li>0 &lt;= M &lt;= N-2</li>
+</ul>
+
+<h2>解法</h2>
+
+<p>すべての K に対してゴールできるかシミュレーションで判定するだけ．</p>
+
+<p><pre><div class="highlight"><pre><span class="lineno"> 1</span> <span class="cp">#include &lt;iostream&gt;</span>
+<span class="lineno"> 2</span> <span class="cp">#include &lt;vector&gt;</span>
+<span class="lineno"> 3</span> <span class="cp">#include &lt;set&gt;</span>
+<span class="lineno"> 4</span> <span class="cp">#include &lt;iterator&gt;</span>
+<span class="lineno"> 5</span> <span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+<span class="lineno"> 6</span> 
+<span class="lineno"> 7</span> <span class="kt">bool</span> <span class="nf">ok</span><span class="p">(</span><span class="kt">int</span> <span class="n">N</span><span class="p">,</span> <span class="kt">int</span> <span class="n">Z</span><span class="p">,</span> <span class="kt">int</span> <span class="n">K</span><span class="p">,</span> <span class="k">const</span> <span class="n">set</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;&amp;</span> <span class="n">s</span><span class="p">)</span>
+<span class="lineno"> 8</span> <span class="p">{</span>
+<span class="lineno"> 9</span>   <span class="n">vector</span><span class="o">&lt;</span><span class="kt">bool</span><span class="o">&gt;</span> <span class="n">visited</span><span class="p">(</span><span class="n">N</span><span class="p">,</span> <span class="nb">false</span><span class="p">);</span>
+<span class="lineno">10</span>   <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">pos</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">pos</span> <span class="o">!=</span> <span class="n">Z</span><span class="p">;</span> <span class="n">pos</span> <span class="o">=</span> <span class="p">(</span><span class="n">pos</span> <span class="o">+</span> <span class="n">K</span><span class="p">)</span> <span class="o">%</span> <span class="n">N</span><span class="p">)</span> <span class="p">{</span>
+<span class="lineno">11</span>     <span class="k">if</span> <span class="p">(</span><span class="n">visited</span><span class="p">[</span><span class="n">pos</span><span class="p">]</span> <span class="o">||</span> <span class="n">s</span><span class="p">.</span><span class="n">find</span><span class="p">(</span><span class="n">pos</span><span class="p">)</span> <span class="o">!=</span> <span class="n">s</span><span class="p">.</span><span class="n">end</span><span class="p">())</span> <span class="p">{</span>
+<span class="lineno">12</span>       <span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
+<span class="lineno">13</span>     <span class="p">}</span>
+<span class="lineno">14</span>     <span class="n">visited</span><span class="p">[</span><span class="n">pos</span><span class="p">]</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+<span class="lineno">15</span>   <span class="p">}</span>
+<span class="lineno">16</span>   <span class="k">return</span> <span class="nb">true</span><span class="p">;</span>
+<span class="lineno">17</span> <span class="p">}</span>
+<span class="lineno">18</span> 
+<span class="lineno">19</span> <span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span>
+<span class="lineno">20</span> <span class="p">{</span>
+<span class="lineno">21</span>   <span class="kt">int</span> <span class="n">N</span><span class="p">,</span> <span class="n">Z</span><span class="p">,</span> <span class="n">M</span><span class="p">;</span>
+<span class="lineno">22</span>   <span class="n">cin</span> <span class="o">&gt;&gt;</span> <span class="n">N</span> <span class="o">&gt;&gt;</span> <span class="n">Z</span> <span class="o">&gt;&gt;</span> <span class="n">M</span><span class="p">;</span>
+<span class="lineno">23</span>   <span class="n">Z</span><span class="o">--</span><span class="p">;</span>
+<span class="lineno">24</span>   <span class="n">set</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">s</span><span class="p">;</span>
+<span class="lineno">25</span>   <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">M</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+<span class="lineno">26</span>     <span class="kt">int</span> <span class="n">x</span><span class="p">;</span>
+<span class="lineno">27</span>     <span class="n">cin</span> <span class="o">&gt;&gt;</span> <span class="n">x</span><span class="p">;</span>
+<span class="lineno">28</span>     <span class="n">s</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="n">x</span><span class="o">-</span><span class="mi">1</span><span class="p">);</span>
+<span class="lineno">29</span>   <span class="p">}</span>
+<span class="lineno">30</span>   <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">K</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="n">K</span> <span class="o">&lt;</span> <span class="n">N</span><span class="p">;</span> <span class="n">K</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+<span class="lineno">31</span>     <span class="k">if</span> <span class="p">(</span><span class="n">ok</span><span class="p">(</span><span class="n">N</span><span class="p">,</span> <span class="n">Z</span><span class="p">,</span> <span class="n">K</span><span class="p">,</span> <span class="n">s</span><span class="p">))</span> <span class="p">{</span>
+<span class="lineno">32</span>       <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">K</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+<span class="lineno">33</span>       <span class="k">break</span><span class="p">;</span>
+<span class="lineno">34</span>     <span class="p">}</span>
+<span class="lineno">35</span>   <span class="p">}</span>
+<span class="lineno">36</span>   <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="lineno">37</span> <span class="p">}</span>
+</pre></div></pre><a href="/contests/code/poj/2657.cc">poj/2657.cc</a></p>
+<footer><p>Posted on 2011-10-19</p><a class="prev-page" href="/contests/blog/poj-1154/">POJ 1154 - LETTERS</a><a class="next-page" href="/contests/blog/poj-2665/">POJ 2665 - Trees</a></footer></article></div></body></html>

@@ -1,0 +1,26 @@
+<!DOCTYPE html><html><head><meta charset="utf-8" /><meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible" /><title>POJ 3183 - Stump Removal - プログラミングコンテストの記録</title><link rel="alternate" type="application/atom+xml" title="Atom Feed" href="/contests/blog/feed.xml" /><link href="/contests/stylesheets/normalize-ef7858ef.css" rel="stylesheet" type="text/css" /><link href="/contests/stylesheets/pygments-61d6ee10.css" rel="stylesheet" type="text/css" /><link href="/contests/stylesheets/all-1916dece.css" rel="stylesheet" type="text/css" /><script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script></head><body class="blog blog_poj-3183 blog_poj-3183_index"><div id="header"><h1>プログラミングコンテストの記録</h1><p>POJ/AOJ を中心に解いた問題のコードと簡単な解説。<br />ライブラリは <a href="https://github.com/osak/ICPCLibrary">https://github.com/osak/ICPCLibrary</a></p></div><div id="main"><article class="post"><h1>POJ 3183 - Stump Removal</h1><p><a href="http://poj.org/problem?id=3183">http://poj.org/problem?id=3183</a></p>
+
+<h2>概要</h2>
+
+<p>N 個のスタンプがあり，最小の爆薬ですべてのスタンプを爆破したい．</p>
+
+<p>i 番目のスタンプの上に爆薬を落とすとそのスタンプを爆破できる．</p>
+
+<p>また，高さ H のスタンプが爆破されると，それに隣接した高さ H 未満のスタンプも連鎖的に爆破される．</p>
+
+<h2>制約</h2>
+
+<ul>
+<li>1 &lt;= N &lt;= 50000</li>
+<li>1 &lt;= H[i] &lt;= 10000</li>
+</ul>
+
+<h2>解法</h2>
+
+<p>H[i-1] &lt;= H[i] &amp;&amp; H[i] &gt;= H[i+1] なスタンプ i は連鎖的に爆破されないので，爆薬を使うしかない．</p>
+
+<p>逆に，そうでないスタンプは隣接するスタンプから連鎖的に爆破されるので，爆薬を使う必要はない．</p>
+
+<p><pre><div class="highlight"><pre><span class="lineno">1</span> <span class="n">N</span><span class="p">,</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">z</span><span class="p">;</span><span class="n">main</span><span class="p">(</span><span class="n">i</span><span class="p">){</span><span class="n">scanf</span><span class="p">(</span><span class="s">&quot;%d&quot;</span><span class="p">,</span><span class="o">&amp;</span><span class="n">N</span><span class="p">);</span><span class="k">for</span><span class="p">(</span><span class="n">scanf</span><span class="p">(</span><span class="s">&quot;%d&quot;</span><span class="p">,</span><span class="o">&amp;</span><span class="n">y</span><span class="p">);</span><span class="n">i</span><span class="o">&lt;=</span><span class="n">N</span><span class="p">;</span><span class="n">i</span><span class="o">++</span><span class="p">){</span><span class="n">scanf</span><span class="p">(</span><span class="s">&quot;%d&quot;</span><span class="p">,</span><span class="o">&amp;</span><span class="n">z</span><span class="p">);</span><span class="n">x</span><span class="o">&lt;=</span><span class="n">y</span><span class="o">&amp;&amp;</span><span class="n">y</span><span class="o">&gt;=</span><span class="n">z</span><span class="o">&amp;&amp;</span><span class="n">printf</span><span class="p">(</span><span class="s">&quot;%d</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span><span class="n">i</span><span class="p">);</span><span class="n">x</span><span class="o">=</span><span class="n">y</span><span class="p">;</span><span class="n">y</span><span class="o">=</span><span class="n">z</span><span class="p">;}}</span>
+</pre></div></pre><a href="/contests/code/poj/3183.c">poj/3183.c</a></p>
+<footer><p>Posted on 2011-10-19</p><a class="prev-page" href="/contests/blog/poj-1039/">POJ 1039 - Pipe</a><a class="next-page" href="/contests/blog/poj-1408/">POJ 1408 - Fishnet</a></footer></article></div></body></html>

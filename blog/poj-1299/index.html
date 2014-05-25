@@ -1,0 +1,45 @@
+<!DOCTYPE html><html><head><meta charset="utf-8" /><meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible" /><title>POJ 1299 - Polar Explorer - プログラミングコンテストの記録</title><link rel="alternate" type="application/atom+xml" title="Atom Feed" href="/contests/blog/feed.xml" /><link href="/contests/stylesheets/normalize-ef7858ef.css" rel="stylesheet" type="text/css" /><link href="/contests/stylesheets/pygments-61d6ee10.css" rel="stylesheet" type="text/css" /><link href="/contests/stylesheets/all-1916dece.css" rel="stylesheet" type="text/css" /><script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script></head><body class="blog blog_poj-1299 blog_poj-1299_index"><div id="header"><h1>プログラミングコンテストの記録</h1><p>POJ/AOJ を中心に解いた問題のコードと簡単な解説。<br />ライブラリは <a href="https://github.com/osak/ICPCLibrary">https://github.com/osak/ICPCLibrary</a></p></div><div id="main"><article class="post"><h1>POJ 1299 - Polar Explorer</h1><p><a href="http://poj.org/problem?id=1299">http://poj.org/problem?id=1299</a></p>
+
+<h2>概要</h2>
+
+<p>半径 X の完全な球面上にいる．
+今いる場所と墜落した場所の角度 Z が与えられるので，今ある燃料 Y でその場所まで往復できるかどうか答える．</p>
+
+<p>燃料は1マイルあたり5消費する．</p>
+
+<p>往復できるときは往復した後の燃料の残量も出力し，できないときは何マイルだったら往復できるかも出力する．</p>
+
+<h2>制約</h2>
+
+<ul>
+<li>1 &lt;= X &lt;= 100</li>
+<li>0 &lt;= Y &lt;= 100</li>
+<li>0 &lt;= Z &lt;= 360</li>
+</ul>
+
+<h2>解法</h2>
+
+<p>やるだけ．</p>
+
+<p><pre><div class="highlight"><pre><span class="lineno"> 1</span> <span class="cp">#include &lt;iostream&gt;</span>
+<span class="lineno"> 2</span> <span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+<span class="lineno"> 3</span> 
+<span class="lineno"> 4</span> <span class="kt">int</span> <span class="nf">main</span><span class="p">()</span>
+<span class="lineno"> 5</span> <span class="p">{</span>
+<span class="lineno"> 6</span>   <span class="k">static</span> <span class="k">const</span> <span class="kt">double</span> <span class="n">PI</span> <span class="o">=</span> <span class="mf">3.14159</span><span class="p">;</span>
+<span class="lineno"> 7</span>   <span class="n">string</span> <span class="n">s</span><span class="p">;</span>
+<span class="lineno"> 8</span>   <span class="k">while</span> <span class="p">(</span><span class="n">cin</span> <span class="o">&gt;&gt;</span> <span class="n">s</span> <span class="o">&amp;&amp;</span> <span class="n">s</span> <span class="o">!=</span> <span class="s">&quot;ENDOFINPUT&quot;</span><span class="p">)</span> <span class="p">{</span>
+<span class="lineno"> 9</span>     <span class="kt">double</span> <span class="n">r</span><span class="p">,</span> <span class="n">g</span><span class="p">,</span> <span class="n">t</span><span class="p">;</span>
+<span class="lineno">10</span>     <span class="n">cin</span> <span class="o">&gt;&gt;</span> <span class="n">r</span> <span class="o">&gt;&gt;</span> <span class="n">g</span> <span class="o">&gt;&gt;</span> <span class="n">t</span> <span class="o">&gt;&gt;</span> <span class="n">s</span><span class="p">;</span>
+<span class="lineno">11</span>     <span class="n">t</span> <span class="o">=</span> <span class="n">min</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="mi">360</span><span class="o">-</span><span class="n">t</span><span class="p">);</span>
+<span class="lineno">12</span>     <span class="k">const</span> <span class="kt">double</span> <span class="n">need</span> <span class="o">=</span> <span class="n">PI</span><span class="o">*</span><span class="n">r</span><span class="o">*</span><span class="n">t</span><span class="o">/</span><span class="mi">450</span><span class="p">;</span>
+<span class="lineno">13</span>     <span class="k">if</span> <span class="p">(</span><span class="n">need</span> <span class="o">&lt;</span> <span class="n">g</span> <span class="o">+</span> <span class="mf">1e-10</span><span class="p">)</span> <span class="p">{</span>
+<span class="lineno">14</span>       <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;YES &quot;</span> <span class="o">&lt;&lt;</span> <span class="kt">int</span><span class="p">(</span><span class="n">g</span> <span class="o">-</span> <span class="n">need</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+<span class="lineno">15</span>     <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+<span class="lineno">16</span>       <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;NO &quot;</span> <span class="o">&lt;&lt;</span> <span class="kt">int</span><span class="p">(</span><span class="mi">5</span><span class="o">*</span><span class="n">g</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+<span class="lineno">17</span>     <span class="p">}</span>
+<span class="lineno">18</span>   <span class="p">}</span>
+<span class="lineno">19</span>   <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="lineno">20</span> <span class="p">}</span>
+</pre></div></pre><a href="/contests/code/poj/1299.cc">poj/1299.cc</a></p>
+<footer><p>Posted on 2011-10-19</p><a class="prev-page" href="/contests/blog/poj-3783/">POJ 3783 - Balls</a><a class="next-page" href="/contests/blog/poj-1914/">POJ 1914 - Cramer's Rule</a></footer></article></div></body></html>

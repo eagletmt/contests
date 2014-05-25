@@ -1,0 +1,73 @@
+<!DOCTYPE html><html><head><meta charset="utf-8" /><meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible" /><title>POJ 3370 - Halloween treats - プログラミングコンテストの記録</title><link rel="alternate" type="application/atom+xml" title="Atom Feed" href="/contests/blog/feed.xml" /><link href="/contests/stylesheets/normalize-ef7858ef.css" rel="stylesheet" type="text/css" /><link href="/contests/stylesheets/pygments-61d6ee10.css" rel="stylesheet" type="text/css" /><link href="/contests/stylesheets/all-1916dece.css" rel="stylesheet" type="text/css" /><script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script></head><body class="blog blog_poj-3370 blog_poj-3370_index"><div id="header"><h1>プログラミングコンテストの記録</h1><p>POJ/AOJ を中心に解いた問題のコードと簡単な解説。<br />ライブラリは <a href="https://github.com/osak/ICPCLibrary">https://github.com/osak/ICPCLibrary</a></p></div><div id="main"><article class="post"><h1>POJ 3370 - Halloween treats</h1><p><a href="http://poj.org/problem?id=3370">http://poj.org/problem?id=3370</a></p>
+
+<h2>概要</h2>
+
+<p>\(n\) 軒の家があり，\(i\) 番目の家では \(a_i\) 個の飴をもらえる．
+どの家に行けば \(c\) 人で等分できる数の飴を手に入れられるか答える．
+ただし，答えが複数存在するときはそのうちのどれを答えてもよく (Special Judge)，
+答えが存在しないときは「no sweets」と出力する．</p>
+
+<h2>制約</h2>
+
+<ul>
+<li>\(1 \le c \le n \le 10 ^ 5\)</li>
+<li>\(1 \le a_i \le 10 ^ 5\)</li>
+</ul>
+
+<h2>解法</h2>
+
+<p>飴の数に関してはすべて \(\mbox{mod } c\) で考えればよい．</p>
+
+<p>部分和 \(s_i = a_1 + a_2 + \cdots + a_i\) を考える．
+\(s_i = 0\) ならば \(1, 2, \cdots, i\) が答えである．
+そうでないとき，\(s_i\) のとりうる値は高々 \(c-1\) 通りしか存在しない．
+ここで制約から \(c-1 &lt; n\) なので，鳩の巣原理より \(i &lt; j \land s_i = s_j\) なる \(i, j\) が存在する．
+このとき \(a_{i+1} + a_{i+2} + \cdots + a_j = 0\) となるので，これを答えればよい．
+したがって「no sweets」となることはない．</p>
+
+<p>これで \(\mathrm{O}(n)\) で解けるわけだけど，出力が多くて上記のアルゴリズムを愚直に実装すると TLE する…
+複数答えが存在するときはなるべく短くなるやつを選ぶようにしてみたら 1000MS ちょっとで通った．</p>
+
+<p><pre><div class="highlight"><pre><span class="lineno"> 1</span> <span class="cp">#include &lt;cstdio&gt;</span>
+<span class="lineno"> 2</span> <span class="cp">#include &lt;algorithm&gt;</span>
+<span class="lineno"> 3</span> <span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+<span class="lineno"> 4</span> 
+<span class="lineno"> 5</span> <span class="kt">int</span> <span class="nf">main</span><span class="p">()</span>
+<span class="lineno"> 6</span> <span class="p">{</span>
+<span class="lineno"> 7</span>   <span class="kt">int</span> <span class="n">C</span><span class="p">,</span> <span class="n">N</span><span class="p">;</span>
+<span class="lineno"> 8</span>   <span class="k">while</span> <span class="p">(</span><span class="n">scanf</span><span class="p">(</span><span class="s">&quot;%d %d&quot;</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">C</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">N</span><span class="p">)</span> <span class="o">!=</span> <span class="n">EOF</span> <span class="o">&amp;&amp;</span> <span class="n">C</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+<span class="lineno"> 9</span>     <span class="k">static</span> <span class="k">const</span> <span class="kt">int</span> <span class="n">K</span> <span class="o">=</span> <span class="mi">100000</span><span class="p">;</span>
+<span class="lineno">10</span>     <span class="k">static</span> <span class="kt">int</span> <span class="n">prev</span><span class="p">[</span><span class="n">K</span><span class="p">];</span>
+<span class="lineno">11</span>     <span class="n">fill_n</span><span class="p">(</span><span class="n">prev</span><span class="p">,</span> <span class="n">N</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">);</span>
+<span class="lineno">12</span>     <span class="kt">int</span> <span class="n">b</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">e</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+<span class="lineno">13</span>     <span class="kt">int</span> <span class="n">acc</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+<span class="lineno">14</span>     <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">N</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+<span class="lineno">15</span>       <span class="kt">int</span> <span class="n">x</span><span class="p">;</span>
+<span class="lineno">16</span>       <span class="n">scanf</span><span class="p">(</span><span class="s">&quot;%d&quot;</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">x</span><span class="p">);</span>
+<span class="lineno">17</span>       <span class="n">acc</span> <span class="o">=</span> <span class="p">(</span><span class="n">acc</span> <span class="o">+</span> <span class="n">x</span><span class="p">)</span> <span class="o">%</span> <span class="n">C</span><span class="p">;</span>
+<span class="lineno">18</span>       <span class="k">if</span> <span class="p">(</span><span class="n">x</span> <span class="o">%</span> <span class="n">C</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+<span class="lineno">19</span>         <span class="n">b</span> <span class="o">=</span> <span class="n">e</span> <span class="o">=</span> <span class="n">i</span><span class="p">;</span>
+<span class="lineno">20</span>       <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">acc</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+<span class="lineno">21</span>         <span class="k">if</span> <span class="p">(</span><span class="n">b</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span> <span class="o">||</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">e</span><span class="o">-</span><span class="n">b</span><span class="p">)</span> <span class="p">{</span>
+<span class="lineno">22</span>           <span class="n">b</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+<span class="lineno">23</span>           <span class="n">e</span> <span class="o">=</span> <span class="n">i</span><span class="p">;</span>
+<span class="lineno">24</span>         <span class="p">}</span>
+<span class="lineno">25</span>       <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">prev</span><span class="p">[</span><span class="n">acc</span><span class="p">]</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+<span class="lineno">26</span>         <span class="k">if</span> <span class="p">(</span><span class="n">b</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span> <span class="o">||</span> <span class="n">i</span><span class="o">-</span><span class="n">prev</span><span class="p">[</span><span class="n">acc</span><span class="p">]</span><span class="o">-</span><span class="mi">1</span> <span class="o">&lt;</span> <span class="n">e</span><span class="o">-</span><span class="n">b</span><span class="p">)</span> <span class="p">{</span>
+<span class="lineno">27</span>           <span class="n">b</span> <span class="o">=</span> <span class="n">prev</span><span class="p">[</span><span class="n">acc</span><span class="p">]</span><span class="o">+</span><span class="mi">1</span><span class="p">;</span>
+<span class="lineno">28</span>           <span class="n">e</span> <span class="o">=</span> <span class="n">i</span><span class="p">;</span>
+<span class="lineno">29</span>         <span class="p">}</span>
+<span class="lineno">30</span>       <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+<span class="lineno">31</span>         <span class="n">prev</span><span class="p">[</span><span class="n">acc</span><span class="p">]</span> <span class="o">=</span> <span class="n">i</span><span class="p">;</span>
+<span class="lineno">32</span>       <span class="p">}</span>
+<span class="lineno">33</span>     <span class="p">}</span>
+<span class="lineno">34</span>     <span class="n">printf</span><span class="p">(</span><span class="s">&quot;%d&quot;</span><span class="p">,</span> <span class="n">b</span><span class="o">+</span><span class="mi">1</span><span class="p">);</span>
+<span class="lineno">35</span>     <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="n">b</span><span class="o">+</span><span class="mi">1</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;=</span> <span class="n">e</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+<span class="lineno">36</span>       <span class="n">printf</span><span class="p">(</span><span class="s">&quot; %d&quot;</span><span class="p">,</span> <span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">);</span>
+<span class="lineno">37</span>     <span class="p">}</span>
+<span class="lineno">38</span>     <span class="n">putchar</span><span class="p">(</span><span class="sc">&#39;\n&#39;</span><span class="p">);</span>
+<span class="lineno">39</span>   <span class="p">}</span>
+<span class="lineno">40</span>   <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="lineno">41</span> <span class="p">}</span>
+</pre></div></pre><a href="/contests/code/poj/3370.cc">poj/3370.cc</a></p>
+<footer><p>Posted on 2012-02-06</p><a class="prev-page" href="/contests/blog/poj-2926/">POJ 2926 - Requirements</a><a class="next-page" href="/contests/blog/poj-1951/">POJ 1951 - Extra Krunch</a></footer></article></div></body></html>

@@ -1,0 +1,69 @@
+<!DOCTYPE html><html><head><meta charset="utf-8" /><meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible" /><title>POJ 1675 - Happy Birthday! - プログラミングコンテストの記録</title><link rel="alternate" type="application/atom+xml" title="Atom Feed" href="/contests/blog/feed.xml" /><link href="/contests/stylesheets/normalize-ef7858ef.css" rel="stylesheet" type="text/css" /><link href="/contests/stylesheets/pygments-61d6ee10.css" rel="stylesheet" type="text/css" /><link href="/contests/stylesheets/all-1916dece.css" rel="stylesheet" type="text/css" /><script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script></head><body class="blog blog_poj-1675 blog_poj-1675_index"><div id="header"><h1>プログラミングコンテストの記録</h1><p>POJ/AOJ を中心に解いた問題のコードと簡単な解説。<br />ライブラリは <a href="https://github.com/osak/ICPCLibrary">https://github.com/osak/ICPCLibrary</a></p></div><div id="main"><article class="post"><h1>POJ 1675 - Happy Birthday!</h1><p><a href="http://poj.org/problem?id=1675">http://poj.org/problem?id=1675</a></p>
+
+<h2>概要</h2>
+
+<p>原点を中心とする半径 r の円形のケーキの上に，3つのイチゴがそれぞれ (x1,y1), (x2,y2), (x3,y3) の位置にある．</p>
+
+<p>これを各ピースに1つイチゴが乗っているように3等分できるかどうか答える．</p>
+
+<h2>制約</h2>
+
+<ul>
+<li>イチゴの半径は 0 とする</li>
+<li>イチゴを切ってはならない</li>
+</ul>
+
+<h2>解法</h2>
+
+<p>各点同士のなす角を計算し，それの最大値が120度以上だった場合は No．</p>
+
+<p>ただし，原点にイチゴがある場合がコーナーケースになっていて，イチゴを切ってはならないので No と答える．</p>
+
+<p>原点とイチゴの距離が r より大きい場合も No と答えるように書いたけど，他の人の解答によるとこれをチェックしなくても通るらしい (r の意味が無い…)．</p>
+
+<p><pre><div class="highlight"><pre><span class="lineno"> 1</span> <span class="cp">#include &lt;iostream&gt;</span>
+<span class="lineno"> 2</span> <span class="cp">#include &lt;algorithm&gt;</span>
+<span class="lineno"> 3</span> <span class="cp">#include &lt;complex&gt;</span>
+<span class="lineno"> 4</span> <span class="cp">#include &lt;cmath&gt;</span>
+<span class="lineno"> 5</span> <span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+<span class="lineno"> 6</span> <span class="k">typedef</span> <span class="n">complex</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="n">P</span><span class="p">;</span>
+<span class="lineno"> 7</span> <span class="k">static</span> <span class="k">const</span> <span class="kt">double</span> <span class="n">PI</span> <span class="o">=</span> <span class="n">acos</span><span class="p">(</span><span class="o">-</span><span class="mf">1.0</span><span class="p">);</span>
+<span class="lineno"> 8</span> 
+<span class="lineno"> 9</span> <span class="kr">inline</span> <span class="kt">double</span> <span class="nf">dot</span><span class="p">(</span><span class="k">const</span> <span class="n">P</span><span class="o">&amp;</span> <span class="n">a</span><span class="p">,</span> <span class="k">const</span> <span class="n">P</span><span class="o">&amp;</span> <span class="n">b</span><span class="p">)</span>
+<span class="lineno">10</span> <span class="p">{</span>
+<span class="lineno">11</span>   <span class="k">return</span> <span class="n">a</span><span class="p">.</span><span class="n">real</span><span class="p">()</span><span class="o">*</span><span class="n">b</span><span class="p">.</span><span class="n">real</span><span class="p">()</span> <span class="o">+</span> <span class="n">a</span><span class="p">.</span><span class="n">imag</span><span class="p">()</span><span class="o">*</span><span class="n">b</span><span class="p">.</span><span class="n">imag</span><span class="p">();</span>
+<span class="lineno">12</span> <span class="p">}</span>
+<span class="lineno">13</span> 
+<span class="lineno">14</span> <span class="kt">bool</span> <span class="nf">solve</span><span class="p">(</span><span class="kt">int</span> <span class="n">r</span><span class="p">,</span> <span class="k">const</span> <span class="n">P</span><span class="o">&amp;</span> <span class="n">p1</span><span class="p">,</span> <span class="k">const</span> <span class="n">P</span><span class="o">&amp;</span> <span class="n">p2</span><span class="p">,</span> <span class="k">const</span> <span class="n">P</span><span class="o">&amp;</span> <span class="n">p3</span><span class="p">)</span>
+<span class="lineno">15</span> <span class="p">{</span>
+<span class="lineno">16</span>   <span class="k">const</span> <span class="kt">double</span> <span class="n">r1</span> <span class="o">=</span> <span class="n">abs</span><span class="p">(</span><span class="n">p1</span><span class="p">);</span>
+<span class="lineno">17</span>   <span class="k">const</span> <span class="kt">double</span> <span class="n">r2</span> <span class="o">=</span> <span class="n">abs</span><span class="p">(</span><span class="n">p2</span><span class="p">);</span>
+<span class="lineno">18</span>   <span class="k">const</span> <span class="kt">double</span> <span class="n">r3</span> <span class="o">=</span> <span class="n">abs</span><span class="p">(</span><span class="n">p3</span><span class="p">);</span>
+<span class="lineno">19</span>   <span class="k">if</span> <span class="p">(</span><span class="n">r1</span> <span class="o">&gt;</span> <span class="n">r</span> <span class="o">||</span> <span class="n">r2</span> <span class="o">&gt;</span> <span class="n">r</span> <span class="o">||</span> <span class="n">r3</span> <span class="o">&gt;</span> <span class="n">r</span><span class="p">)</span> <span class="p">{</span>
+<span class="lineno">20</span>     <span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
+<span class="lineno">21</span>   <span class="p">}</span>
+<span class="lineno">22</span>   <span class="k">const</span> <span class="kt">double</span> <span class="n">ang</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+<span class="lineno">23</span>     <span class="n">acos</span><span class="p">(</span><span class="n">dot</span><span class="p">(</span><span class="n">p1</span><span class="p">,</span> <span class="n">p2</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">r1</span> <span class="o">*</span> <span class="n">r2</span><span class="p">)),</span>
+<span class="lineno">24</span>     <span class="n">acos</span><span class="p">(</span><span class="n">dot</span><span class="p">(</span><span class="n">p2</span><span class="p">,</span> <span class="n">p3</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">r2</span> <span class="o">*</span> <span class="n">r3</span><span class="p">)),</span>
+<span class="lineno">25</span>     <span class="n">acos</span><span class="p">(</span><span class="n">dot</span><span class="p">(</span><span class="n">p3</span><span class="p">,</span> <span class="n">p1</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">r3</span> <span class="o">*</span> <span class="n">r1</span><span class="p">)),</span>
+<span class="lineno">26</span>   <span class="p">};</span>
+<span class="lineno">27</span>   <span class="k">return</span> <span class="o">*</span><span class="n">max_element</span><span class="p">(</span><span class="n">ang</span><span class="p">,</span> <span class="n">ang</span><span class="o">+</span><span class="mi">3</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">2</span><span class="o">*</span><span class="n">PI</span><span class="o">/</span><span class="mf">3.0</span><span class="p">;</span>
+<span class="lineno">28</span> <span class="p">}</span>
+<span class="lineno">29</span> 
+<span class="lineno">30</span> <span class="kt">int</span> <span class="nf">main</span><span class="p">()</span>
+<span class="lineno">31</span> <span class="p">{</span>
+<span class="lineno">32</span>   <span class="kt">int</span> <span class="n">T</span><span class="p">;</span>
+<span class="lineno">33</span>   <span class="n">cin</span> <span class="o">&gt;&gt;</span> <span class="n">T</span><span class="p">;</span>
+<span class="lineno">34</span>   <span class="k">while</span> <span class="p">(</span><span class="n">T</span><span class="o">--</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+<span class="lineno">35</span>     <span class="kt">int</span> <span class="n">r</span><span class="p">,</span> <span class="n">x1</span><span class="p">,</span> <span class="n">y1</span><span class="p">,</span> <span class="n">x2</span><span class="p">,</span> <span class="n">y2</span><span class="p">,</span> <span class="n">x3</span><span class="p">,</span> <span class="n">y3</span><span class="p">;</span>
+<span class="lineno">36</span>     <span class="n">cin</span> <span class="o">&gt;&gt;</span> <span class="n">r</span> <span class="o">&gt;&gt;</span> <span class="n">x1</span> <span class="o">&gt;&gt;</span> <span class="n">y1</span> <span class="o">&gt;&gt;</span> <span class="n">x2</span> <span class="o">&gt;&gt;</span> <span class="n">y2</span> <span class="o">&gt;&gt;</span> <span class="n">x3</span> <span class="o">&gt;&gt;</span> <span class="n">y3</span><span class="p">;</span>
+<span class="lineno">37</span>     <span class="k">if</span> <span class="p">((</span><span class="n">x1</span> <span class="o">==</span> <span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="n">y1</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="o">||</span> <span class="p">(</span><span class="n">x2</span> <span class="o">==</span> <span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="n">y2</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="o">||</span> <span class="p">(</span><span class="n">x3</span> <span class="o">==</span> <span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="n">y3</span> <span class="o">==</span> <span class="mi">0</span><span class="p">))</span> <span class="p">{</span>
+<span class="lineno">38</span>       <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;No&quot;</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+<span class="lineno">39</span>     <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+<span class="lineno">40</span>       <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="p">(</span><span class="n">solve</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">P</span><span class="p">(</span><span class="n">x1</span><span class="p">,</span><span class="n">y1</span><span class="p">),</span> <span class="n">P</span><span class="p">(</span><span class="n">x2</span><span class="p">,</span><span class="n">y2</span><span class="p">),</span> <span class="n">P</span><span class="p">(</span><span class="n">x3</span><span class="p">,</span><span class="n">y3</span><span class="p">))</span> <span class="o">?</span> <span class="s">&quot;Yes&quot;</span> <span class="o">:</span> <span class="s">&quot;No&quot;</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+<span class="lineno">41</span>     <span class="p">}</span>
+<span class="lineno">42</span>   <span class="p">}</span>
+<span class="lineno">43</span>   <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="lineno">44</span> <span class="p">}</span>
+</pre></div></pre><a href="/contests/code/poj/1675.cc">poj/1675.cc</a></p>
+<footer><p>Posted on 2011-10-19</p><a class="prev-page" href="/contests/blog/poj-2948/">POJ 2948 - Martian Mining</a><a class="next-page" href="/contests/blog/poj-3185/">POJ 3185 - The Water Bowls</a></footer></article></div></body></html>

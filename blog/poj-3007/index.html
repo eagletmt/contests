@@ -1,0 +1,83 @@
+<!DOCTYPE html><html><head><meta charset="utf-8" /><meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible" /><title>POJ 3007 - Organize Your Train part II - プログラミングコンテストの記録</title><link rel="alternate" type="application/atom+xml" title="Atom Feed" href="/contests/blog/feed.xml" /><link href="/contests/stylesheets/normalize-ef7858ef.css" rel="stylesheet" type="text/css" /><link href="/contests/stylesheets/pygments-61d6ee10.css" rel="stylesheet" type="text/css" /><link href="/contests/stylesheets/all-1916dece.css" rel="stylesheet" type="text/css" /><script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script></head><body class="blog blog_poj-3007 blog_poj-3007_index"><div id="header"><h1>プログラミングコンテストの記録</h1><p>POJ/AOJ を中心に解いた問題のコードと簡単な解説。<br />ライブラリは <a href="https://github.com/osak/ICPCLibrary">https://github.com/osak/ICPCLibrary</a></p></div><div id="main"><article class="post"><h1>POJ 3007 - Organize Your Train part II</h1><p><a href="http://poj.org/problem?id=3007">http://poj.org/problem?id=3007</a></p>
+
+<h2>概要</h2>
+
+<p>ある文字列に対して，任意の位置で文字列を s, t の2つに分けて</p>
+
+<ul>
+<li>s + t</li>
+<li>s + reverse(t)</li>
+<li>reverse(s) + t</li>
+<li>reverse(s) + reverse(t)</li>
+<li>t + s</li>
+<li>t + reverse(s)</li>
+<li>reverse(t) + s</li>
+<li>reverse(t) + reverse(s)</li>
+</ul>
+
+<p>の8種類の変形ができるとして，変形後の文字列の種類を重複無く数えて答える．</p>
+
+<h2>制約</h2>
+
+<ul>
+<li>2 &lt;= 文字列の長さ &lt;= 72</li>
+</ul>
+
+<h2>解法</h2>
+
+<p>可能な文字列を全部生成して set につっこむなり sort + unique するなり．</p>
+
+<p>TLE がやや厳しめで set<string> につっこむと通らないが，固定長の文字列のクラスを用意して set<fixed_string> だと通ったりする．
+あと Java で HashSet<String> でも通る．</p>
+
+<p><pre><div class="highlight"><pre><span class="lineno"> 1</span> <span class="cp">#include &lt;cstdio&gt;</span>
+<span class="lineno"> 2</span> <span class="cp">#include &lt;cstring&gt;</span>
+<span class="lineno"> 3</span> <span class="cp">#include &lt;set&gt;</span>
+<span class="lineno"> 4</span> <span class="cp">#include &lt;algorithm&gt;</span>
+<span class="lineno"> 5</span> <span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+<span class="lineno"> 6</span> 
+<span class="lineno"> 7</span> <span class="k">struct</span> <span class="n">fixed_string</span>
+<span class="lineno"> 8</span> <span class="p">{</span>
+<span class="lineno"> 9</span>   <span class="kt">size_t</span> <span class="n">len</span><span class="p">;</span>
+<span class="lineno">10</span>   <span class="kt">char</span> <span class="n">s</span><span class="p">[</span><span class="mi">80</span><span class="p">];</span>
+<span class="lineno">11</span>   <span class="kt">char</span> <span class="o">*</span><span class="nf">begin</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">s</span><span class="p">;</span> <span class="p">}</span>
+<span class="lineno">12</span>   <span class="kt">char</span> <span class="o">*</span><span class="nf">end</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">s</span> <span class="o">+</span> <span class="n">len</span><span class="p">;</span> <span class="p">}</span>
+<span class="lineno">13</span>   <span class="kt">bool</span> <span class="k">operator</span><span class="o">&lt;</span><span class="p">(</span><span class="k">const</span> <span class="n">fixed_string</span><span class="o">&amp;</span> <span class="n">that</span><span class="p">)</span> <span class="k">const</span>
+<span class="lineno">14</span>   <span class="p">{</span>
+<span class="lineno">15</span>     <span class="k">return</span> <span class="n">strcmp</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">that</span><span class="p">.</span><span class="n">s</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">;</span>
+<span class="lineno">16</span>   <span class="p">}</span>
+<span class="lineno">17</span> <span class="p">};</span>
+<span class="lineno">18</span> 
+<span class="lineno">19</span> <span class="kt">int</span> <span class="nf">main</span><span class="p">()</span>
+<span class="lineno">20</span> <span class="p">{</span>
+<span class="lineno">21</span>   <span class="kt">int</span> <span class="n">N</span><span class="p">;</span>
+<span class="lineno">22</span>   <span class="n">scanf</span><span class="p">(</span><span class="s">&quot;%d&quot;</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">N</span><span class="p">);</span>
+<span class="lineno">23</span>   <span class="k">while</span> <span class="p">(</span><span class="n">N</span><span class="o">--</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+<span class="lineno">24</span>     <span class="n">fixed_string</span> <span class="n">w</span><span class="p">;</span>
+<span class="lineno">25</span>     <span class="n">scanf</span><span class="p">(</span><span class="s">&quot;%s&quot;</span><span class="p">,</span> <span class="n">w</span><span class="p">.</span><span class="n">s</span><span class="p">);</span>
+<span class="lineno">26</span>     <span class="n">w</span><span class="p">.</span><span class="n">len</span> <span class="o">=</span> <span class="n">strlen</span><span class="p">(</span><span class="n">w</span><span class="p">.</span><span class="n">s</span><span class="p">);</span>
+<span class="lineno">27</span>     <span class="n">set</span><span class="o">&lt;</span><span class="n">fixed_string</span><span class="o">&gt;</span> <span class="n">h</span><span class="p">;</span>
+<span class="lineno">28</span>     <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">w</span><span class="p">.</span><span class="n">len</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+<span class="lineno">29</span>       <span class="n">h</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="n">w</span><span class="p">);</span>
+<span class="lineno">30</span>       <span class="n">reverse</span><span class="p">(</span><span class="n">w</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">w</span><span class="p">.</span><span class="n">begin</span><span class="p">()</span><span class="o">+</span><span class="n">i</span><span class="p">);</span>
+<span class="lineno">31</span>       <span class="n">h</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="n">w</span><span class="p">);</span>
+<span class="lineno">32</span>       <span class="n">reverse</span><span class="p">(</span><span class="n">w</span><span class="p">.</span><span class="n">begin</span><span class="p">()</span><span class="o">+</span><span class="n">i</span><span class="p">,</span> <span class="n">w</span><span class="p">.</span><span class="n">end</span><span class="p">());</span>
+<span class="lineno">33</span>       <span class="n">h</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="n">w</span><span class="p">);</span>
+<span class="lineno">34</span>       <span class="n">reverse</span><span class="p">(</span><span class="n">w</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">w</span><span class="p">.</span><span class="n">begin</span><span class="p">()</span><span class="o">+</span><span class="n">i</span><span class="p">);</span>
+<span class="lineno">35</span>       <span class="n">h</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="n">w</span><span class="p">);</span>
+<span class="lineno">36</span>       <span class="n">reverse</span><span class="p">(</span><span class="n">w</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">w</span><span class="p">.</span><span class="n">end</span><span class="p">());</span>
+<span class="lineno">37</span>       <span class="n">h</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="n">w</span><span class="p">);</span>
+<span class="lineno">38</span>       <span class="n">reverse</span><span class="p">(</span><span class="n">w</span><span class="p">.</span><span class="n">begin</span><span class="p">()</span><span class="o">+</span><span class="n">w</span><span class="p">.</span><span class="n">len</span><span class="o">-</span><span class="n">i</span><span class="p">,</span> <span class="n">w</span><span class="p">.</span><span class="n">end</span><span class="p">());</span>
+<span class="lineno">39</span>       <span class="n">h</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="n">w</span><span class="p">);</span>
+<span class="lineno">40</span>       <span class="n">reverse</span><span class="p">(</span><span class="n">w</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">w</span><span class="p">.</span><span class="n">begin</span><span class="p">()</span><span class="o">+</span><span class="n">w</span><span class="p">.</span><span class="n">len</span><span class="o">-</span><span class="n">i</span><span class="p">);</span>
+<span class="lineno">41</span>       <span class="n">h</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="n">w</span><span class="p">);</span>
+<span class="lineno">42</span>       <span class="n">reverse</span><span class="p">(</span><span class="n">w</span><span class="p">.</span><span class="n">begin</span><span class="p">()</span><span class="o">+</span><span class="n">w</span><span class="p">.</span><span class="n">len</span><span class="o">-</span><span class="n">i</span><span class="p">,</span> <span class="n">w</span><span class="p">.</span><span class="n">end</span><span class="p">());</span>
+<span class="lineno">43</span>       <span class="n">h</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="n">w</span><span class="p">);</span>
+<span class="lineno">44</span>       <span class="n">reverse</span><span class="p">(</span><span class="n">w</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">w</span><span class="p">.</span><span class="n">end</span><span class="p">());</span>
+<span class="lineno">45</span>     <span class="p">}</span>
+<span class="lineno">46</span>     <span class="n">printf</span><span class="p">(</span><span class="s">&quot;%lu</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">h</span><span class="p">.</span><span class="n">size</span><span class="p">());</span>
+<span class="lineno">47</span>   <span class="p">}</span>
+<span class="lineno">48</span>   <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="lineno">49</span> <span class="p">}</span>
+</pre></div></pre><a href="/contests/code/poj/3007.cc">poj/3007.cc</a></p>
+<footer><p>Posted on 2011-10-19</p><a class="prev-page" href="/contests/blog/poj-1158/">POJ 1158 - TRAFFIC LIGHTS</a><a class="next-page" href="/contests/blog/aoj-2293/">AOJ 2293 - Dangerous Tower</a></footer></article></div></body></html>

@@ -1,0 +1,59 @@
+<!DOCTYPE html><html><head><meta charset="utf-8" /><meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible" /><title>POJ 1894 - Alternative Scale of Notation - プログラミングコンテストの記録</title><link rel="alternate" type="application/atom+xml" title="Atom Feed" href="/contests/blog/feed.xml" /><link href="/contests/stylesheets/normalize-ef7858ef.css" rel="stylesheet" type="text/css" /><link href="/contests/stylesheets/pygments-61d6ee10.css" rel="stylesheet" type="text/css" /><link href="/contests/stylesheets/all-1916dece.css" rel="stylesheet" type="text/css" /><script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script></head><body class="blog blog_poj-1894 blog_poj-1894_index"><div id="header"><h1>プログラミングコンテストの記録</h1><p>POJ/AOJ を中心に解いた問題のコードと簡単な解説。<br />ライブラリは <a href="https://github.com/osak/ICPCLibrary">https://github.com/osak/ICPCLibrary</a></p></div><div id="main"><article class="post"><h1>POJ 1894 - Alternative Scale of Notation</h1><p><a href="http://poj.org/problem?id=1894">http://poj.org/problem?id=1894</a></p>
+
+<h2>概要</h2>
+
+<p>普通，B 進数で表示された n 桁の数字 α は 0, 1, ..., B-1 の B 種類の数字から成り，</p>
+
+<pre><code>U_B(α) = Σα[n-i]*B^i
+</code></pre>
+
+<p>という数値を表している．
+例えば <code>U_3(1001) = 1*27 + 0*9 + 0*3 + 1*1 = 28</code>．</p>
+
+<p>しかし，この写像は例えば <code>28 = U_3(1001) = U_3(01001) = U_3(001001) = ...</code> であるので全単射ではない．</p>
+
+<p>そこで，別の表示方法として 1, 2, ..., B の B 種類の数字で表現する方法を考える．</p>
+
+<pre><code>V_B(α) = Σα[n-i]*B^i
+</code></pre>
+
+<p>ただし，空文字列 ε に対して <code>V_B(ε) = 0</code> と定義する．
+この写像は全単射であるため，逆写像が存在する．</p>
+
+<p>基数 B と十進法で表示された非負整数 x が与えられるので，<code>V_B(α) = x</code> となるような α を答える．</p>
+
+<h2>制約</h2>
+
+<ul>
+<li>2 &lt;= B &lt;= 9</li>
+<li>0 &lt;= x &lt;= 10^100</li>
+</ul>
+
+<h2>解法</h2>
+
+<p>x を普通の意味の B 進数に変換し，下の位から見ていって 0 になっている位を見つけたら，
+そのひとつ上の位の数字を1減らし，その位を B にすることで求められる．</p>
+
+<p><pre><div class="highlight"><pre><span class="lineno"> 1</span> <span class="kn">import</span> <span class="nn">java.util.*</span><span class="o">;</span>
+<span class="lineno"> 2</span> <span class="kn">import</span> <span class="nn">java.io.*</span><span class="o">;</span>
+<span class="lineno"> 3</span> <span class="kn">import</span> <span class="nn">java.math.*</span><span class="o">;</span>
+<span class="lineno"> 4</span> 
+<span class="lineno"> 5</span> <span class="kd">public</span> <span class="kd">class</span> <span class="nc">Main</span> <span class="o">{</span>
+<span class="lineno"> 6</span>   <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
+<span class="lineno"> 7</span>     <span class="n">Scanner</span> <span class="n">cin</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">Scanner</span><span class="o">(</span><span class="n">System</span><span class="o">.</span><span class="na">in</span><span class="o">);</span>
+<span class="lineno"> 8</span>     <span class="kt">int</span> <span class="n">B</span> <span class="o">=</span> <span class="n">cin</span><span class="o">.</span><span class="na">nextInt</span><span class="o">();</span>
+<span class="lineno"> 9</span>     <span class="n">BigInteger</span> <span class="n">x</span> <span class="o">=</span> <span class="n">cin</span><span class="o">.</span><span class="na">nextBigInteger</span><span class="o">();</span>
+<span class="lineno">10</span>     <span class="kt">char</span><span class="o">[]</span> <span class="n">ans</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="na">toString</span><span class="o">(</span><span class="n">B</span><span class="o">).</span><span class="na">toCharArray</span><span class="o">();</span>
+<span class="lineno">11</span>     <span class="kt">int</span> <span class="n">len</span> <span class="o">=</span> <span class="n">ans</span><span class="o">.</span><span class="na">length</span><span class="o">;</span>
+<span class="lineno">12</span>     <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="n">len</span><span class="o">-</span><span class="mi">1</span><span class="o">;</span> <span class="n">i</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span><span class="o">--)</span> <span class="o">{</span>
+<span class="lineno">13</span>       <span class="k">if</span> <span class="o">(</span><span class="n">ans</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">&lt;=</span> <span class="sc">&#39;0&#39;</span><span class="o">)</span> <span class="o">{</span>
+<span class="lineno">14</span>         <span class="o">--</span><span class="n">ans</span><span class="o">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="o">];</span>
+<span class="lineno">15</span>         <span class="n">ans</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="o">(</span><span class="kt">char</span><span class="o">)(</span><span class="n">ans</span><span class="o">[</span><span class="n">i</span><span class="o">]+</span><span class="n">B</span><span class="o">);</span>
+<span class="lineno">16</span>       <span class="o">}</span>
+<span class="lineno">17</span>     <span class="o">}</span>
+<span class="lineno">18</span>     <span class="n">String</span> <span class="n">r</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">String</span><span class="o">(</span><span class="n">ans</span><span class="o">);</span>
+<span class="lineno">19</span>     <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">r</span><span class="o">.</span><span class="na">replaceFirst</span><span class="o">(</span><span class="s">&quot;^0&quot;</span><span class="o">,</span> <span class="s">&quot;&quot;</span><span class="o">));</span>
+<span class="lineno">20</span>   <span class="o">}</span>
+<span class="lineno">21</span> <span class="o">}</span>
+</pre></div></pre><a href="/contests/code/poj/1894.java">poj/1894.java</a></p>
+<footer><p>Posted on 2011-10-19</p><a class="prev-page" href="/contests/blog/poj-1609/">POJ 1609 - Tiling Up Blocks</a><a class="next-page" href="/contests/blog/aoj-2310/">AOJ 2310 - Rose Garden Witch</a></footer></article></div></body></html>

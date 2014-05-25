@@ -1,0 +1,55 @@
+<!DOCTYPE html><html><head><meta charset="utf-8" /><meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible" /><title>POJ 3181 - Dollar Dayz - プログラミングコンテストの記録</title><link rel="alternate" type="application/atom+xml" title="Atom Feed" href="/contests/blog/feed.xml" /><link href="/contests/stylesheets/normalize-ef7858ef.css" rel="stylesheet" type="text/css" /><link href="/contests/stylesheets/pygments-61d6ee10.css" rel="stylesheet" type="text/css" /><link href="/contests/stylesheets/all-1916dece.css" rel="stylesheet" type="text/css" /><script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script></head><body class="blog blog_poj-3181 blog_poj-3181_index"><div id="header"><h1>プログラミングコンテストの記録</h1><p>POJ/AOJ を中心に解いた問題のコードと簡単な解説。<br />ライブラリは <a href="https://github.com/osak/ICPCLibrary">https://github.com/osak/ICPCLibrary</a></p></div><div id="main"><article class="post"><h1>POJ 3181 - Dollar Dayz</h1><p><a href="http://poj.org/problem?id=3181">http://poj.org/problem?id=3181</a></p>
+
+<h2>概要</h2>
+
+<p>N ドル使って 1ドル, ..., Kドルの商品を買うとき，買い方が何通りあるか答える．</p>
+
+<h2>制約</h2>
+
+<ul>
+<li>1 &lt;= N &lt;= 1000</li>
+<li>1 &lt;= K &lt;= 100</li>
+</ul>
+
+<h2>解法</h2>
+
+<pre><code>dp[n][k] := n ドルで 1ドル, ..., kドルの商品を買うときの買い方
+</code></pre>
+
+<p>で DP．</p>
+
+<p><code>dp[n][0]</code> を 1 として，</p>
+
+<pre><code>dp[n][k] = Σdp[n-i][i]
+</code></pre>
+
+<p>で更新する．</p>
+
+<p>最大ケース <code>dp[1000][100]</code> の値は unsigned long long にも収まらないので多倍長計算が必要．</p>
+
+<p><pre><div class="highlight"><pre><span class="lineno"> 1</span> <span class="kn">import</span> <span class="nn">java.util.*</span><span class="o">;</span>
+<span class="lineno"> 2</span> <span class="kn">import</span> <span class="nn">java.math.*</span><span class="o">;</span>
+<span class="lineno"> 3</span> <span class="kn">import</span> <span class="nn">java.io.*</span><span class="o">;</span>
+<span class="lineno"> 4</span> 
+<span class="lineno"> 5</span> <span class="kd">public</span> <span class="kd">class</span> <span class="nc">Main</span> <span class="o">{</span>
+<span class="lineno"> 6</span>   <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
+<span class="lineno"> 7</span>     <span class="n">Scanner</span> <span class="n">cin</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">Scanner</span><span class="o">(</span><span class="n">System</span><span class="o">.</span><span class="na">in</span><span class="o">);</span>
+<span class="lineno"> 8</span>     <span class="kt">int</span> <span class="n">N</span> <span class="o">=</span> <span class="n">cin</span><span class="o">.</span><span class="na">nextInt</span><span class="o">();</span>
+<span class="lineno"> 9</span>     <span class="kt">int</span> <span class="n">K</span> <span class="o">=</span> <span class="n">cin</span><span class="o">.</span><span class="na">nextInt</span><span class="o">();</span>
+<span class="lineno">10</span>     <span class="n">BigInteger</span><span class="o">[][]</span> <span class="n">dp</span> <span class="o">=</span> <span class="k">new</span> <span class="n">BigInteger</span><span class="o">[</span><span class="n">N</span><span class="o">+</span><span class="mi">1</span><span class="o">][</span><span class="n">K</span><span class="o">+</span><span class="mi">1</span><span class="o">];</span>
+<span class="lineno">11</span>     <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">k</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">k</span> <span class="o">&lt;=</span> <span class="n">K</span><span class="o">;</span> <span class="n">k</span><span class="o">++)</span> <span class="o">{</span>
+<span class="lineno">12</span>       <span class="n">dp</span><span class="o">[</span><span class="mi">0</span><span class="o">][</span><span class="n">k</span><span class="o">]</span> <span class="o">=</span> <span class="n">BigInteger</span><span class="o">.</span><span class="na">ONE</span><span class="o">;</span>
+<span class="lineno">13</span>     <span class="o">}</span>
+<span class="lineno">14</span>     <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">n</span> <span class="o">=</span> <span class="mi">1</span><span class="o">;</span> <span class="n">n</span> <span class="o">&lt;=</span> <span class="n">N</span><span class="o">;</span> <span class="n">n</span><span class="o">++)</span> <span class="o">{</span>
+<span class="lineno">15</span>       <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">k</span> <span class="o">=</span> <span class="mi">1</span><span class="o">;</span> <span class="n">k</span> <span class="o">&lt;=</span> <span class="n">K</span><span class="o">;</span> <span class="n">k</span><span class="o">++)</span> <span class="o">{</span>
+<span class="lineno">16</span>         <span class="n">dp</span><span class="o">[</span><span class="n">n</span><span class="o">][</span><span class="n">k</span><span class="o">]</span> <span class="o">=</span> <span class="n">BigInteger</span><span class="o">.</span><span class="na">ZERO</span><span class="o">;</span>
+<span class="lineno">17</span>         <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">1</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;=</span> <span class="n">k</span> <span class="o">&amp;&amp;</span> <span class="n">n</span><span class="o">-</span><span class="n">i</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span> <span class="o">{</span>
+<span class="lineno">18</span>           <span class="n">dp</span><span class="o">[</span><span class="n">n</span><span class="o">][</span><span class="n">k</span><span class="o">]</span> <span class="o">=</span> <span class="n">dp</span><span class="o">[</span><span class="n">n</span><span class="o">][</span><span class="n">k</span><span class="o">].</span><span class="na">add</span><span class="o">(</span><span class="n">dp</span><span class="o">[</span><span class="n">n</span><span class="o">-</span><span class="n">i</span><span class="o">][</span><span class="n">i</span><span class="o">]);</span>
+<span class="lineno">19</span>         <span class="o">}</span>
+<span class="lineno">20</span>       <span class="o">}</span>
+<span class="lineno">21</span>     <span class="o">}</span>
+<span class="lineno">22</span>     <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">dp</span><span class="o">[</span><span class="n">N</span><span class="o">][</span><span class="n">K</span><span class="o">]);</span>
+<span class="lineno">23</span>   <span class="o">}</span>
+<span class="lineno">24</span> <span class="o">}</span>
+</pre></div></pre><a href="/contests/code/poj/3181.java">poj/3181.java</a></p>
+<footer><p>Posted on 2011-10-19</p><a class="prev-page" href="/contests/blog/poj-1127/">POJ 1127 - Jack Straws</a><a class="next-page" href="/contests/blog/aoj-1246/">AOJ 1246 - Concert Hall Scheduling</a></footer></article></div></body></html>

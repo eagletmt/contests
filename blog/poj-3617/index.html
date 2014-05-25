@@ -1,0 +1,66 @@
+<!DOCTYPE html><html><head><meta charset="utf-8" /><meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible" /><title>POJ 3617 - Best Cow Line - プログラミングコンテストの記録</title><link rel="alternate" type="application/atom+xml" title="Atom Feed" href="/contests/blog/feed.xml" /><link href="/contests/stylesheets/normalize-ef7858ef.css" rel="stylesheet" type="text/css" /><link href="/contests/stylesheets/pygments-61d6ee10.css" rel="stylesheet" type="text/css" /><link href="/contests/stylesheets/all-1916dece.css" rel="stylesheet" type="text/css" /><script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script></head><body class="blog blog_poj-3617 blog_poj-3617_index"><div id="header"><h1>プログラミングコンテストの記録</h1><p>POJ/AOJ を中心に解いた問題のコードと簡単な解説。<br />ライブラリは <a href="https://github.com/osak/ICPCLibrary">https://github.com/osak/ICPCLibrary</a></p></div><div id="main"><article class="post"><h1>POJ 3617 - Best Cow Line</h1><p><a href="http://poj.org/problem?id=3617">http://poj.org/problem?id=3617</a></p>
+
+<h2>概要</h2>
+
+<p>N 個の大文字のアルファベットの列が与えられる．</p>
+
+<p>ここから先頭か末尾の文字を1つずつ取り出して並べたとき，最も辞書順が小さくなる文字列を答える．</p>
+
+<h2>制約</h2>
+
+<ul>
+<li>1 &lt;= N &lt;= 2000</li>
+<li>答えは80文字ずつ改行で区切って出力する．</li>
+</ul>
+
+<h2>解法</h2>
+
+<p>アルファベットの列を s とする．</p>
+
+<p>i 番目から j 番目の部分列について考えているとき，s[i+k] != s[j-k] なる k について，</p>
+
+<ul>
+<li>s[i+k] &lt; s[j-k] なら先頭の文字をとる</li>
+<li>s[i+k] &gt; s[j-k] なら末尾の文字をとる</li>
+</ul>
+
+<p>と貪欲にとっていけば最悪 O( N^2 ) で解ける．</p>
+
+<p>もしそのような k が無いときは，つまり s の i 番目から j 番目までの文字がすべて同じなので，どちらをとっても変わらない．</p>
+
+<p><pre><div class="highlight"><pre><span class="lineno"> 1</span> <span class="cp">#include &lt;cstdio&gt;</span>
+<span class="lineno"> 2</span> <span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+<span class="lineno"> 3</span> 
+<span class="lineno"> 4</span> <span class="kt">int</span> <span class="nf">main</span><span class="p">()</span>
+<span class="lineno"> 5</span> <span class="p">{</span>
+<span class="lineno"> 6</span>   <span class="kt">int</span> <span class="n">N</span><span class="p">;</span>
+<span class="lineno"> 7</span>   <span class="n">scanf</span><span class="p">(</span><span class="s">&quot;%d&quot;</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">N</span><span class="p">);</span>
+<span class="lineno"> 8</span>   <span class="k">static</span> <span class="kt">char</span> <span class="n">s</span><span class="p">[</span><span class="mi">30001</span><span class="p">];</span>
+<span class="lineno"> 9</span>   <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">N</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+<span class="lineno">10</span>     <span class="n">scanf</span><span class="p">(</span><span class="s">&quot;%1s&quot;</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">s</span><span class="p">[</span><span class="n">i</span><span class="p">]);</span>
+<span class="lineno">11</span>   <span class="p">}</span>
+<span class="lineno">12</span> 
+<span class="lineno">13</span>   <span class="k">static</span> <span class="kt">char</span> <span class="n">buf</span><span class="p">[</span><span class="mi">30001</span><span class="p">];</span>
+<span class="lineno">14</span>   <span class="kt">char</span> <span class="o">*</span><span class="n">p</span> <span class="o">=</span> <span class="n">buf</span><span class="p">;</span>
+<span class="lineno">15</span>   <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">beg</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">end</span> <span class="o">=</span> <span class="n">N</span><span class="o">-</span><span class="mi">1</span><span class="p">;</span> <span class="n">beg</span> <span class="o">&lt;=</span> <span class="n">end</span><span class="p">;)</span> <span class="p">{</span>
+<span class="lineno">16</span>     <span class="kt">int</span> <span class="n">b</span> <span class="o">=</span> <span class="n">beg</span><span class="p">,</span> <span class="n">e</span> <span class="o">=</span> <span class="n">end</span><span class="p">;</span>
+<span class="lineno">17</span>     <span class="k">while</span> <span class="p">(</span><span class="n">b</span> <span class="o">&lt;=</span> <span class="n">e</span> <span class="o">&amp;&amp;</span> <span class="n">s</span><span class="p">[</span><span class="n">b</span><span class="p">]</span> <span class="o">==</span> <span class="n">s</span><span class="p">[</span><span class="n">e</span><span class="p">])</span> <span class="p">{</span>
+<span class="lineno">18</span>       <span class="n">b</span><span class="o">++</span><span class="p">;</span>
+<span class="lineno">19</span>       <span class="n">e</span><span class="o">--</span><span class="p">;</span>
+<span class="lineno">20</span>     <span class="p">}</span>
+<span class="lineno">21</span>     <span class="k">if</span> <span class="p">(</span><span class="n">s</span><span class="p">[</span><span class="n">b</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">s</span><span class="p">[</span><span class="n">e</span><span class="p">])</span> <span class="p">{</span>
+<span class="lineno">22</span>       <span class="o">*</span><span class="n">p</span><span class="o">++</span> <span class="o">=</span> <span class="n">s</span><span class="p">[</span><span class="n">beg</span><span class="o">++</span><span class="p">];</span>
+<span class="lineno">23</span>     <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+<span class="lineno">24</span>       <span class="o">*</span><span class="n">p</span><span class="o">++</span> <span class="o">=</span> <span class="n">s</span><span class="p">[</span><span class="n">end</span><span class="o">--</span><span class="p">];</span>
+<span class="lineno">25</span>     <span class="p">}</span>
+<span class="lineno">26</span>   <span class="p">}</span>
+<span class="lineno">27</span>   <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">N</span><span class="p">;</span> <span class="n">i</span> <span class="o">+=</span> <span class="mi">80</span><span class="p">)</span> <span class="p">{</span>
+<span class="lineno">28</span>     <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">j</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="mi">80</span> <span class="o">&amp;&amp;</span> <span class="n">i</span><span class="o">+</span><span class="n">j</span> <span class="o">&lt;</span> <span class="n">N</span><span class="p">;</span> <span class="n">j</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+<span class="lineno">29</span>       <span class="n">putchar</span><span class="p">(</span><span class="n">buf</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="n">j</span><span class="p">]);</span>
+<span class="lineno">30</span>     <span class="p">}</span>
+<span class="lineno">31</span>     <span class="n">putchar</span><span class="p">(</span><span class="sc">&#39;\n&#39;</span><span class="p">);</span>
+<span class="lineno">32</span>   <span class="p">}</span>
+<span class="lineno">33</span>   <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="lineno">34</span> <span class="p">}</span>
+</pre></div></pre><a href="/contests/code/poj/3617.cc">poj/3617.cc</a></p>
+<footer><p>Posted on 2011-10-19</p><a class="prev-page" href="/contests/blog/aoj-1246/">AOJ 1246 - Concert Hall Scheduling</a><a class="next-page" href="/contests/blog/aoj-1281/">AOJ 1281 - The Morning after Halloween</a></footer></article></div></body></html>

@@ -1,0 +1,70 @@
+<!DOCTYPE html><html><head><meta charset="utf-8" /><meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible" /><title>POJ 2570 - Fiber Network - プログラミングコンテストの記録</title><link rel="alternate" type="application/atom+xml" title="Atom Feed" href="/contests/blog/feed.xml" /><link href="/contests/stylesheets/normalize-ef7858ef.css" rel="stylesheet" type="text/css" /><link href="/contests/stylesheets/pygments-61d6ee10.css" rel="stylesheet" type="text/css" /><link href="/contests/stylesheets/all-1916dece.css" rel="stylesheet" type="text/css" /><script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script></head><body class="blog blog_poj-2570 blog_poj-2570_index"><div id="header"><h1>プログラミングコンテストの記録</h1><p>POJ/AOJ を中心に解いた問題のコードと簡単な解説。<br />ライブラリは <a href="https://github.com/osak/ICPCLibrary">https://github.com/osak/ICPCLibrary</a></p></div><div id="main"><article class="post"><h1>POJ 2570 - Fiber Network</h1><p><a href="http://poj.org/problem?id=2570">http://poj.org/problem?id=2570</a></p>
+
+<h2>概要</h2>
+
+<p>\(n\) 個のノードからなる有向グラフが与えられる。
+各エッジには小文字のアルファベットからなる文字列のラベルがついており、その文字列に含まれるアルファベットで表される会社の回線が存在することを表している。</p>
+
+<p>その後2つのノード \(A, B\) からなるクエリがいくつか与えられ、\(A\) から \(B\) への回線を持っている会社のアルファベットをすべて答える。</p>
+
+<h2>制約</h2>
+
+<ul>
+<li>\(1 \le n \le 200\)</li>
+<li>エッジ数に関する制約は特にない</li>
+</ul>
+
+<h2>解法</h2>
+
+<p>ワーシャルフロイド。
+会社の種類は26しかないので、ビットでもって計算する。</p>
+
+<p><pre><div class="highlight"><pre><span class="lineno"> 1</span> <span class="cp">#include &lt;cstdio&gt;</span>
+<span class="lineno"> 2</span> <span class="cp">#include &lt;algorithm&gt;</span>
+<span class="lineno"> 3</span> <span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+<span class="lineno"> 4</span> 
+<span class="lineno"> 5</span> <span class="kt">int</span> <span class="nf">main</span><span class="p">()</span>
+<span class="lineno"> 6</span> <span class="p">{</span>
+<span class="lineno"> 7</span>   <span class="kt">int</span> <span class="n">N</span><span class="p">;</span>
+<span class="lineno"> 8</span>   <span class="k">while</span> <span class="p">(</span><span class="n">scanf</span><span class="p">(</span><span class="s">&quot;%d&quot;</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">N</span><span class="p">)</span> <span class="o">!=</span> <span class="n">EOF</span> <span class="o">&amp;&amp;</span> <span class="n">N</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+<span class="lineno"> 9</span>     <span class="k">static</span> <span class="kt">int</span> <span class="n">dist</span><span class="p">[</span><span class="mi">200</span><span class="p">][</span><span class="mi">200</span><span class="p">];</span>
+<span class="lineno">10</span>     <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">N</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+<span class="lineno">11</span>       <span class="n">fill_n</span><span class="p">(</span><span class="n">dist</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">N</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
+<span class="lineno">12</span>     <span class="p">}</span>
+<span class="lineno">13</span>     <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">;</span> <span class="n">scanf</span><span class="p">(</span><span class="s">&quot;%d %d&quot;</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">u</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">v</span><span class="p">)</span> <span class="o">!=</span> <span class="n">EOF</span> <span class="o">&amp;&amp;</span> <span class="n">u</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;)</span> <span class="p">{</span>
+<span class="lineno">14</span>       <span class="o">--</span><span class="n">u</span><span class="p">;</span>  <span class="o">--</span><span class="n">v</span><span class="p">;</span>
+<span class="lineno">15</span>       <span class="kt">char</span> <span class="n">buf</span><span class="p">[</span><span class="mi">32</span><span class="p">];</span>
+<span class="lineno">16</span>       <span class="n">scanf</span><span class="p">(</span><span class="s">&quot;%s&quot;</span><span class="p">,</span> <span class="n">buf</span><span class="p">);</span>
+<span class="lineno">17</span>       <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">buf</span><span class="p">[</span><span class="n">i</span><span class="p">];</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+<span class="lineno">18</span>         <span class="n">dist</span><span class="p">[</span><span class="n">u</span><span class="p">][</span><span class="n">v</span><span class="p">]</span> <span class="o">|=</span> <span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="p">(</span><span class="n">buf</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="sc">&#39;a&#39;</span><span class="p">);</span>
+<span class="lineno">19</span>       <span class="p">}</span>
+<span class="lineno">20</span>     <span class="p">}</span>
+<span class="lineno">21</span> 
+<span class="lineno">22</span>     <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">k</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">k</span> <span class="o">&lt;</span> <span class="n">N</span><span class="p">;</span> <span class="n">k</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+<span class="lineno">23</span>       <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">N</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+<span class="lineno">24</span>         <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">j</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="n">N</span><span class="p">;</span> <span class="n">j</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+<span class="lineno">25</span>           <span class="n">dist</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span> <span class="o">|=</span> <span class="n">dist</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">k</span><span class="p">]</span> <span class="o">&amp;</span> <span class="n">dist</span><span class="p">[</span><span class="n">k</span><span class="p">][</span><span class="n">j</span><span class="p">];</span>
+<span class="lineno">26</span>         <span class="p">}</span>
+<span class="lineno">27</span>       <span class="p">}</span>
+<span class="lineno">28</span>     <span class="p">}</span>
+<span class="lineno">29</span> 
+<span class="lineno">30</span>     <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">;</span> <span class="n">scanf</span><span class="p">(</span><span class="s">&quot;%d %d&quot;</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">u</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">v</span><span class="p">)</span> <span class="o">!=</span> <span class="n">EOF</span> <span class="o">&amp;&amp;</span> <span class="n">u</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;)</span> <span class="p">{</span>
+<span class="lineno">31</span>       <span class="o">--</span><span class="n">u</span><span class="p">;</span>  <span class="o">--</span><span class="n">v</span><span class="p">;</span>
+<span class="lineno">32</span>       <span class="kt">bool</span> <span class="n">found</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+<span class="lineno">33</span>       <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">26</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+<span class="lineno">34</span>         <span class="k">if</span> <span class="p">(</span><span class="n">dist</span><span class="p">[</span><span class="n">u</span><span class="p">][</span><span class="n">v</span><span class="p">]</span> <span class="o">&amp;</span> <span class="p">(</span><span class="mi">1</span><span class="o">&lt;&lt;</span><span class="n">i</span><span class="p">))</span> <span class="p">{</span>
+<span class="lineno">35</span>           <span class="n">found</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+<span class="lineno">36</span>           <span class="n">putchar</span><span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="sc">&#39;a&#39;</span><span class="p">);</span>
+<span class="lineno">37</span>         <span class="p">}</span>
+<span class="lineno">38</span>       <span class="p">}</span>
+<span class="lineno">39</span>       <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">found</span><span class="p">)</span> <span class="p">{</span>
+<span class="lineno">40</span>         <span class="n">putchar</span><span class="p">(</span><span class="sc">&#39;-&#39;</span><span class="p">);</span>
+<span class="lineno">41</span>       <span class="p">}</span>
+<span class="lineno">42</span>       <span class="n">putchar</span><span class="p">(</span><span class="sc">&#39;\n&#39;</span><span class="p">);</span>
+<span class="lineno">43</span>     <span class="p">}</span>
+<span class="lineno">44</span>     <span class="n">putchar</span><span class="p">(</span><span class="sc">&#39;\n&#39;</span><span class="p">);</span>
+<span class="lineno">45</span>   <span class="p">}</span>
+<span class="lineno">46</span>   <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="lineno">47</span> <span class="p">}</span>
+</pre></div></pre><a href="/contests/code/poj/2570.cc">poj/2570.cc</a></p>
+<footer><p>Posted on 2012-05-06</p><a class="prev-page" href="/contests/blog/poj-2567/">POJ 2567 - Code the Tree</a><a class="next-page" href="/contests/blog/poj-3631/">POJ 3631 - Cuckoo Hashing</a></footer></article></div></body></html>
