@@ -46,10 +46,10 @@ set :css_dir, 'stylesheets'
 set :images_dir, 'images'
 
 set :markdown_engine, :redcarpet
-set :http_prefix, '/contests'
 
 configure :build do
   activate :asset_hash
+  set :http_prefix, '/contests'
 end
 
 activate :blog do |blog|
