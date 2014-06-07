@@ -18,7 +18,7 @@ xml.feed xmlns: 'http://www.w3.org/2005/Atom' do
     Time.at(IO.popen(cmd, 'r', &:read).chomp.to_i)
   end
 
-  blog.articles[0 .. 20].each do |article|
+  blog.articles[0 ... 20].each do |article|
     xml.entry do
       article_url = URI.join(blog_url, article.url)
 
