@@ -4,6 +4,7 @@ html
     meta charset="utf-8"
     meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible"
     title== "#{data.page.title} - #{data.config.title}"
+    == feed_tag :atom, File.join(http_prefix, '/blog/feed.xml'), title: 'Atom Feed'
 
     == stylesheet_link_tag "normalize", "pygments", "all"
     == javascript_include_tag  "all"

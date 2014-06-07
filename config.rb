@@ -52,6 +52,8 @@ configure :build do
   set :http_prefix, '/contests'
 end
 
+page '/blog/feed.xml', layout: false
+
 activate :blog do |blog|
   blog.permalink = 'blog/{title}.html'
   blog.paginate = true
