@@ -7,7 +7,7 @@ html
     == feed_tag :atom, File.join(http_prefix, '/blog/feed.xml'), title: 'Atom Feed'
 
     == stylesheet_link_tag "normalize", "pygments", "all"
-    == javascript_include_tag "https://c328740.ssl.cf1.rackcdn.com/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"
+    == javascript_include_tag "https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"
 
   body class="#{page_classes}"
     #header
